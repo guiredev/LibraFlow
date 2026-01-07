@@ -13,6 +13,8 @@ body{
     flex-direction: column;
     align-items: center;
     height: 100vh;
+    background-color: #283618;
+    height: 100vh;
 }
 
 .conteiner-main{
@@ -21,7 +23,7 @@ body{
     width: 90vw;
    border-radius: 5rem;
    background-color: #FAF9F6;
-   box-shadow: 1rem 1rem 3rem rgba(163, 93, 31,0.3);
+   box-shadow: 0rem 0rem 5rem rgb(75, 116, 29);
 }
 
 nav{
@@ -57,7 +59,7 @@ main{
     justify-content: space-evenly;
     align-items: center;
     height: 80vh;
-    padding: 3rem;
+    padding: 0 6rem;
 }
 
 
@@ -75,16 +77,27 @@ form, .others-forms{
      display: flex;
     flex-direction: column;
     justify-content: start;
-    align-items: center;
-    margin-top: 20rem;
+    margin-top: 10rem;
     color: #283618;
 }
 
 
 
+
 .text-main h1{
-    font-size: 4rem;
+    font-size: 5rem;
     margin-bottom: 2rem;
+    font-weight: bold;
+    font-family: "Lora", serif;
+}
+
+.text-main p{
+    color: #606C38;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 3rem;
+    margin-bottom: 4rem;
+    font-family: 'Source Sans 3', sans-serif;
 }
 
 
@@ -96,7 +109,7 @@ form, .others-forms{
 }
 
 .img-main{
-    width: 55%;
+    width: 60%;
     height: 100vh;
 }
 
@@ -104,3 +117,68 @@ form, .others-forms{
     width: 70%;
     margin-top: 10rem;
 }
+
+.form-main h2{
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    font-weight: bold;
+    font-family: "Lora", serif;
+    display: flex;
+    justify-content: center;
+    color: #283618;
+}
+
+input{
+    width: 25rem;
+    height: 3rem;
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+    border: 0.1rem solid #BC6C25;
+    border-radius: 1.5rem;
+    font-size: 1.2rem;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+button{
+    width: 15rem;
+    height: 3.5rem;
+    background-color: #BC6C25;
+    color: #FAF9F6;
+    border: none;
+    border-radius: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+.others-forms{
+    margin-top: 2rem;
+}
+
+.others-forms p{
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+.others-forms a{
+    text-decoration: none;
+    color: #BC6C25;
+    font-weight: bold;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+span > a{
+    margin: 0 1rem;
+    font-size: 1.2rem;
+    color: #606C38;
+    font-family: 'Source Sans 3', sans-serif;
+    text-decoration: none;
+    margin-bottom: 2rem;
+}
+
+span{
+    margin-bottom: 1rem;
+}
+
