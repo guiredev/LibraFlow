@@ -1,0 +1,44 @@
+.links-nav-login a:hover{
+    color: #96531D;
+    transition: 0.4s;
+    text-decoration: underline;
+}
+
+.others-forms a:hover{
+    color: #96531D;
+    transition: 0.4s;
+    text-decoration: underline;
+}
+
+ span a:hover{
+    color: #96531D;
+    transition: 0.4s;
+    text-decoration: underline;
+}
+
+input:focus{
+    border-color: #96531D;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(150, 83, 29,0.15);
+    transition: 0.3s;
+}
+
+button:hover{
+    background-color: #96531D;
+    transition: 0.3s;
+}
+
+.img-main img{
+    animation: flutter 3s ease-in-out infinite;
+}
+
+
+
+@keyframes flutter {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}

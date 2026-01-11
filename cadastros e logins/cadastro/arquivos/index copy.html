@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../logins/styles.css">
+    <link rel="stylesheet" href="./styles copy.css">
+    <link rel="stylesheet" href="./animations.css">
     <title>Bem-vindo | LibraFlow</title>
 
     <!-- Fonte Lora -->
@@ -27,7 +28,7 @@
                 </ul>
             </div>
             <div class="dark-mode">
-                <button id="dark-mode-toggle">Cadastrar</button>
+                <button id="dark-mode-toggle">login</button>
             </div>
         </nav>
         <main>
@@ -41,20 +42,17 @@
                 </p>
             </div>
             <div class="img-main">
-                <img src="./imgs/img-main.png" alt="imagem de livros">
+                <img src="../imgs/img-main.png" alt="imagem de livros">
             </div>
             <div class="form-main">
                 <h2>
-                    Faça login na sua conta
+                    Faça seu cadastro
                 </h2>
                 <form action="">
-                    <input type="text" placeholder="nome">
-                    <input type="password" placeholder="senha">
-                    <span>
-                        <a href="#">
-                            Esqueceu a senha?
-                        </a>
-                    </span>
+                    <input type="text" placeholder="nome" required>
+                    <input type="email" placeholder="email" required>
+                    <input type="password" placeholder="senha" required>
+                    <input type="password" placeholder="confirme a senha" required>
                     <button type="submit">Entrar</button>
                 </form>
                 <div class="others-forms">
