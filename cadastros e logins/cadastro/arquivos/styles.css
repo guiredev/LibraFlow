@@ -13,18 +13,10 @@ body{
     flex-direction: column;
     align-items: center;
     height: 100vh;
-    background-color: #283618;
     height: 100vh;
 }
 
-.conteiner-main{
-    margin-top: 3rem;
-    height: 90vh;
-    width: 90vw;
-   border-radius: 5rem;
-   background-color: #FAF9F6;
-   box-shadow: 0rem 0rem 5rem rgb(75, 116, 29);
-}
+
 
 nav{
     display: flex;
@@ -38,10 +30,10 @@ nav{
 }
 
 .links-nav-login a{
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     text-decoration: none;
     color: #BC6C25;
-    margin-left: 0.5rem;
+    margin-left: 1rem;
     font-weight: bold;
 }
 
@@ -77,15 +69,21 @@ form, .others-forms{
      display: flex;
     flex-direction: column;
     justify-content: start;
-    margin-top: 10rem;
     color: #283618;
 }
 
+body{
+    height: 100vh;
+}
 
+
+.text-main, .form-main{
+    height: 70%;
+}
 
 
 .text-main h1{
-    font-size: 5rem;
+    font-size: 4.7rem;
     margin-bottom: 2rem;
     font-weight: bold;
     font-family: "Lora", serif;
@@ -106,16 +104,13 @@ form, .others-forms{
     flex-direction: column;
     justify-content: start;
     align-items: center;
-}
-
-.img-main{
-    width: 60%;
-    height: 100vh;
+    width: 80%;
+    height: 100%;
 }
 
 .img-main img{
-    width: 70%;
-    margin-top: 10rem;
+    width: 80%;
+    margin-top: 3rem;
 }
 
 .form-main h2{
@@ -142,7 +137,7 @@ input{
 button{
     width: 15rem;
     height: 3.5rem;
-    background-color: #BC6C25;
+    background-color: #DDA15E;
     color: #FAF9F6;
     border: none;
     border-radius: 1.5rem;
@@ -172,7 +167,7 @@ button{
 span > a{
     margin: 0 1rem;
     font-size: 1.2rem;
-    color: #606C38;
+    color: #BC6C25;
     font-family: 'Source Sans 3', sans-serif;
     text-decoration: none;
     margin-bottom: 2rem;
