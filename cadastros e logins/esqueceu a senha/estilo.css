@@ -1,0 +1,151 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4rem;
+    width: 100%;
+}
+
+.links-nav a {
+    font-size: 1.5rem;
+    text-decoration: none;
+    color: #BC6C25;
+    margin-left: 1rem;
+    font-weight: bold;
+}
+
+.dark-mode button {
+    background-color: #DDA15E;
+    color: #FEFAE0;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    padding: 4rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 450px;
+    width: 90%;
+}
+
+h2 {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    font-weight: bold;
+    color: #283618;
+    font-family: "Lora", serif;
+}
+
+label {
+    font-size: 1.2rem;
+    color: #606C38;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+input[type="email"],
+input[type="text"] {
+    width: 25rem;
+    height: 3rem;
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+    border: 0.1rem solid #BC6C25;
+    border-radius: 1.5rem;
+    font-size: 1.2rem;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+input[type="submit"] {
+    width: 15rem;
+    height: 3.5rem;
+    background-color: #DDA15E;
+    color: #FAF9F6;
+    border: none;
+    border-radius: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: background-color 0.3s;
+}
+
+input[type="submit"]:hover {
+    background-color: #BC6C25;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.inputs a {
+    text-decoration: none;
+    color: #BC6C25;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-top: 2rem;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: color 0.3s;
+}
+
+.inputs a:hover {
+    color: #DDA15E;
+}
+
+@media (max-width: 768px) {
+    html {
+        font-size: 56.25%;
+    }
+
+    nav {
+        padding: 2rem;
+    }
+
+    .inputs {
+        padding: 2rem;
+        margin: 2rem;
+    }
+
+    input[type="email"],
+    input[type="text"] {
+        width: 100%;
+        max-width: 25rem;
+    }
+
+    input[type="submit"] {
+        width: 100%;
+        max-width: 15rem;
+    }
+}
