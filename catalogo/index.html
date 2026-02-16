@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
     <title>LibraFlow</title>
 
         <!-- Fonte Lora -->
@@ -40,8 +40,29 @@
                 Explore nossa vasta coleção e encontre seu próximo livro favorito.
             </p>
         </div>
-        <div class="search-header">
-            <input type="text" placeholder="Pesquisar livros...">
-            <button type="submit">Buscar</button>
-        </div>
+    <div class="search-header">
+        <form action="catalogo.php" method="GET" class="search-container">
+            <input type="text" name="txtBusca" placeholder="Pesquisar livros..." value="<?php echo isset($_GET['txtBusca']) ? $_GET['txtBusca'] : ''; ?>">
+            <button type="submit" class="btn-buscar">Buscar</button>
+        </form>
+    </div>
     </header>
+    <main>
+        <div class="book-grid">
+            <?php 
+            // O while vai repetir o código abaixo para cada livro encontrado no banco
+            while($livro = mysqli_fetch_assoc($resultado)) { 
+            ?>
+                <div class="book-card">
+                    <img src="img/capas/<?php echo $livro['capa']; ?>" alt="Capa">
+                    
+                    <div class="book-info">
+                        <h3><?php echo $livro['titulo']; ?></h3>
+                        <p><?php echo $livro['autor']; ?></p>
+                        
+                        <a href="detalhes.php?id=<?php echo $livro['id']; ?>" class="btn">Ver Mais</a>
+                    </div>
+                </div>
+            <?php } ?>
+        </div>
+    </main>

@@ -1,0 +1,139 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html{
+    font-size: 62.5%;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Navegação */
+nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4rem;
+    width: 100%;
+}
+
+.logo-nav img{
+    width: 5rem;
+}
+
+.links-nav ul{
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+
+.links-nav li{
+    display: inline;
+}
+
+.links-nav a,
+nav a{
+    font-size: 1.5rem;
+    text-decoration: none;
+    color: #BC6C25;
+    margin-left: 1rem;
+    font-weight: bold;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+.user img{
+    width: 3rem;
+    border-radius: 50%;
+}
+
+/* Header/Cabeçalho */
+header{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 2rem 6rem;
+}
+
+.text-header{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 3rem;
+    color: #283618;
+}
+
+.text-header h1{
+    font-size: 4.7rem;
+    margin-bottom: 2rem;
+    font-weight: bold;
+    font-family: "Lora", serif;
+}
+
+.text-header p{
+    color: #606C38;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 3rem;
+    margin-bottom: 2rem;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+.search-header{
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+/* Inputs e Buttons */
+input{
+    width: 25rem;
+    height: 3rem;
+    padding: 0 1rem;
+    border: 0.1rem solid #BC6C25;
+    border-radius: 1.5rem;
+    font-size: 1.2rem;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+button{
+    width: 15rem;
+    height: 3.5rem;
+    background-color: #DDA15E;
+    color: #FAF9F6;
+    border: none;
+    border-radius: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+/* Animações e Hover */
+.links-nav a:hover,
+nav a:hover{
+    color: #96531D;
+    transition: 0.4s;
+    text-decoration: underline;
+}
+
+input:focus{
+    border-color: #96531D;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(150, 83, 29,0.15);
+    transition: 0.3s;
+}
+
+button:hover{
+    background-color: #96531D;
+    transition: 0.3s;
+}
