@@ -20,6 +20,7 @@ html{
     padding: 0;
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    outline: 2px solid red !important;
 }
 
 body{
@@ -31,7 +32,22 @@ aside{
     height: 100vh;
     position: fixed;
     background-color: var(--cor-sidebar);
-    z-index: 0;
+}
+
+aside a{
+    text-decoration: none;
+    color: var(--cor-texto);
+    display: block;
+    padding: 15px 20px;
+    font-size: 1.6rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+.sidebar-down{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
 }
 
 main, header, nav{
