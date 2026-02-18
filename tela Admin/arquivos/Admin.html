@@ -10,102 +10,80 @@
 </head>
 
 <body>
-
-    <div class="admin-container">
-        <aside class="sidebar">
-            <div class="logo">
-                <img src="img/logo-branca.png" alt="LibraFlow">
+    <aside>
+        <ul>
+            <li><a href="Admin.html">Início</a></li>
+            <li><a href="Livros.html">Livros</a></li>
+            <li><a href="Usuarios.html">Usuários</a></li>
+            <div class="sidebar-down">
+                <li><a href="Autores.html">Configurações</a></li>
+                <li><a href="">sair</a></li>
             </div>
-            <nav class="menu">
-                <ul>
-                    <li><a href="admin_dashboard.php" class="active"><i class="fas fa-home"></i> Início</a></li>
-                    <li><a href="gerenciar_livros.php"><i class="fas fa-book"></i> Gerenciar Acervo</a></li>
-                    <li><a href="emprestimos.php"><i class="fas fa-exchange-alt"></i> Empréstimos</a></li>
-                    <li><a href="usuarios.php"><i class="fas fa-users"></i> Usuários</a></li>
-                    <li><a href="configuracoes.php"><i class="fas fa-cog"></i> Configurações</a></li>
-                </ul>
-            </nav>
-            <div class="sidebar-footer">
-                <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </ul>
+    </aside>
+    <nav>
+            <div class="logo-nav">
+                <img src="" alt="Logo LibraFlow">
             </div>
-        </aside>
-
-        <main class="main-content">
-
-            <header class="admin-header">
-                <div class="search-bar">
-                    <input type="text" placeholder="Buscar no sistema...">
+            <div class="right">
+                <div class="notification">
+                    
                 </div>
-                <div class="admin-profile">
-                    <span>Olá, <strong>Bibliotecário</strong></span>
-                    <img src="img/admin-avatar.png" alt="Perfil">
+                <div class="user">
+                    <img src="" alt="Foto do usuário">
                 </div>
-            </header>
+            </div>
+    </nav>
+    <header>
+        <h1>Painel Administrativo</h1>
+        <p>Bem-vindo ao painel administrativo do LibraFlow. Aqui você pode gerenciar livros, usuários e configurações do sistema.</p>
+    </header>
+    <main>
+        <section class="resumo">
+            <div>
+                <h2>Livros Em Empretimo</h2>
+                <p>150</p>
+            </div>
+            <div>
+                <h2>Livros em Atraso</h2>
+                <p>5</p>
+            </div>
+            <div>
+                <h2>Usuários Ativos</h2>
+                <p>300</p>
+            </div>
+        </section>
+        <section class="graficos">
+            <canvas class="grafico">
 
-            <section class="stats-grid">
-                <div class="card">
-                    <div class="card-icon blue"><i class="fas fa-book"></i></div>
-                    <div class="card-info">
-                        <h3>Total de Livros</h3>
-                        <p>1.250</p>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-icon orange"><i class="fas fa-hand-holding"></i></div>
-                    <div class="card-info">
-                        <h3>Empréstimos Ativos</h3>
-                        <p>45</p>
-                    </div>
-                </div>
-
-                <div class="card alert">
-                    <div class="card-icon red"><i class="fas fa-clock"></i></div>
-                    <div class="card-info">
-                        <h3>Livros em Atraso</h3>
-                        <p>12</p>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-icon green"><i class="fas fa-user-plus"></i></div>
-                    <div class="card-info">
-                        <h3>Novos Alunos</h3>
-                        <p>8</p>
-                    </div>
-                </div>
-            </section>
-
-            <section class="admin-details">
-                <div class="recent-activity">
-                    <div class="section-header">
-                        <h2>Últimos Empréstimos</h2>
-                        <a href="emprestimos.php" class="btn-ver-todos">Ver todos</a>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Aluno</th>
-                                <th>Livro</th>
-                                <th>Data Saída</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>João Silva</td>
-                                <td>Dom Casmurro</td>
-                                <td>25/01/2026</td>
-                                <td><span class="status-badge pendente">Pendente</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-        </main>
-    </div>
-
+            </canvas>
+        </section>
+        <section class="historico">
+            <h2>Histórico de Atividades</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Atividade</th>
+                        <th>Usuário</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2024-06-01</td>
+                        <td>Livro "O Alquimista" emprestado</td>
+                        <td>João Silva</td>
+                    </tr>
+                    <tr>
+                        <td>2024-06-02</td>
+                        <td>Livro "1984" devolvido</td>
+                        <td>Maria Oliveira</td>
+                    </tr>
+                    <!-- Mais linhas de atividades -->
+                </tbody>
+            </table>
+        </section>
+    </main>
 </body>
 
 </html>

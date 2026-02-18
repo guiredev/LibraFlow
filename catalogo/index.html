@@ -48,21 +48,5 @@
     </div>
     </header>
     <main>
-        <div class="book-grid">
-            <?php 
-            // O while vai repetir o código abaixo para cada livro encontrado no banco
-            while($livro = mysqli_fetch_assoc($resultado)) { 
-            ?>
-                <div class="book-card">
-                    <img src="img/capas/<?php echo $livro['capa']; ?>" alt="Capa">
-                    
-                    <div class="book-info">
-                        <h3><?php echo $livro['titulo']; ?></h3>
-                        <p><?php echo $livro['autor']; ?></p>
-                        
-                        <a href="detalhes.php?id=<?php echo $livro['id']; ?>" class="btn">Ver Mais</a>
-                    </div>
-                </div>
-            <?php } ?>
-        </div>
+        
     </main>
