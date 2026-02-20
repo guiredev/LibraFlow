@@ -1,14 +1,17 @@
 /* Importando variáveis de cor para facilitar a manutenção */
 :root {
-    --cor-primaria: #F26419;         /* Laranja LibraFlow */
+    --cor-primaria: #F59E0B;         /* Laranja LibraFlow */
     --cor-primaria-hover: #DD5713;
-    --cor-fundo: #f4f7f6;
-    --cor-sidebar: #ffffff;
-    --cor-texto: #333333;
-    --cor-texto-suave: #666666;
-    --cor-branco: #ffffff;
-    --cor-alerta: #e91212;
-    --cor-sucesso: #2ecc71;
+    --cor-fundo:#F8F5F2;
+    --cor-aside: #283618;
+    --texto-aside: #FDFCFB;
+    --cor-texto-suave: #4A4A4A;
+    --cor-texto: #2D3A19;
+    --cor-areia: #F8F5F2;
+    --cor-alerta: #EF4444;
+    --cor-sucesso: #22C55E;
+    --cor-tread: #2D3A19;
+    --cor-branca: #FFFFFF;
 }
 
 html{
@@ -20,23 +23,23 @@ html{
     padding: 0;
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    outline: 2px solid red !important;
 }
 
-body{
-    background-color: var(--cor-fundo);
+main{
+    height: 100%;
+    background-color: var(--cor-areia);
 }
 
 aside{
     width: 15%;
     height: 100vh;
     position: fixed;
-    background-color: var(--cor-sidebar);
+    background-color: var(--cor-aside);
 }
 
 aside a{
     text-decoration: none;
-    color: var(--cor-texto);
+    color: var(--texto-aside);
     display: block;
     padding: 15px 20px;
     font-size: 1.6rem;
@@ -55,3 +58,94 @@ main, header, nav{
     padding: 20px;
 }
 
+
+nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--cor-branca);
+    padding: 10px 20px;
+    box-shadow: 0 0.2rem 1rem rgba(0,0,0,0.05);;
+    padding: 2.5rem;
+    position: fixed;
+    width: 85%;
+    z-index: 1000;
+}
+
+.logo-nav img{
+    width: 10rem;
+    height: 10rem;
+}
+
+.right{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+header{
+    background-color: var(--cor-branco);
+    padding: 10rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header h1{
+    font-size: 2.4rem;
+    color: var(--cor-texto);
+    text-align: center;
+}
+
+header p{
+    font-size: 1.6rem;
+    color: var(--cor-texto-suave);
+    text-align: center;
+}
+
+.resumo{
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+}
+
+.resumo .card-1, .resumo .card-2, .resumo .card-3{
+    padding: 2.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    margin: 0 1rem;
+}
+
+.card-1{
+    background-color: var(--cor-primaria);
+    border: 1px solid orangered;
+    color: #451a03;
+}
+.card-2{
+    background-color: var(--cor-alerta);
+    border: 1px solid red;
+}
+.card-3{
+    background-color: var(--cor-sucesso);
+    border: 1px solid green;
+}
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+    height: 15rem;
+    padding: 1rem;
+}
+
+table th, table td{
+    border-bottom: 1px solid var(--cor-texto);
+    padding: 1rem;
+    text-align: left;
+    font-size: 1.4rem;
+}
+
+table thead{
+    background-color: var(--cor-tread);
+    color: var(--cor-areia);
+    padding: 3rem;
+    border-radius: 1rem;
+}
