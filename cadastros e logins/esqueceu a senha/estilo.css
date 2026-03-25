@@ -33,7 +33,7 @@ nav {
     font-weight: bold;
 }
 
-.dark-mode button {
+.login.btn button {
     background-color: #DDA15E;
     color: #FEFAE0;
     border: none;

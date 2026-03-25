@@ -1,35 +1,36 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-html{
+html {
     font-size: 62.5%;
 }
 
-body{
+body {
     display: flex;
     flex-direction: column;
     align-items: center;
     height: 100vh;
     height: 100vh;
+    transition: background 0.4s ease, color 0.4s ease;
 }
 
 
 
-nav{
+nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 4rem;
 }
 
-.links-nav-login li{
+.links-nav-login li {
     display: inline;
 }
 
-.links-nav-login a{
+.links-nav-login a {
     font-size: 1.5rem;
     text-decoration: none;
     color: #BC6C25;
@@ -37,7 +38,7 @@ nav{
     font-weight: bold;
 }
 
-.dark-mode button{
+.login.btn button {
     background-color: #DDA15E;
     color: #FEFAE0;
     border: none;
@@ -45,7 +46,7 @@ nav{
     border-radius: 1rem;
 }
 
-main{
+main {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
@@ -56,40 +57,43 @@ main{
 
 
 
-form, .others-forms{
+form,
+.others-forms {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.text-main, .form-main{
+.text-main,
+.form-main {
     width: 35%;
     height: 100%;
-     display: flex;
+    display: flex;
     flex-direction: column;
     justify-content: start;
     color: #283618;
 }
 
-body{
+body {
     height: 100vh;
 }
 
 
-.text-main, .form-main{
+.text-main,
+.form-main {
     height: 70%;
 }
 
 
-.text-main h1{
+.text-main h1 {
     font-size: 4.7rem;
     margin-bottom: 2rem;
     font-weight: bold;
     font-family: "Lora", serif;
 }
 
-.text-main p{
+.text-main p {
     color: #606C38;
     font-size: 1.5rem;
     font-weight: 600;
@@ -99,7 +103,7 @@ body{
 }
 
 
-.img-main{
+.img-main {
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -108,12 +112,12 @@ body{
     height: 100%;
 }
 
-.img-main img{
+.img-main img {
     width: 80%;
     margin-top: 3rem;
 }
 
-.form-main h2{
+.form-main h2 {
     font-size: 2.5rem;
     margin-bottom: 3rem;
     font-weight: bold;
@@ -123,7 +127,7 @@ body{
     color: #283618;
 }
 
-input{
+input {
     width: 25rem;
     height: 3rem;
     margin-bottom: 2rem;
@@ -134,7 +138,7 @@ input{
     font-family: 'Source Sans 3', sans-serif;
 }
 
-button{
+button {
     width: 15rem;
     height: 3.5rem;
     background-color: #DDA15E;
@@ -147,24 +151,24 @@ button{
     font-family: 'Source Sans 3', sans-serif;
 }
 
-.others-forms{
+.others-forms {
     margin-top: 2rem;
 }
 
-.others-forms p{
+.others-forms p {
     margin-bottom: 1rem;
     font-size: 1.2rem;
     font-family: 'Source Sans 3', sans-serif;
 }
 
-.others-forms a{
+.others-forms a {
     text-decoration: none;
     color: #BC6C25;
     font-weight: bold;
     font-family: 'Source Sans 3', sans-serif;
 }
 
-span > a{
+span>a {
     margin: 0 1rem;
     font-size: 1.2rem;
     color: #BC6C25;
@@ -173,7 +177,61 @@ span > a{
     margin-bottom: 2rem;
 }
 
-span{
+span {
     margin-bottom: 1rem;
 }
 
+/* Wrapper que posiciona o conjunto botão + texto na tela */
+.theme-btn-wrapper {
+    position: fixed;        /* fixed = grudado na tela ao rolar */
+    bottom: 1rem;
+    right: 4rem;
+    width: 5.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Botão redondo */
+.theme-btn {
+    width: 5rem;
+    height: 5rem;
+    background: #DDA15E;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    margin-bottom: 0.5rem;
+    font-size: 2rem;        /* tamanho do emoji ☀️ 🌙 */
+    transition: background 0.4s ease;
+}
+
+.theme-btn:active {
+    transform: scale(0.95);
+}
+
+/* Texto embaixo do botão */
+#themeLabel {
+    font-size: 1.3rem;
+    color: #606C38;
+    font-weight: 600;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: color 0.4s;
+}
+
+/* === DARK MODE === */
+/* Aplicado no body, não no .page */
+
+body.dark {
+    background: #1a1a2e;
+    color: #e8e8f0;
+}
+
+body.dark .theme-btn {
+    background: #2a2550;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+}
+
+body.dark #themeLabel {
+    color: #b0aaff;
+}
