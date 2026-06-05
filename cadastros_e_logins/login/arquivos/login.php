@@ -6,9 +6,9 @@ require '../../configs/conexao.php';
 
 if (isset($_SESSION['usuario_id'])) {
     if ($_SESSION['usuario_tipo'] === 'D') {
-        header('Location: /LibraFlow/tela_Admin/arquivos/Admin.html');
+        header('Location: /LibraFlow/tela_Admin/arquivos/Admin.php');
     } else {
-        header('Location: /LibraFlow/Tela_de_usuario/arquivos/index.html');
+        header('Location: /LibraFlow/catalogo/catalogo.php');
     }
     exit;
 }
@@ -35,9 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['usuario_tipo']  = $usuario['tipo'];
 
             if ($usuario['tipo'] === 'D') {
-                header('Location: /LibraFlow/tela_Admin/arquivos/Admin.html');
+                header('Location: /LibraFlow/tela_Admin/arquivos/Admin.php');
             } else {
-                header('Location: /LibraFlow/Tela_de_usuario/arquivos/index.html');
+                header('Location: /LibraFlow/catalogo/catalogo.php');
             }
             exit;
         } else {
@@ -77,7 +77,7 @@ $cadastroOk = isset($_GET['cadastro']) && $_GET['cadastro'] === 'ok';
         <nav>
             <div class="links-nav-login">
                 <ul>
-                    <li><a href="/LibraFlow/Tela_de_usuario/arquivos/index.html">Início</a></li>
+                    <li><a href="/LibraFlow/Tela_de_usuario/arquivos/catalogo.php">Início</a></li>
                     <li><a href="#">Sobre nós</a></li>
                     <li><a href="#">Contato</a></li>
                 </ul>
@@ -96,7 +96,7 @@ $cadastroOk = isset($_GET['cadastro']) && $_GET['cadastro'] === 'ok';
             </div>
 
             <div class="img-main">
-                <img src="../../imgs/img-main.png" alt="imagem de livros">
+                <img src="../imgs/img-main.png" alt="imagem de livros">
             </div>
 
             <div class="form-main">
