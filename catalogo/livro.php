@@ -196,7 +196,7 @@ $jaEmprestado = (bool) $stmt->fetch();
         </div>
         <div class="links-nav">
             <ul>
-                <li><a href="/LibraFlow/Tela_de_usuario/arquivos/index.html">Início</a></li>
+                <li><a href="/LibraFlow/Tela_de_usuario/arquivos/index.php">Início</a></li>
                 <li><a href="/LibraFlow/catalogo/catalogo.php">Catálogo</a></li>
                 <li><a href="/LibraFlow/catalogo/meus_emprestimos.php">Meus empréstimos</a></li>
                 <li><a href="/LibraFlow/cadastros_e_logins/logout/logout.php">Sair</a></li>
