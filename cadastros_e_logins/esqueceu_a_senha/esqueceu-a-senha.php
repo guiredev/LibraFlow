@@ -87,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="estilo.css">
+    <link rel="stylesheet" href="/LibraFlow/tela_Admin/arquivos/darkmode-btn.css">
     <title>LibraFlow - Esqueceu a Senha</title>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
     <style>
@@ -194,9 +195,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 required>
             <input type="submit" value="Enviar instruções">
         </form>
+
+        <!-- Botão Dark Mode -->
+        <button id="themeToggle" class="theme-toggle-float" aria-label="Alternar tema claro/escuro">
+            <span id="themeIcon">🌙</span>
+            <span id="themeLabel">Escuro</span>
+        </button>
+    </div>
         <?php endif; ?>
 
         <a class="voltar" href="/LibraFlow/cadastros_e_logins/login/arquivos/login.php">← Voltar para o login</a>
     </div>
+
+    <script src="/LibraFlow/cadastros_e_logins/esqueceu_a_senha/darkmode.js"></script>
+</body>
 </body>
 </html>

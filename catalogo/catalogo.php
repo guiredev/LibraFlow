@@ -34,6 +34,7 @@ $emprestimosAtivos = array_flip($stmt->fetchAll(PDO::FETCH_COLUMN));
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/LibraFlow/tela_Admin/arquivos/darkmode-btn.css">
     <title>Catálogo | LibraFlow</title>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
     <style>
@@ -194,6 +195,219 @@ $emprestimosAtivos = array_flip($stmt->fetchAll(PDO::FETCH_COLUMN));
             color: #888;
             font-family: 'Source Sans 3', sans-serif;
         }
+
+        /* ==================== RESPONSIVIDADE ==================== */
+        @media (max-width: 1024px) {
+            .filtro-categorias {
+                padding: 0 2rem;
+            }
+
+            .grid-livros {
+                grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+                padding: 2rem 2rem 4rem;
+            }
+
+            .capa-livro,
+            .sem-capa {
+                height: 20rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .filtro-categorias {
+                padding: 0 1.5rem;
+                gap: 0.8rem;
+            }
+
+            .filtro-categorias a {
+                padding: 0.5rem 1.2rem;
+                font-size: 1.2rem;
+            }
+
+            .grid-livros {
+                grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+                padding: 1.5rem 1.5rem 3rem;
+                gap: 1.5rem;
+            }
+
+            .capa-livro,
+            .sem-capa {
+                height: 18rem;
+            }
+
+            .card-livro {
+                border-radius: 1rem;
+            }
+
+            .info-livro {
+                padding: 1.2rem;
+            }
+
+            .titulo-livro {
+                font-size: 1.3rem;
+            }
+
+            .autor-livro {
+                font-size: 1.1rem;
+            }
+
+            .card-botoes {
+                padding: 0 1.2rem 1.2rem;
+            }
+
+            .total-resultados {
+                padding: 0 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .filtro-categorias {
+                padding: 0 1rem;
+                gap: 0.5rem;
+            }
+
+            .filtro-categorias a {
+                padding: 0.4rem 1rem;
+                font-size: 1.1rem;
+            }
+
+            .grid-livros {
+                grid-template-columns: 1fr;
+                padding: 1rem 1rem 2rem;
+                gap: 1rem;
+            }
+
+            .capa-livro,
+            .sem-capa {
+                height: 16rem;
+            }
+
+            .sem-capa {
+                font-size: 4rem;
+            }
+
+            .info-livro {
+                padding: 1rem;
+            }
+
+            .titulo-livro {
+                font-size: 1.2rem;
+            }
+
+            .autor-livro {
+                font-size: 1rem;
+            }
+
+            .disponibilidade {
+                font-size: 1rem;
+            }
+
+            .card-botoes {
+                flex-direction: column;
+                padding: 0 1rem 1rem;
+            }
+
+            .card-botoes button {
+                width: 100%;
+            }
+
+            .total-resultados {
+                padding: 0 1rem;
+                font-size: 1.1rem;
+            }
+        }
+
+        /* ==================== DARK MODE ==================== */
+        body.dark {
+            background: #1C2410;
+            color: #D4E8B0;
+        }
+
+        body.dark nav {
+            background: #1C2410;
+        }
+
+        body.dark .text-header h1,
+        body.dark .text-header p {
+            color: #D4E8B0;
+        }
+
+        body.dark .text-header p {
+            color: #A8C97F;
+        }
+
+        body.dark input {
+            background: #243015;
+            border-color: #3A4E1E;
+            color: #D4E8B0;
+        }
+
+        body.dark button {
+            background: #3A4E1E;
+            color: #D4E8B0;
+        }
+
+        body.dark button:hover {
+            background: #4A6020;
+        }
+
+        body.dark .links-nav a,
+        body.dark nav a {
+            color: #A8C97F;
+        }
+
+        body.dark .filtro-categorias a {
+            border-color: #3A4E1E;
+            color: #A8C97F;
+        }
+
+        body.dark .filtro-categorias a:hover,
+        body.dark .filtro-categorias a.ativo {
+            background: #3A4E1E;
+            color: #D4E8B0;
+        }
+
+        body.dark .card-livro {
+            background: #243015;
+        }
+
+        body.dark .capa-livro {
+            filter: brightness(0.9);
+        }
+
+        body.dark .sem-capa {
+            background: linear-gradient(135deg, #3a3060, #3A4E1E33);
+        }
+
+        body.dark .info-livro {
+            background: #243015;
+        }
+
+        body.dark .titulo-livro {
+            color: #D4E8B0;
+        }
+
+        body.dark .autor-livro {
+            color: #A8C97F;
+        }
+
+        body.dark .badge-categoria {
+            background: #3a3060;
+            color: #A8C97F;
+            border-color: #3A4E1E;
+        }
+
+        body.dark .disponivel {
+            color: #90EE90;
+        }
+
+        body.dark .indisponivel {
+            color: #FF6B6B;
+        }
+
+        body.dark .total-resultados {
+            color: #A8C97F;
+        }
     </style>
 </head>
 <body>
@@ -288,6 +502,15 @@ $emprestimosAtivos = array_flip($stmt->fetchAll(PDO::FETCH_COLUMN));
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
+
+        <!-- Botão Dark Mode -->
+        <button id="themeToggle" class="theme-toggle-float" aria-label="Alternar tema claro/escuro">
+            <span id="themeIcon">🌙</span>
+            <span id="themeLabel">Escuro</span>
+        </button>
     </main>
+
+    <script src="/LibraFlow/catalogo/darkmode.js"></script>
+</body>
 </body>
 </html>

@@ -83,6 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastrar Livro | LibraFlow Admin</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="darkmode-btn.css">
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -215,5 +216,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             reader.readAsDataURL(file);
         });
     </script>
+
+    <!-- Botão Dark Mode -->
+    <button id="themeToggle" class="theme-toggle-float" aria-label="Alternar tema claro/escuro">
+        <span id="themeIcon">🌙</span>
+        <span id="themeLabel">Escuro</span>
+    </button>
+
+    <script src="darkmode.js"></script>
 </body>
 </html>

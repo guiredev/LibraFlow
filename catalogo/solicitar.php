@@ -70,6 +70,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/LibraFlow/tela_Admin/arquivos/darkmode-btn.css">
     <title>Solicitar Empréstimo | LibraFlow</title>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
     <style>
@@ -126,6 +127,144 @@ try {
 
         .btn-principal { background: #DDA15E; color: #fff; }
         .btn-secundario { border: 2px solid #BC6C25; color: #BC6C25; }
+
+        /* ==================== RESPONSIVIDADE ==================== */
+        @media (max-width: 768px) {
+            .solicitar-container {
+                padding: 2rem;
+                max-width: 100%;
+            }
+
+            .livro-detalhes {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .livro-capa {
+                width: 100%;
+                max-width: 25rem;
+                height: auto;
+            }
+
+            .livro-info {
+                width: 100%;
+            }
+
+            .livro-info h1 {
+                font-size: 1.8rem;
+            }
+
+            .livro-info p {
+                font-size: 1.2rem;
+            }
+
+            .info-item {
+                font-size: 1.1rem;
+            }
+
+            .botoes-solicitar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn-principal,
+            .btn-secundario {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .solicitar-container {
+                padding: 1.5rem 1rem;
+            }
+
+            .livro-capa {
+                max-width: 20rem;
+            }
+
+            .livro-info h1 {
+                font-size: 1.5rem;
+            }
+
+            .livro-info p {
+                font-size: 1.1rem;
+            }
+
+            .info-item {
+                font-size: 1rem;
+            }
+
+            .btn-principal,
+            .btn-secundario {
+                padding: 0.8rem 1.5rem;
+                font-size: 1.2rem;
+            }
+        }
+
+        /* ==================== DARK MODE ==================== */
+        body.dark {
+            background: #1C2410;
+            color: #D4E8B0;
+        }
+
+        body.dark nav {
+            background: #1C2410;
+        }
+
+        body.dark .solicitar-container {
+            background: #243015;
+        }
+
+        body.dark .livro-info h1 {
+            color: #D4E8B0;
+        }
+
+        body.dark .livro-info p {
+            color: #A8C97F;
+        }
+
+        body.dark .info-item {
+            color: #A8C97F;
+        }
+
+        body.dark .info-item strong {
+            color: #D4E8B0;
+        }
+
+        body.dark .badge-categoria {
+            background: #2A3318;
+            color: #A8C97F;
+            border-color: #3A4E1E;
+        }
+
+        body.dark .btn-principal {
+            background: #3A4E1E;
+            color: #D4E8B0;
+        }
+
+        body.dark .btn-principal:hover {
+            background: #4A6020;
+        }
+
+        body.dark .btn-secundario {
+            border-color: #3A4E1E;
+            color: #A8C97F;
+        }
+
+        body.dark .btn-secundario:hover {
+            background: #3A4E1E;
+            color: #D4E8B0;
+        }
+
+        body.dark .links-nav a,
+        body.dark nav a {
+            color: #A8C97F;
+        }
+
+        body.dark .livro-capa {
+            filter: brightness(0.9);
+        }
     </style>
 </head>
 <body>
@@ -167,6 +306,15 @@ try {
                 <a href="meus_emprestimos.php" class="btn-principal">Ver meus empréstimos</a>
             </div>
         </section>
+
+        <!-- Botão Dark Mode -->
+        <button id="themeToggle" class="theme-toggle-float" aria-label="Alternar tema claro/escuro">
+            <span id="themeIcon">🌙</span>
+            <span id="themeLabel">Escuro</span>
+        </button>
     </main>
+
+    <script src="/LibraFlow/catalogo/darkmode.js"></script>
+</body>
 </body>
 </html>

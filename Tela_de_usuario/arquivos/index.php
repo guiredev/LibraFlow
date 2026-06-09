@@ -74,6 +74,7 @@ $statusInfo = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/LibraFlow/tela_Admin/arquivos/darkmode-btn.css">
     <title>Painel do Aluno | LibraFlow</title>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
 </head>
@@ -165,13 +166,12 @@ $statusInfo = [
         <p>&copy; 2024 LibraFlow. Todos os direitos reservados.</p>
     </footer>
 
-    <!-- Dark Mode Toggle -->
-    <div class="theme-toggle-wrapper">
-        <button id="themeToggle" class="theme-toggle-btn" aria-label="Alternar tema claro/escuro">
-            <span id="themeIcon">🌙</span>
-        </button>
-    </div>
+    <!-- Botão Dark Mode -->
+    <button id="themeToggle" class="theme-toggle-float" aria-label="Alternar tema claro/escuro">
+        <span id="themeIcon">🌙</span>
+        <span id="themeLabel">Escuro</span>
+    </button>
 
-    <script src="darkmode.js"></script>
+    <script src="/LibraFlow/Tela_de_usuario/arquivos/darkmode.js"></script>
 </body>
 </html>

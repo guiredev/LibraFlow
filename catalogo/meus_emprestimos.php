@@ -39,6 +39,7 @@ $statusInfo = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/LibraFlow/tela_Admin/arquivos/darkmode-btn.css">
     <title>Meus Empréstimos | LibraFlow</title>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
     <style>
@@ -113,12 +114,134 @@ $statusInfo = [
             .emprestimo-card { grid-template-columns: 6rem 1fr; }
             .status { grid-column: 1 / -1; width: fit-content; }
         }
+
+        @media (max-width: 480px) {
+            .meus-emprestimos {
+                padding: 1.5rem 1rem;
+                max-width: 100%;
+            }
+
+            .meus-emprestimos h2 {
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .vazio {
+                font-size: 1.2rem;
+                padding: 2rem 1rem;
+            }
+
+            .emprestimo-card {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto;
+                gap: 0.8rem;
+                padding: 1rem;
+            }
+
+            .livro-info h3 {
+                font-size: 1.1rem;
+            }
+
+            .livro-info p {
+                font-size: 1rem;
+            }
+
+            .data-info {
+                font-size: 0.9rem;
+            }
+
+            .status {
+                grid-column: 1;
+                grid-row: auto;
+                padding: 0.3rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .botoes-card {
+                grid-column: 1;
+            }
+
+            .btn-devolver {
+                padding: 0.6rem 1.2rem;
+                font-size: 1.1rem;
+            }
+        }
+
+        /* ==================== DARK MODE ==================== */
+        body.dark {
+            background: #1C2410;
+            color: #D4E8B0;
+        }
+
+        body.dark nav {
+            background: #1C2410;
+        }
+
+        body.dark .meus-emprestimos h2 {
+            color: #D4E8B0;
+        }
+
+        body.dark .emprestimo-card {
+            background: #243015;
+        }
+
+        body.dark .livro-info h3 {
+            color: #D4E8B0;
+        }
+
+        body.dark .livro-info p {
+            color: #A8C97F;
+        }
+
+        body.dark .data-info {
+            color: #A8C97F;
+        }
+
+        body.dark .status {
+            background: #2A3318;
+            color: #A8C97F;
+            border-color: #3A4E1E;
+        }
+
+        body.dark .status.ativo {
+            background: #1a4a1a;
+            color: #90EE90;
+            border-color: #2a6a2a;
+        }
+
+        body.dark .status.vencido {
+            background: #1a4a1a;
+            color: #FF6B6B;
+            border-color: #2a6a2a;
+        }
+
+        body.dark .btn-devolver {
+            background: #3A4E1E;
+            color: #D4E8B0;
+        }
+
+        body.dark .btn-devolver:hover {
+            background: #4A6020;
+        }
+
+        body.dark .vazio {
+            color: #A8C97F;
+        }
+
+        body.dark .total-resultados {
+            color: #A8C97F;
+        }
+
+        body.dark .links-nav a,
+        body.dark nav a {
+            color: #A8C97F;
+        }
     </style>
 </head>
 <body>
     <nav>
         <div class="logo-nav">
-            <img src="" alt="Logo LibraFlow">
+            <img src="/LibraFlow/assets/logo.png" alt="Logo LibraFlow">
         </div>
         <div class="links-nav">
             <ul>
@@ -172,6 +295,16 @@ $statusInfo = [
                 </article>
             <?php endforeach; ?>
         <?php endif; ?>
+
+        <!-- Botão Dark Mode -->
+        <button id="themeToggle" class="theme-toggle-float" aria-label="Alternar tema claro/escuro">
+            <span id="themeIcon">🌙</span>
+            <span id="themeLabel">Escuro</span>
+        </button>
+    </main>
+
+    <script src="/LibraFlow/catalogo/darkmode.js"></script>
+</body>
     </main>
 </body>
 </html>
