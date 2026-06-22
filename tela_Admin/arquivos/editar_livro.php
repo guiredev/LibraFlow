@@ -192,6 +192,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         </div>
     </main>
+
+    <div class="theme-toggle-wrapper">
+        <button id="themeToggle" class="theme-toggle-btn" aria-label="Alternar tema claro/escuro">
+            <span id="themeIcon">🌙</span>
+        </button>
+    </div>
+
     <script>
         document.getElementById('inputCapa').addEventListener('change', function () {
             const file = this.files[0];
@@ -205,5 +212,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             reader.readAsDataURL(file);
         });
     </script>
+    <script src="darkmode.js"></script>
 </body>
 </html>

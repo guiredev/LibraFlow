@@ -243,5 +243,13 @@ $statusInfo = [
             <?php endif; ?>
         </div>
     </main>
+
+    <div class="theme-toggle-wrapper">
+        <button id="themeToggle" class="theme-toggle-btn" aria-label="Alternar tema claro/escuro">
+            <span id="themeIcon">🌙</span>
+        </button>
+    </div>
+
+    <script src="darkmode.js"></script>
 </body>
 </html>
