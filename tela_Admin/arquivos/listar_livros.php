@@ -5,6 +5,19 @@ require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/cadastros_e_logins/configs/auth_
 if ($_SESSION['usuario_tipo'] !== 'D') { header('Location: /LibraFlow/Tela_de_usuario/arquivos/index.html'); exit; }
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/cadastros_e_logins/configs/conexao.php';
 
+// Endpoint AJAX para carregar livros
+if (isset($_GET['ajax'])) {
+    header('Content-Type: application/json');
+    $stmt = $conn->query("
+        SELECT id, titulo, autor, quantidade
+        FROM livros
+        WHERE quantidade > 0
+        ORDER BY titulo ASC
+    ");
+    echo json_encode($stmt->fetchAll());
+    exit;
+}
+
 // Excluir
 if (isset($_GET['excluir'])) {
     $id = intval($_GET['excluir']);
@@ -42,6 +55,7 @@ $categorias = $conn->query("SELECT id, nome FROM categorias ORDER BY nome")->fet
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Livros | LibraFlow Admin</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="darkmode-btn.css">
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -53,6 +67,7 @@ $categorias = $conn->query("SELECT id, nome FROM categorias ORDER BY nome")->fet
             <li><a href="cadastrar_livro.php">➕ Cadastrar Livro</a></li>
             <li><a href="usuarios.php">👥 Usuários</a></li>
             <li><a href="emprestimos.php">📋 Empréstimos</a></li>
+            <li><a href="/LibraFlow/relatorios/index.php">📈 Relatórios</a></li>
             <li><a href="visitas.php">Visitas</a></li>
             <div class="sidebar-down">
                 <li><a href="/LibraFlow/cadastros_e_logins/logout/logout.php">🚪 Sair</a></li>
@@ -139,11 +154,11 @@ $categorias = $conn->query("SELECT id, nome FROM categorias ORDER BY nome")->fet
         </div>
     </main>
 
-    <div class="theme-toggle-wrapper">
-        <button id="themeToggle" class="theme-toggle-btn" aria-label="Alternar tema claro/escuro">
-            <span id="themeIcon">🌙</span>
-        </button>
-    </div>
+    <!-- Botão Dark Mode -->
+    <button id="themeToggle" class="theme-toggle-float" aria-label="Alternar tema claro/escuro">
+        <span id="themeIcon">🌙</span>
+        <span id="themeLabel">Escuro</span>
+    </button>
 
     <script src="darkmode.js"></script>
 </body>

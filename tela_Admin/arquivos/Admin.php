@@ -40,6 +40,7 @@ $historico = $conn->query("
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Administrativo | LibraFlow</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="darkmode-btn.css">
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -53,8 +54,8 @@ $historico = $conn->query("
             <li><a href="cadastrar_livro.php">➕ Cadastrar Livro</a></li>
             <li><a href="usuarios.php">👥 Usuários</a></li>
             <li><a href="emprestimos.php">📋 Empréstimos</a></li>
-            <li><a href="visitas.php">🕒 Visitas</a></li>
-            <li><a href="relatorios.php">📝 Relatórios</a></li>
+            <li><a href="/LibraFlow/relatorios/index.php">📈 Relatórios</a></li>
+            <li><a href="visitas.php">Visitas</a></li>
             <div class="sidebar-down">
                 <li><a href="/LibraFlow/cadastros_e_logins/logout/logout.php">🚪 Sair</a></li>
             </div>
@@ -134,12 +135,11 @@ $historico = $conn->query("
         </section>
     </main>
 
-    <!-- Dark Mode Toggle -->
-    <div class="theme-toggle-wrapper">
-        <button id="themeToggle" class="theme-toggle-btn" aria-label="Alternar tema claro/escuro">
-            <span id="themeIcon">🌙</span>
-        </button>
-    </div>
+    <!-- Botão Dark Mode -->
+    <button id="themeToggle" class="theme-toggle-float" aria-label="Alternar tema claro/escuro">
+        <span id="themeIcon">🌙</span>
+        <span id="themeLabel">Escuro</span>
+    </button>
 
     <script src="darkmode.js"></script>
 </body>

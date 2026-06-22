@@ -707,3 +707,39 @@ textarea:focus-visible {
     outline: 2px solid var(--text-link);
     outline-offset: 2px;
 }
+
+/* ==================== Filtro Header ==================== */
+.filtro-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.btn-novo-emprestimo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: var(--btn-primary);
+    color: var(--btn-primary-text);
+    padding: 0.8rem 1.5rem;
+    border-radius: 0.8rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.4rem;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+    white-space: nowrap;
+}
+
+.btn-novo-emprestimo:hover {
+    background: var(--btn-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-novo-emprestimo svg {
+    flex-shrink: 0;
+}

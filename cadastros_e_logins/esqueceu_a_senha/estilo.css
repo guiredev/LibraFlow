@@ -129,13 +129,32 @@ form {
         font-size: 56.25%;
     }
 
+    body {
+        height: auto;
+        min-height: 100vh;
+    }
+
     nav {
+        flex-direction: column;
+        gap: 2rem;
         padding: 2rem;
+        text-align: center;
+    }
+
+    .links-nav a {
+        margin: 0 0.5rem;
+        font-size: 1.3rem;
     }
 
     .inputs {
         padding: 2rem;
-        margin: 2rem;
+        margin: 2rem 1rem;
+        width: 95%;
+    }
+
+    h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
     }
 
     input[type="email"],
@@ -147,5 +166,160 @@ form {
     input[type="submit"] {
         width: 100%;
         max-width: 15rem;
+    }
+}
+
+@media (max-width: 480px) {
+    nav {
+        padding: 1.5rem;
+    }
+
+    .inputs {
+        padding: 1.5rem;
+        margin: 1.5rem 1rem;
+        border-radius: 0.8rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    label {
+        font-size: 1.1rem;
+    }
+
+    input[type="email"],
+    input[type="text"] {
+        height: 2.5rem;
+        font-size: 1.1rem;
+    }
+
+    input[type="submit"] {
+        height: 3rem;
+        font-size: 1.3rem;
+    }
+
+    .inputs a {
+        font-size: 1.1rem;
+    }
+}
+
+/* ==================== DARK MODE ==================== */
+body.dark {
+    background: #1C2410;
+    color: #D4E8B0;
+}
+
+body.dark nav {
+    background: #243015;
+}
+
+body.dark .inputs {
+    background: #243015;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+body.dark h2 {
+    color: #D4E8B0;
+}
+
+body.dark label {
+    color: #A8C97F;
+}
+
+body.dark input[type="email"],
+body.dark input[type="text"] {
+    background: #2A3318;
+    border-color: #3A4E1E;
+    color: #A8C97F;
+}
+
+body.dark input[type="submit"] {
+    background: #4A6020;
+    color: #D4E8B0;
+}
+
+body.dark input[type="submit"]:hover {
+    background: #3A4E1E;
+}
+
+body.dark .inputs a {
+    color: #A8C97F;
+}
+
+body.dark .links-nav a {
+    color: #A8C97F;
+}
+
+body.dark .voltar {
+    background: #2A3318;
+    color: #A8C97F;
+    border-color: #3A4E1E;
+}
+
+body.dark .voltar:hover {
+    background: #3A4E1E;
+    color: #D4E8B0;
+}
+
+/* ==================== BOTÃO DARK MODE ==================== */
+.theme-btn-wrapper {
+    position: fixed;
+    bottom: 1rem;
+    right: 4rem;
+    width: 5.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.theme-btn {
+    width: 5rem;
+    height: 5rem;
+    background: #DDA15E;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+    transition: background 0.4s ease;
+}
+
+.theme-btn:active {
+    transform: scale(0.95);
+}
+
+#themeLabel {
+    font-size: 1.3rem;
+    color: #606C38;
+    font-weight: 600;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: color 0.4s;
+}
+
+body.dark .theme-btn {
+    background: #3A4E1E;
+}
+
+body.dark #themeLabel {
+    color: #A8C97F;
+}
+
+@media (max-width: 768px) {
+    .theme-btn-wrapper {
+        bottom: 1.5rem;
+        right: 1.5rem;
+    }
+
+    .theme-btn {
+        width: 4.5rem;
+        height: 4.5rem;
+        font-size: 1.8rem;
+    }
+
+    #themeLabel {
+        font-size: 1.1rem;
     }
 }

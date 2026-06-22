@@ -35,6 +35,7 @@ $jaEmprestado = (bool) $stmt->fetch();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/LibraFlow/tela_Admin/arquivos/darkmode-btn.css">
     <title><?= htmlspecialchars($livro['titulo']) ?> | LibraFlow</title>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
     <style>
@@ -187,6 +188,185 @@ $jaEmprestado = (bool) $stmt->fetch();
         }
 
         .btn-voltar:hover { background: #BC6C25; color: #fff; }
+
+        /* ==================== RESPONSIVIDADE ==================== */
+        @media (max-width: 1024px) {
+            .livro-container {
+                padding: 3rem;
+                max-width: 45rem;
+            }
+
+            .livro-capa {
+                width: 18rem;
+                height: 24rem;
+            }
+
+            .livro-info h1 {
+                font-size: 2rem;
+            }
+
+            .livro-info p {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .livro-container {
+                flex-direction: column;
+                padding: 2rem;
+                max-width: 100%;
+            }
+
+            .livro-capa {
+                width: 100%;
+                max-width: 25rem;
+                height: 20rem;
+                margin-right: 0;
+                margin-bottom: 2rem;
+            }
+
+            .livro-info {
+                width: 100%;
+            }
+
+            .livro-info h1 {
+                font-size: 1.8rem;
+                margin-bottom: 1rem;
+            }
+
+            .livro-info p {
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+            }
+
+            .badge-categoria {
+                font-size: 1rem;
+                padding: 0.3rem 0.8rem;
+            }
+
+            .botoes-acoes {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn-solicitar,
+            .btn-voltar {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .livro-container {
+                padding: 1.5rem;
+            }
+
+            .livro-capa {
+                max-width: 20rem;
+                height: 18rem;
+            }
+
+            .livro-info h1 {
+                font-size: 1.5rem;
+            }
+
+            .livro-info p {
+                font-size: 1.1rem;
+            }
+
+            .badge-categoria {
+                font-size: 0.9rem;
+                padding: 0.2rem 0.6rem;
+            }
+
+            .btn-solicitar,
+            .btn-voltar {
+                padding: 0.8rem 1.5rem;
+                font-size: 1.3rem;
+            }
+        }
+
+        /* ==================== DARK MODE ==================== */
+        body.dark {
+            background: #1C2410;
+            color: #D4E8B0;
+        }
+
+        body.dark nav {
+            background: #1C2410;
+        }
+
+        body.dark .livro-container {
+            background: #243015;
+        }
+
+        body.dark .livro-info h1 {
+            color: #D4E8B0;
+        }
+
+        body.dark .livro-info p {
+            color: #A8C97F;
+        }
+
+        body.dark .badge-categoria {
+            background: #2A3318;
+            color: #A8C97F;
+            border-color: #3A4E1E;
+        }
+
+        body.dark .info-item {
+            color: #A8C97F;
+        }
+
+        body.dark .info-item strong {
+            color: #D4E8B0;
+        }
+
+        body.dark .disponivel {
+            color: #90EE90;
+        }
+
+        body.dark .indisponivel {
+            color: #FF6B6B;
+        }
+
+        body.dark .btn-solicitar {
+            background: #3A4E1E;
+            color: #D4E8B0;
+        }
+
+        body.dark .btn-solicitar:hover {
+            background: #4A6020;
+        }
+
+        body.dark .btn-solicitar.desabilitado {
+            background: #2A3318;
+            color: #4A6020;
+        }
+
+        body.dark .btn-voltar {
+            border-color: #3A4E1E;
+            color: #A8C97F;
+        }
+
+        body.dark .btn-voltar:hover {
+            background: #3A4E1E;
+            color: #D4E8B0;
+        }
+
+        body.dark .links-nav a,
+        body.dark nav a {
+            color: #A8C97F;
+        }
+
+        body.dark .capa-livro,
+        body.dark .sem-capa {
+            filter: brightness(0.9);
+        }
+
+        body.dark .sem-capa {
+            background: linear-gradient(135deg, #2A3318, #3A4E1E33);
+        }
     </style>
 </head>
 <body>
@@ -259,6 +439,15 @@ $jaEmprestado = (bool) $stmt->fetch();
                 </a>
             </div>
         </div>
+
+        <!-- Botão Dark Mode -->
+        <button id="themeToggle" class="theme-toggle-float" aria-label="Alternar tema claro/escuro">
+            <span id="themeIcon">🌙</span>
+            <span id="themeLabel">Escuro</span>
+        </button>
     </div>
+
+    <script src="/LibraFlow/catalogo/darkmode.js"></script>
+</body>
 </body>
 </html>

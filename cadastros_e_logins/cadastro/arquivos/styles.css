@@ -223,15 +223,241 @@ span {
 /* Aplicado no body, não no .page */
 
 body.dark {
-    background: #1a1a2e;
-    color: #e8e8f0;
+    background: #1C2410;
+    color: #D4E8B0;
+}
+
+body.dark .text-main h1,
+body.dark .text-main p,
+body.dark .form-main h2 {
+    color: #D4E8B0;
+}
+
+body.dark .text-main p {
+    color: #A8C97F;
+}
+
+body.dark input {
+    background: #243015;
+    border-color: #3A4E1E;
+    color: #D4E8B0;
+}
+
+body.dark button {
+    background: #4A6020;
+    color: #D4E8B0;
+}
+
+body.dark button:hover {
+    background: #3A4E1E;
+}
+
+body.dark .others-forms a,
+body.dark span>a {
+    color: #A8C97F;
+}
+
+body.dark .links-nav-login a {
+    color: #A8C97F;
+}
+
+body.dark .login.btn button {
+    background: #4A6020;
+    color: #D4E8B0;
+}
+
+body.dark .login.btn button:hover {
+    background: #3A4E1E;
+}
+
+body.dark .img-main img {
+    filter: brightness(0.8) contrast(1.1);
 }
 
 body.dark .theme-btn {
-    background: #2a2550;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+    background: #4A6020;
+}
+
+body.dark .theme-btn:hover {
+    background: #3A4E1E;
 }
 
 body.dark #themeLabel {
-    color: #b0aaff;
+    color: #A8C97F;
+}
+
+/* ==================== RESPONSIVIDADE ==================== */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    nav {
+        padding: 3rem;
+    }
+
+    main {
+        padding: 0 4rem;
+    }
+
+    .text-main h1 {
+        font-size: 3.5rem;
+    }
+
+    .text-main p {
+        font-size: 1.3rem;
+        line-height: 2.5rem;
+    }
+
+    .img-main img {
+        width: 70%;
+    }
+
+    input {
+        width: 22rem;
+    }
+
+    button {
+        width: 13rem;
+    }
+
+    .theme-btn-wrapper {
+        right: 3rem;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    body {
+        height: auto;
+        min-height: 100vh;
+    }
+
+    nav {
+        flex-direction: column;
+        gap: 2rem;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .links-nav-login li {
+        display: block;
+        margin: 0.5rem 0;
+    }
+
+    .links-nav-login a {
+        margin: 0;
+    }
+
+    main {
+        flex-direction: column;
+        height: auto;
+        padding: 2rem 1.5rem;
+        gap: 3rem;
+    }
+
+    .text-main,
+    .form-main {
+        width: 100%;
+        height: auto;
+        align-items: center;
+        text-align: center;
+    }
+
+    .text-main h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .text-main p {
+        font-size: 1.2rem;
+        line-height: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .img-main {
+        display: none;
+    }
+
+    .form-main h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    input {
+        width: 100%;
+        max-width: 25rem;
+    }
+
+    button {
+        width: 100%;
+        max-width: 20rem;
+    }
+
+    .others-forms {
+        text-align: center;
+    }
+
+    span>a {
+        display: block;
+        margin: 0.5rem 0;
+    }
+
+    .theme-btn-wrapper {
+        bottom: 1.5rem;
+        right: 1.5rem;
+    }
+
+    .theme-btn {
+        width: 4.5rem;
+        height: 4.5rem;
+        font-size: 1.8rem;
+    }
+
+    #themeLabel {
+        font-size: 1.1rem;
+    }
+}
+
+/* Mobile Pequeno */
+@media (max-width: 480px) {
+    nav {
+        padding: 1.5rem;
+    }
+
+    main {
+        padding: 1.5rem 1rem;
+    }
+
+    .text-main h1 {
+        font-size: 2rem;
+    }
+
+    .text-main p {
+        font-size: 1.1rem;
+        line-height: 1.8rem;
+    }
+
+    .form-main h2 {
+        font-size: 1.5rem;
+    }
+
+    input {
+        height: 2.5rem;
+        font-size: 1.1rem;
+    }
+
+    button {
+        height: 3rem;
+        font-size: 1.3rem;
+    }
+
+    .theme-btn-wrapper {
+        bottom: 1rem;
+        right: 1rem;
+    }
+
+    .theme-btn {
+        width: 4rem;
+        height: 4rem;
+        font-size: 1.5rem;
+    }
 }
