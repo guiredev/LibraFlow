@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../cadastros_e_logins/configs/auth_check.php';
-require_once __DIR__ . '/../cadastros_e_logins/configs/conexao.php';
+require_once __DIR__ . '/../../../cadastros_e_logins/configs/auth_check.php';
+require_once __DIR__ . '/../../../cadastros_e_logins/configs/conexao.php';
 require_once __DIR__ . '/RelatorioService.php';
 
 // Apenas admin pode acessar
@@ -19,6 +19,7 @@ $resumo = $servico->resumoGeral();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatórios — LibraFlow</title>
+    <link rel="stylesheet" href="/LibraFlow/tela_Admin/arquivos/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -275,12 +276,12 @@ $resumo = $servico->resumoGeral();
             <span>LibraFlow</span>
         </div>
         <ul>
-            <li><a href="/LibraFlow/tela_Admin/arquivos/Admin.php" class="ativo">🏠 Início</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/Admin.php">🏠 Início</a></li>
             <li><a href="/LibraFlow/tela_Admin/arquivos/listar_livros.php">📚 Livros</a></li>
             <li><a href="/LibraFlow/tela_Admin/arquivos/cadastrar_livro.php">➕ Cadastrar Livro</a></li>
             <li><a href="/LibraFlow/tela_Admin/arquivos/usuarios.php">👥 Usuários</a></li>
             <li><a href="/LibraFlow/tela_Admin/arquivos/emprestimos.php">📋 Empréstimos</a></li>
-            <li><a href="/LibraFlow/relatorios/index.php">📈 Relatórios</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/relatorios/index.php" class="ativo">📈 Relatórios</a></li>
             <li><a href="/LibraFlow/tela_Admin/arquivos/visitas.php">Visitas</a></li>
             <div class="sidebar-down">
                 <li><a href="/LibraFlow/cadastros_e_logins/logout/logout.php">🚪 Sair</a></li>

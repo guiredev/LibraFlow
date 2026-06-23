@@ -411,7 +411,7 @@ $totalUsuarios = count($usuarios);
             <li><a href="/LibraFlow/tela_Admin/arquivos/cadastrar_livro.php">Cadastrar Livro</a></li>
             <li><a href="/LibraFlow/tela_Admin/arquivos/usuarios.php" class="ativo">Usuarios</a></li>
             <li><a href="/LibraFlow/tela_Admin/arquivos/emprestimos.php">Emprestimos</a></li>
-            <li><a href="/LibraFlow/relatorios/index.php">📈 Relatórios</a></li>
+            <li><a href="relatorios/index.php">📈 Relatórios</a></li>
             <li><a href="/LibraFlow/tela_Admin/arquivos/visitas.php">Visitas</a></li>
             <div class="sidebar-down">
                 <li><a href="/LibraFlow/cadastros_e_logins/logout/logout.php">Sair</a></li>

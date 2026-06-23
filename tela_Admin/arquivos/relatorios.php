@@ -444,7 +444,7 @@ require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/tela_Admin/arquivos/conexao.php'
         const fim = document.getElementById('data_fim').value;
         if (!ini || !fim) { alert('Selecione o período antes de gerar o relatório.'); return; }
         mostrarToast('⏳ Gerando relatório...');
-        const url = `gerar_relatorio.php?tipo=${tipo}&formato=${formato}&inicio=${ini}&fim=${fim}`;
+        const url = `../relatorios/gerar_relatorio.php?tipo=${tipo}&formato=${formato}&inicio=${ini}&fim=${fim}`;
         window.open(url, '_blank');
     }
 
@@ -455,7 +455,7 @@ require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/tela_Admin/arquivos/conexao.php'
         const fim = document.getElementById('data_fim').value;
         if (!ini || !fim) { alert('Selecione o período antes de gerar o relatório.'); return; }
         mostrarToast('⏳ Gerando relatório...');
-        const url = `gerar_relatorio.php?tipo=historico_aluno&formato=${formato}&inicio=${ini}&fim=${fim}&aluno_id=${aluno_id}`;
+        const url = `../relatorios/gerar_relatorio.php?tipo=historico_aluno&formato=${formato}&inicio=${ini}&fim=${fim}&aluno_id=${aluno_id}`;
         window.open(url, '_blank');
     }
 

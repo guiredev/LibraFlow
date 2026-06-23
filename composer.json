@@ -1,7 +1,13 @@
 {
     "require": {
         "phpmailer/phpmailer": "^7.1",
-        "dompdf/dompdf": "^3.1",
-        "phpoffice/phpspreadsheet": "^5.8"
+        "tecnickcom/tcpdf": "^6.7",
+        "phpoffice/phpspreadsheet": "1.29.0"
+    },
+    "config": {
+        "allow-plugins": true,
+        "audit": {
+            "abandoned": "report"
+        }
     }
 }
