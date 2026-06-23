@@ -270,17 +270,23 @@ $resumo = $servico->resumoGeral();
 </head>
 <body>
 
-<aside class="sidebar">
-    <div class="sidebar-logo">Libra<span>Flow</span></div>
-    <nav class="sidebar-nav">
-        <a href="../Admin.html"><i class="fas fa-gauge-high"></i> Dashboard</a>
-        <a href="../arquivos/cadastrar_livro.php"><i class="fas fa-book-medical"></i> Cadastrar Livro</a>
-        <a href="../arquivos/listar_livros.php"><i class="fas fa-books"></i> Gerenciar Livros</a>
-        <a href="../arquivos/solicitacoes.php"><i class="fas fa-inbox"></i> Solicitações</a>
-        <a href="index.php" class="ativo"><i class="fas fa-chart-column"></i> Relatórios</a>
-        <a href="../../cadastros_e_logins/logout/logout.php"><i class="fas fa-right-from-bracket"></i> Sair</a>
-    </nav>
-</aside>
+<aside>
+        <div class="logo-aside">
+            <span>LibraFlow</span>
+        </div>
+        <ul>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/Admin.php" class="ativo">🏠 Início</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/listar_livros.php">📚 Livros</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/cadastrar_livro.php">➕ Cadastrar Livro</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/usuarios.php">👥 Usuários</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/emprestimos.php">📋 Empréstimos</a></li>
+            <li><a href="/LibraFlow/relatorios/index.php">📈 Relatórios</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/visitas.php">Visitas</a></li>
+            <div class="sidebar-down">
+                <li><a href="/LibraFlow/cadastros_e_logins/logout/logout.php">🚪 Sair</a></li>
+            </div>
+        </ul>
+    </aside>
 
 <main class="main">
     <div class="page-header">

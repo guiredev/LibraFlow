@@ -178,13 +178,13 @@ try {
     <aside>
         <div class="logo-aside"><span>LibraFlow</span></div>
         <ul>
-            <li><a href="Admin.php">Inicio</a></li>
-            <li><a href="listar_livros.php">Livros</a></li>
-            <li><a href="cadastrar_livro.php">Cadastrar Livro</a></li>
-            <li><a href="usuarios.php">Usuarios</a></li>
-            <li><a href="emprestimos.php">Emprestimos</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/Admin.php">Inicio</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/listar_livros.php">Livros</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/cadastrar_livro.php">Cadastrar Livro</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/usuarios.php">Usuarios</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/emprestimos.php">Emprestimos</a></li>
             <li><a href="/LibraFlow/relatorios/index.php">📈 Relatórios</a></li>
-            <li><a href="visitas.php" class="ativo">Visitas</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/visitas.php" class="ativo">Visitas</a></li>
             <div class="sidebar-down">
                 <li><a href="/LibraFlow/cadastros_e_logins/logout/logout.php">Sair</a></li>
             </div>
@@ -291,3 +291,4 @@ try {
     <script src="darkmode.js"></script>
 </body>
 </html>
+

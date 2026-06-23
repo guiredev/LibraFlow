@@ -54,7 +54,7 @@ $historico = $conn->query("
             <li><a href="cadastrar_livro.php">➕ Cadastrar Livro</a></li>
             <li><a href="usuarios.php">👥 Usuários</a></li>
             <li><a href="emprestimos.php">📋 Empréstimos</a></li>
-            <li><a href="/LibraFlow/relatorios/index.php">📈 Relatórios</a></li>
+            <li><a href="relatorios.php" class="ativo">📈 Relatórios</a></li>
             <li><a href="visitas.php">Visitas</a></li>
             <div class="sidebar-down">
                 <li><a href="/LibraFlow/cadastros_e_logins/logout/logout.php">🚪 Sair</a></li>
@@ -144,3 +144,4 @@ $historico = $conn->query("
     <script src="darkmode.js"></script>
 </body>
 </html>
+

@@ -2,7 +2,7 @@
 $host = "localhost";
 $usuario = "root";
 $senha = "";
-$banco = "libra_flow";
+$banco = "libraflow";
 
 $conn = mysqli_connect($host, $usuario, $senha, $banco);
 

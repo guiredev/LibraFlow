@@ -1,6 +1,6 @@
 <?php
-require_once '../../configs/auth_check.php';
-require_once 'conexao.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/cadastros_e_logins/configs/auth_check.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/tela_Admin/arquivos/conexao.php';
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -12,12 +12,6 @@ require_once 'conexao.php';
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #f0f4f8;
-            color: #1a202c;
-        }
-
         .page-header {
             background: linear-gradient(135deg, #1e3a5f 0%, #2d6a4f 100%);
             color: white;
@@ -25,6 +19,8 @@ require_once 'conexao.php';
             display: flex;
             align-items: center;
             gap: 16px;
+            border-radius: 12px;
+            margin-bottom: 28px;
         }
 
         .page-header .icon { font-size: 2.2rem; }
@@ -43,8 +39,6 @@ require_once 'conexao.php';
 
         .container {
             max-width: 1100px;
-            margin: 0 auto;
-            padding: 40px 24px;
         }
 
         /* --- Filtro de período --- */
@@ -282,164 +276,197 @@ require_once 'conexao.php';
     </style>
 </head>
 <body>
+    <aside>
+        <div class="logo-aside"><span>LibraFlow</span></div>
+        <ul>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/Admin.php">🏠 Início</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/listar_livros.php">📚 Livros</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/cadastrar_livro.php">➕ Cadastrar Livro</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/usuarios.php">👥 Usuários</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/emprestimos.php">📋 Empréstimos</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/visitas.php">🕒 Visitas</a></li>
+            <li><a href="/LibraFlow/relatorios/index.php" class="ativo">📈 Relatórios</a></li>
+            <div class="sidebar-down">
+                <li><a href="/LibraFlow/cadastros_e_logins/logout/logout.php">🚪 Sair</a></li>
+            </div>
+        </ul>
+    </aside>
 
-<div class="page-header">
-    <span class="icon">📊</span>
-    <div>
-        <h1>Central de Relatórios</h1>
-        <p>Gere e baixe relatórios da biblioteca em PDF ou Excel</p>
+    <nav>
+        <div class="logo-nav">
+            <span style="font-family:'Lora',serif;font-size:2rem;color:#283618;">Relatórios</span>
+        </div>
+        <div class="right">
+            <div class="user" style="font-size:1.4rem;color:#606C38;font-family:'Source Sans 3',sans-serif;">
+                👤 <?= htmlspecialchars($_SESSION['usuario_nome']) ?>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+
+    <div class="page-header">
+        <span class="icon">📊</span>
+        <div>
+            <h1>Central de Relatórios</h1>
+            <p>Gere e baixe relatórios da biblioteca em PDF ou Excel</p>
+        </div>
     </div>
-</div>
 
-<div class="container">
+    <div class="container">
 
-    <!-- Filtro de Período -->
-    <div class="filtro-card">
-        <h2>🗓️ Período dos relatórios</h2>
-        <div class="campo-grupo">
-            <label>Data início</label>
-            <input type="date" id="data_inicio" value="<?= date('Y-m-01') ?>">
+        <!-- Filtro de Período -->
+        <div class="filtro-card">
+            <h2>🗓️ Período dos relatórios</h2>
+            <div class="campo-grupo">
+                <label>Data início</label>
+                <input type="date" id="data_inicio" value="<?= date('Y-m-01') ?>">
+            </div>
+            <div class="campo-grupo">
+                <label>Data fim</label>
+                <input type="date" id="data_fim" value="<?= date('Y-m-d') ?>">
+            </div>
+            <button class="btn-aplicar" onclick="validarPeriodo()">✔ Aplicar período</button>
         </div>
-        <div class="campo-grupo">
-            <label>Data fim</label>
-            <input type="date" id="data_fim" value="<?= date('Y-m-d') ?>">
+
+        <!-- Grid de Relatórios -->
+        <p class="secao-titulo">Relatórios disponíveis</p>
+        <div class="relatorios-grid">
+
+            <!-- 1. Empréstimos vencidos -->
+            <div class="relatorio-card cor-vermelho">
+                <div class="card-topo">
+                    <div class="card-icone">⏰</div>
+                    <div class="card-info">
+                        <h3>Empréstimos Vencidos</h3>
+                        <p>Alunos com livros atrasados e dias de atraso</p>
+                    </div>
+                </div>
+                <div class="card-acoes">
+                    <button class="btn-gerar btn-pdf" onclick="gerar('vencidos','pdf')">📄 PDF</button>
+                    <button class="btn-gerar btn-excel" onclick="gerar('vencidos','excel')">📊 Excel</button>
+                </div>
+            </div>
+
+            <!-- 2. Empréstimos do período -->
+            <div class="relatorio-card cor-azul">
+                <div class="card-topo">
+                    <div class="card-icone">📅</div>
+                    <div class="card-info">
+                        <h3>Empréstimos no Período</h3>
+                        <p>Total de livros emprestados no período selecionado</p>
+                    </div>
+                </div>
+                <div class="card-acoes">
+                    <button class="btn-gerar btn-pdf" onclick="gerar('emprestimos_periodo','pdf')">📄 PDF</button>
+                    <button class="btn-gerar btn-excel" onclick="gerar('emprestimos_periodo','excel')">📊 Excel</button>
+                </div>
+            </div>
+
+            <!-- 3. Visitas à biblioteca -->
+            <div class="relatorio-card cor-verde">
+                <div class="card-topo">
+                    <div class="card-icone">🚪</div>
+                    <div class="card-info">
+                        <h3>Visitas à Biblioteca</h3>
+                        <p>Quantidade de visitas por dia no período</p>
+                    </div>
+                </div>
+                <div class="card-acoes">
+                    <button class="btn-gerar btn-pdf" onclick="gerar('visitas','pdf')">📄 PDF</button>
+                    <button class="btn-gerar btn-excel" onclick="gerar('visitas','excel')">📊 Excel</button>
+                </div>
+            </div>
+
+            <!-- 4. Livros mais populares -->
+            <div class="relatorio-card cor-laranja">
+                <div class="card-topo">
+                    <div class="card-icone">🏆</div>
+                    <div class="card-info">
+                        <h3>Livros Mais Populares</h3>
+                        <p>Ranking de livros por número de empréstimos</p>
+                    </div>
+                </div>
+                <div class="card-acoes">
+                    <button class="btn-gerar btn-pdf" onclick="gerar('populares','pdf')">📄 PDF</button>
+                    <button class="btn-gerar btn-excel" onclick="gerar('populares','excel')">📊 Excel</button>
+                </div>
+            </div>
+
+            <!-- 5. Histórico por aluno -->
+            <div class="relatorio-card cor-roxo">
+                <div class="card-topo">
+                    <div class="card-icone">👤</div>
+                    <div class="card-info">
+                        <h3>Histórico por Aluno</h3>
+                        <p>Todos os empréstimos de um aluno específico</p>
+                    </div>
+                </div>
+                <!-- Seletor de aluno -->
+                <div class="campo-aluno">
+                    <select id="select_aluno">
+                        <option value="">— Selecione o aluno —</option>
+                        <?php
+                        // CORRIGIDO: $conn (não $pdo) -- é a variável definida no seu conexao.php
+                        $stmt = $conn->query("SELECT id, nome FROM usuarios WHERE tipo = 'A' ORDER BY nome ASC");
+                        while ($row = $stmt->fetch()) {
+                            echo "<option value='{$row['id']}'>" . htmlspecialchars($row['nome']) . "</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="card-acoes">
+                    <button class="btn-gerar btn-pdf" onclick="gerarAluno('pdf')">📄 PDF</button>
+                    <button class="btn-gerar btn-excel" onclick="gerarAluno('excel')">📊 Excel</button>
+                </div>
+            </div>
+
         </div>
-        <button class="btn-aplicar" onclick="validarPeriodo()">✔ Aplicar período</button>
     </div>
 
-    <!-- Grid de Relatórios -->
-    <p class="secao-titulo">Relatórios disponíveis</p>
-    <div class="relatorios-grid">
+    <!-- Toast de feedback -->
+    <div class="toast" id="toast">⏳ Gerando relatório...</div>
 
-        <!-- 1. Empréstimos vencidos -->
-        <div class="relatorio-card cor-vermelho">
-            <div class="card-topo">
-                <div class="card-icone">⏰</div>
-                <div class="card-info">
-                    <h3>Empréstimos Vencidos</h3>
-                    <p>Alunos com livros atrasados e dias de atraso</p>
-                </div>
-            </div>
-            <div class="card-acoes">
-                <button class="btn-gerar btn-pdf" onclick="gerar('vencidos','pdf')">📄 PDF</button>
-                <button class="btn-gerar btn-excel" onclick="gerar('vencidos','excel')">📊 Excel</button>
-            </div>
-        </div>
+    <script>
+    function validarPeriodo() {
+        const ini = document.getElementById('data_inicio').value;
+        const fim = document.getElementById('data_fim').value;
+        if (!ini || !fim) { alert('Preencha as duas datas.'); return false; }
+        if (ini > fim) { alert('A data início não pode ser maior que a data fim.'); return false; }
+        mostrarToast('✔ Período aplicado!');
+        return true;
+    }
 
-        <!-- 2. Empréstimos do mês -->
-        <div class="relatorio-card cor-azul">
-            <div class="card-topo">
-                <div class="card-icone">📅</div>
-                <div class="card-info">
-                    <h3>Empréstimos no Período</h3>
-                    <p>Total de livros emprestados no período selecionado</p>
-                </div>
-            </div>
-            <div class="card-acoes">
-                <button class="btn-gerar btn-pdf" onclick="gerar('emprestimos_periodo','pdf')">📄 PDF</button>
-                <button class="btn-gerar btn-excel" onclick="gerar('emprestimos_periodo','excel')">📊 Excel</button>
-            </div>
-        </div>
+    // CORRIGIDO: gerar_relatorio.php está na MESMA pasta (tela_Admin/arquivos/),
+    // então o caminho é direto, sem "../../"
+    function gerar(tipo, formato) {
+        const ini = document.getElementById('data_inicio').value;
+        const fim = document.getElementById('data_fim').value;
+        if (!ini || !fim) { alert('Selecione o período antes de gerar o relatório.'); return; }
+        mostrarToast('⏳ Gerando relatório...');
+        const url = `gerar_relatorio.php?tipo=${tipo}&formato=${formato}&inicio=${ini}&fim=${fim}`;
+        window.open(url, '_blank');
+    }
 
-        <!-- 3. Visitas à biblioteca -->
-        <div class="relatorio-card cor-verde">
-            <div class="card-topo">
-                <div class="card-icone">🚪</div>
-                <div class="card-info">
-                    <h3>Visitas à Biblioteca</h3>
-                    <p>Quantidade de visitas por dia no período</p>
-                </div>
-            </div>
-            <div class="card-acoes">
-                <button class="btn-gerar btn-pdf" onclick="gerar('visitas','pdf')">📄 PDF</button>
-                <button class="btn-gerar btn-excel" onclick="gerar('visitas','excel')">📊 Excel</button>
-            </div>
-        </div>
+    function gerarAluno(formato) {
+        const aluno_id = document.getElementById('select_aluno').value;
+        if (!aluno_id) { alert('Selecione um aluno primeiro.'); return; }
+        const ini = document.getElementById('data_inicio').value;
+        const fim = document.getElementById('data_fim').value;
+        if (!ini || !fim) { alert('Selecione o período antes de gerar o relatório.'); return; }
+        mostrarToast('⏳ Gerando relatório...');
+        const url = `gerar_relatorio.php?tipo=historico_aluno&formato=${formato}&inicio=${ini}&fim=${fim}&aluno_id=${aluno_id}`;
+        window.open(url, '_blank');
+    }
 
-        <!-- 4. Livros mais populares -->
-        <div class="relatorio-card cor-laranja">
-            <div class="card-topo">
-                <div class="card-icone">🏆</div>
-                <div class="card-info">
-                    <h3>Livros Mais Populares</h3>
-                    <p>Ranking de livros por número de empréstimos</p>
-                </div>
-            </div>
-            <div class="card-acoes">
-                <button class="btn-gerar btn-pdf" onclick="gerar('populares','pdf')">📄 PDF</button>
-                <button class="btn-gerar btn-excel" onclick="gerar('populares','excel')">📊 Excel</button>
-            </div>
-        </div>
-
-        <!-- 5. Histórico por aluno -->
-        <div class="relatorio-card cor-roxo">
-            <div class="card-topo">
-                <div class="card-icone">👤</div>
-                <div class="card-info">
-                    <h3>Histórico por Aluno</h3>
-                    <p>Todos os empréstimos de um aluno específico</p>
-                </div>
-            </div>
-            <!-- Seletor de aluno -->
-            <div class="campo-aluno">
-                <select id="select_aluno">
-                    <option value="">— Selecione o aluno —</option>
-                    <?php
-                    $stmt = $pdo->query("SELECT id, nome FROM usuarios WHERE tipo = 'aluno' ORDER BY nome ASC");
-                    while ($row = $stmt->fetch()) {
-                        echo "<option value='{$row['id']}'>" . htmlspecialchars($row['nome']) . "</option>";
-                    }
-                    ?>
-                </select>
-            </div>
-            <div class="card-acoes">
-                <button class="btn-gerar btn-pdf" onclick="gerarAluno('pdf')">📄 PDF</button>
-                <button class="btn-gerar btn-excel" onclick="gerarAluno('excel')">📊 Excel</button>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<!-- Toast de feedback -->
-<div class="toast" id="toast">⏳ Gerando relatório...</div>
-
-<script>
-function validarPeriodo() {
-    const ini = document.getElementById('data_inicio').value;
-    const fim = document.getElementById('data_fim').value;
-    if (!ini || !fim) { alert('Preencha as duas datas.'); return false; }
-    if (ini > fim) { alert('A data início não pode ser maior que a data fim.'); return false; }
-    mostrarToast('✔ Período aplicado!');
-    return true;
-}
-
-function gerar(tipo, formato) {
-    const ini = document.getElementById('data_inicio').value;
-    const fim = document.getElementById('data_fim').value;
-    if (!ini || !fim) { alert('Selecione o período antes de gerar o relatório.'); return; }
-    mostrarToast('⏳ Gerando relatório...');
-    const url = `gerar_relatorio.php?tipo=${tipo}&formato=${formato}&inicio=${ini}&fim=${fim}`;
-    window.open(url, '_blank');
-}
-
-function gerarAluno(formato) {
-    const aluno_id = document.getElementById('select_aluno').value;
-    if (!aluno_id) { alert('Selecione um aluno primeiro.'); return; }
-    const ini = document.getElementById('data_inicio').value;
-    const fim = document.getElementById('data_fim').value;
-    if (!ini || !fim) { alert('Selecione o período antes de gerar o relatório.'); return; }
-    mostrarToast('⏳ Gerando relatório...');
-    const url = `gerar_relatorio.php?tipo=historico_aluno&formato=${formato}&inicio=${ini}&fim=${fim}&aluno_id=${aluno_id}`;
-    window.open(url, '_blank');
-}
-
-function mostrarToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.style.display = 'block';
-    setTimeout(() => t.style.display = 'none', 2500);
-}
-</script>
+    function mostrarToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.style.display = 'block';
+        setTimeout(() => t.style.display = 'none', 2500);
+    }
+    </script>
+    </main>
 </body>
 </html>
+

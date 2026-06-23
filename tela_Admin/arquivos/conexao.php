@@ -1,6 +1,6 @@
 <?php
 $host = 'localhost';
-$banco = 'libra_flow';
+$banco = 'libraflow';
 $usuario = 'root';
 $senha = '';
 

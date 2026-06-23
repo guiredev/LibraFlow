@@ -11,16 +11,9 @@
  *   aluno_id = int (só para historico_aluno)
  */
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/cadastros_e_logins/configs/auth_check.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/tela_Admin/arquivos/conexao.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/vendor/autoload.php';
-
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Style\Border;
-use PhpOffice\PhpSpreadsheet\Style\Font;
+require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/cadastros_e_logins/configs/auth_check.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/tela_Admin/arquivos/conexao.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/vendor/autoload.php';
 
 // ── Sanitização dos parâmetros ────────────────────────────────────────────────
 $tipo      = $_GET['tipo']    ?? '';
@@ -48,7 +41,7 @@ switch ($tipo) {
     case 'vencidos':
         $titulo   = 'Empréstimos Vencidos/Atrasados';
         $colunas  = ['Aluno', 'RM', 'Livro', 'Data Empréstimo', 'Data Devolução', 'Dias de Atraso'];
-        $stmt = $pdo->prepare("
+        $stmt = $conn->prepare("
             SELECT u.nome AS aluno, u.rm, l.titulo AS livro,
                    e.data_emprestimo, e.data_devolucao,
                    DATEDIFF(CURDATE(), e.data_devolucao) AS dias_atraso
@@ -76,7 +69,7 @@ switch ($tipo) {
     case 'emprestimos_periodo':
         $titulo   = 'Empréstimos no Período';
         $colunas  = ['Aluno', 'RM', 'Livro', 'Data Empréstimo', 'Data Devolução', 'Status'];
-        $stmt = $pdo->prepare("
+        $stmt = $conn->prepare("
             SELECT u.nome AS aluno, u.rm, l.titulo AS livro,
                    e.data_emprestimo, e.data_devolucao, e.status
             FROM emprestimos e
@@ -102,7 +95,7 @@ switch ($tipo) {
     case 'visitas':
         $titulo  = 'Visitas à Biblioteca';
         $colunas = ['Data', 'Aluno', 'RM', 'Hora de Entrada'];
-        $stmt = $pdo->prepare("
+        $stmt = $conn->prepare("
             SELECT v.data_visita, u.nome AS aluno, u.rm, v.hora_entrada
             FROM visitas v
             JOIN usuarios u ON u.id = v.usuario_id
@@ -124,7 +117,7 @@ switch ($tipo) {
     case 'populares':
         $titulo  = 'Livros Mais Populares';
         $colunas = ['Posição', 'Título', 'Autor', 'Categoria', 'Total de Empréstimos'];
-        $stmt = $pdo->prepare("
+        $stmt = $conn->prepare("
             SELECT l.titulo, l.autor,
                    COALESCE(c.nome, '—') AS categoria,
                    COUNT(e.id) AS total
@@ -152,7 +145,7 @@ switch ($tipo) {
     // ── 5. Histórico por aluno ────────────────────────────────────────────────
     case 'historico_aluno':
         // Busca nome do aluno para o título
-        $sa = $pdo->prepare("SELECT nome, rm FROM usuarios WHERE id = :id LIMIT 1");
+        $sa = $conn->prepare("SELECT nome, rm FROM usuarios WHERE id = :id AND tipo = 'A' LIMIT 1");
         $sa->execute([':id' => $aluno_id]);
         $aluno_row = $sa->fetch(PDO::FETCH_ASSOC);
         $nome_aluno = $aluno_row ? $aluno_row['nome'] : 'Aluno #'.$aluno_id;
@@ -161,7 +154,7 @@ switch ($tipo) {
         $titulo  = "Histórico de Empréstimos — {$nome_aluno}" . ($rm_aluno ? " (RM: {$rm_aluno})" : '');
         $colunas = ['Livro', 'Autor', 'Data Empréstimo', 'Data Devolução', 'Status'];
 
-        $stmt = $pdo->prepare("
+        $stmt = $conn->prepare("
             SELECT l.titulo, l.autor,
                    e.data_emprestimo, e.data_devolucao, e.status
             FROM emprestimos e
@@ -190,6 +183,8 @@ $total_registros = count($dados);
 // GERAÇÃO PDF
 // ═════════════════════════════════════════════════════════════════════════════
 if ($formato === 'pdf') {
+
+    use TCPDF as TCPDF;
 
     class LibraFlowPDF extends TCPDF {
         public string $relatorio_titulo = '';
@@ -292,6 +287,13 @@ if ($formato === 'pdf') {
 // ═════════════════════════════════════════════════════════════════════════════
 if ($formato === 'excel') {
 
+    use PhpOffice\PhpSpreadsheet\Spreadsheet;
+    use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+    use PhpOffice\PhpSpreadsheet\Style\Fill;
+    use PhpOffice\PhpSpreadsheet\Style\Alignment;
+    use PhpOffice\PhpSpreadsheet\Style\Border;
+    use PhpOffice\PhpSpreadsheet\Style\Font;
+
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
     $sheet->setTitle('Relatório');
@@ -380,4 +382,3 @@ if ($formato === 'excel') {
     $writer->save('php://output');
     exit;
 }
-
