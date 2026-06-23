@@ -463,13 +463,13 @@ $statusInfo = [
     <aside>
         <div class="logo-aside"><span>LibraFlow</span></div>
         <ul>
-            <li><a href="/LibraFlow/tela_Admin/arquivos/Admin.php">Início</a></li>
-            <li><a href="/LibraFlow/tela_Admin/arquivos/listar_livros.php">Livros</a></li>
-            <li><a href="/LibraFlow/tela_Admin/arquivos/cadastrar_livro.php">Cadastrar Livro</a></li>
-            <li><a href="/LibraFlow/tela_Admin/arquivos/usuarios.php">Usuários</a></li>
-            <li><a href="/LibraFlow/tela_Admin/arquivos/emprestimos.php" class="ativo">Empréstimos</a></li>
-            <li><a href="relatorios/index.php">📈 Relatórios</a></li> 
-            <li><a href="/LibraFlow/tela_Admin/arquivos/visitas.php">Visitas</a></li>
+             <li><a href="/LibraFlow/tela_Admin/arquivos/Admin.php">🏠 Início</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/listar_livros.php">📚 Livros</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/cadastrar_livro.php">➕ Cadastrar Livro</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/usuarios.php">👥 Usuários</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/emprestimos.php">📋 Empréstimos</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/visitas.php">🕒 Visitas</a></li>
+            <li><a href="relatorios/index.php" class="ativo">📈 Relatórios</a></li>
             <div class="sidebar-down">
                 <li><a href="/LibraFlow/cadastros_e_logins/logout/logout.php">Sair</a></li>
             </div>
