@@ -9,6 +9,7 @@ require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/tela_Admin/arquivos/conexao.php'
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatórios - LibraFlow</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="darkmode-btn.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -467,6 +468,13 @@ require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/tela_Admin/arquivos/conexao.php'
     }
     </script>
     </main>
+
+    <button id="themeToggle" class="theme-toggle-float" aria-label="Alternar tema claro/escuro">
+        <span id="themeIcon">🌙</span>
+        <span id="themeLabel">Escuro</span>
+    </button>
+
+    <script src="darkmode.js"></script>
 </body>
 </html>
 

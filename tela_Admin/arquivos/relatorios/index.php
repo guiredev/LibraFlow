@@ -20,6 +20,7 @@ $resumo = $servico->resumoGeral();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatórios — LibraFlow</title>
     <link rel="stylesheet" href="/LibraFlow/tela_Admin/arquivos/style.css">
+    <link rel="stylesheet" href="/LibraFlow/tela_Admin/arquivos/darkmode-btn.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -132,18 +133,6 @@ $resumo = $servico->resumoGeral();
             opacity: .7;
             margin-top: 4px;
         }
-        .btn-tema {
-            background: none;
-            border: 1px solid var(--borda);
-            border-radius: 8px;
-            padding: 8px 12px;
-            cursor: pointer;
-            color: var(--texto);
-            font-size: 1rem;
-            transition: all .2s;
-        }
-        .btn-tema:hover { background: var(--bg-card); }
-
         /* ── Cards de resumo ── */
         .cards-resumo {
             display: grid;
@@ -281,8 +270,8 @@ $resumo = $servico->resumoGeral();
             <li><a href="/LibraFlow/tela_Admin/arquivos/cadastrar_livro.php">➕ Cadastrar Livro</a></li>
             <li><a href="/LibraFlow/tela_Admin/arquivos/usuarios.php">👥 Usuários</a></li>
             <li><a href="/LibraFlow/tela_Admin/arquivos/emprestimos.php">📋 Empréstimos</a></li>
+            <li><a href="/LibraFlow/tela_Admin/arquivos/visitas.php">🕒 Visitas</a></li>
             <li><a href="/LibraFlow/tela_Admin/arquivos/relatorios/index.php" class="ativo">📈 Relatórios</a></li>
-            <li><a href="/LibraFlow/tela_Admin/arquivos/visitas.php">Visitas</a></li>
             <div class="sidebar-down">
                 <li><a href="/LibraFlow/cadastros_e_logins/logout/logout.php">🚪 Sair</a></li>
             </div>
@@ -295,7 +284,6 @@ $resumo = $servico->resumoGeral();
             <h1><i class="fas fa-chart-column" style="font-size:1.3rem;margin-right:8px;color:var(--link)"></i>Relatórios</h1>
             <p>Visualize dados do acervo e baixe relatórios em PDF ou Excel.</p>
         </div>
-        <button class="btn-tema" id="btnTema" title="Alternar tema">🌙</button>
     </div>
 
     <!-- Cards resumo -->
@@ -379,18 +367,12 @@ $resumo = $servico->resumoGeral();
     </div>
 </main>
 
+<button id="themeToggle" class="theme-toggle-float" aria-label="Alternar tema claro/escuro">
+    <span id="themeIcon">🌙</span>
+    <span id="themeLabel">Escuro</span>
+</button>
+
 <script>
-    const btnTema = document.getElementById('btnTema');
-    if (localStorage.getItem('tema') === 'dark') {
-        document.body.classList.add('dark');
-        btnTema.textContent = '☀️';
-    }
-    btnTema.addEventListener('click', () => {
-        document.body.classList.toggle('dark');
-        const isDark = document.body.classList.contains('dark');
-        localStorage.setItem('tema', isDark ? 'dark' : 'light');
-        btnTema.textContent = isDark ? '☀️' : '🌙';
-    });
 
     // Envia o formulário de filtro de data com o formato escolhido
     function enviarComFiltro(idForm, formato) {
@@ -400,5 +382,6 @@ $resumo = $servico->resumoGeral();
         return false;
     }
 </script>
+<script src="/LibraFlow/tela_Admin/arquivos/darkmode.js"></script>
 </body>
 </html>

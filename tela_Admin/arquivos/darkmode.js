@@ -1,198 +1,129 @@
 /**
  * Dark Mode Toggle - LibraFlow
- * Script reutilizável para todas as telas
- * Segue guia de estilização
+ * Shared behavior for all screens.
  */
-
-(function() {
+(function () {
     'use strict';
 
-    console.log('🌙 Dark Mode script carregado');
-
-    // Configurações
     const CONFIG = {
         storageKey: 'libraflow_theme',
         darkClass: 'dark',
         buttonId: 'themeToggle',
         iconSelector: '#themeIcon',
         labelSelector: '#themeLabel',
-        defaultTheme: 'light'
+        defaultTheme: 'light',
     };
 
-    // Ícones
     const ICONS = {
         light: '🌙',
-        dark: '☀️'
+        dark: '☀️',
     };
 
-    // Labels
     const LABELS = {
         light: 'Escuro',
-        dark: 'Claro'
+        dark: 'Claro',
     };
 
-    /**
-     * Obtém o tema salvo ou detecta preferência do sistema
-     */
     function getSavedTheme() {
         const saved = localStorage.getItem(CONFIG.storageKey);
-        if (saved) {
-            console.log('✅ Tema salvo:', saved);
+
+        if (saved === 'dark' || saved === 'light') {
             return saved;
         }
 
-        // Detectar preferência do sistema
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            console.log('🔍 Sistema prefere dark mode');
             return 'dark';
         }
 
-        console.log('🔍 Usando tema padrão:', CONFIG.defaultTheme);
         return CONFIG.defaultTheme;
     }
 
-    /**
-     * Salva a preferência de tema
-     */
     function saveTheme(theme) {
         localStorage.setItem(CONFIG.storageKey, theme);
-        console.log('💾 Tema salvo:', theme);
+        localStorage.setItem('tema', theme);
     }
 
-    /**
-     * Aplica o tema ao documento
-     */
     function applyTheme(theme) {
-        const body = document.body;
+        const normalizedTheme = theme === 'dark' ? 'dark' : 'light';
         const icon = document.querySelector(CONFIG.iconSelector);
         const label = document.querySelector(CONFIG.labelSelector);
 
-        console.log('🎨 Aplicando tema:', theme);
+        document.body.classList.toggle(CONFIG.darkClass, normalizedTheme === 'dark');
 
-        if (theme === 'dark') {
-            body.classList.add(CONFIG.darkClass);
-            if (icon) icon.textContent = ICONS.dark;
-            if (label) label.textContent = LABELS.dark;
-            console.log('✅ Dark mode ativado');
-        } else {
-            body.classList.remove(CONFIG.darkClass);
-            if (icon) icon.textContent = ICONS.light;
-            if (label) label.textContent = LABELS.light;
-            console.log('✅ Light mode ativado');
+        if (icon) {
+            icon.textContent = ICONS[normalizedTheme];
+        }
+
+        if (label) {
+            label.textContent = LABELS[normalizedTheme];
         }
     }
 
-    /**
-     * Alterna entre temas claro e escuro
-     */
     function toggleTheme() {
-        const body = document.body;
-        const currentTheme = body.classList.contains(CONFIG.darkClass) ? 'dark' : 'light';
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        const currentTheme = document.body.classList.contains(CONFIG.darkClass) ? 'dark' : 'light';
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
-        console.log('🔄 Alternando tema:', currentTheme, '→', newTheme);
-
-        applyTheme(newTheme);
-        saveTheme(newTheme);
-
-        // Disparar evento customizado para outros scripts escutarem
-        window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: newTheme } }));
+        applyTheme(nextTheme);
+        saveTheme(nextTheme);
+        window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: nextTheme } }));
     }
 
-    /**
-     * Inicializa o botão de toggle
-     */
     function initToggleButton() {
         const button = document.getElementById(CONFIG.buttonId);
+
         if (!button) {
-            console.warn('⚠️ Botão de tema não encontrado (ID: ' + CONFIG.buttonId + ')');
             return;
         }
 
-        console.log('✅ Botão de tema encontrado');
-
         button.addEventListener('click', toggleTheme);
-
-        // Adicionar suporte a teclado (Enter e Space)
-        button.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
+        button.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
                 toggleTheme();
             }
         });
     }
 
-    /**
-     * Ouvir mudanças no tema do sistema
-     */
     function initSystemThemeListener() {
-        if (window.matchMedia) {
-            const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-            darkModeQuery.addEventListener('change', function(e) {
-                // Aplicar tema do sistema apenas se o usuário não tiver preferência salva
-                if (!localStorage.getItem(CONFIG.storageKey)) {
-                    const theme = e.matches ? 'dark' : 'light';
-                    applyTheme(theme);
-                    console.log('🔍 Tema do sistema mudado para:', theme);
-                }
-            });
+        if (!window.matchMedia) {
+            return;
         }
+
+        const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        darkModeQuery.addEventListener('change', function (event) {
+            if (!localStorage.getItem(CONFIG.storageKey) && !localStorage.getItem('tema')) {
+                applyTheme(event.matches ? 'dark' : 'light');
+            }
+        });
     }
 
-    /**
-     * Inicialização
-     */
-    function init() {
-        console.log('🚀 Iniciando Dark Mode...');
+    function onReady() {
+        const savedTheme = localStorage.getItem(CONFIG.storageKey) || localStorage.getItem('tema') || getSavedTheme();
 
-        // Aguardar DOM estar pronto
-        if (document.readyState === 'loading') {
-            console.log('⏳ Aguardando DOM...');
-            document.addEventListener('DOMContentLoaded', onDOMReady);
-        } else {
-            console.log('✅ DOM já está pronto');
-            onDOMReady();
-        }
-    }
-
-    function onDOMReady() {
-        console.log('🎯 DOM Ready - Configurando tema');
-
-        // Aplicar tema salvo ao carregar
-        const savedTheme = getSavedTheme();
         applyTheme(savedTheme);
-
-        // Inicializar botão
         initToggleButton();
-
-        // Ouvir mudanças no tema do sistema
         initSystemThemeListener();
 
-        // Adicionar classe de transição após carregamento inicial
-        // para evitar transição durante o carregamento da página
-        setTimeout(() => {
+        setTimeout(function () {
             document.body.classList.add('theme-transition-enabled');
-            console.log('✅ Transições habilitadas');
         }, 100);
-
-        console.log('✅ Dark Mode inicializado com sucesso!');
     }
 
-    // Inicializar imediatamente
-    init();
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', onReady);
+    } else {
+        onReady();
+    }
 
-    // Expor função globalmente para uso em outros scripts
     window.LibraFlowTheme = {
         toggle: toggleTheme,
-        setTheme: function(theme) {
-            applyTheme(theme);
-            saveTheme(theme);
+        setTheme: function (theme) {
+            const normalizedTheme = theme === 'dark' ? 'dark' : 'light';
+            applyTheme(normalizedTheme);
+            saveTheme(normalizedTheme);
         },
-        getTheme: function() {
+        getTheme: function () {
             return document.body.classList.contains(CONFIG.darkClass) ? 'dark' : 'light';
-        }
+        },
     };
-
-    console.log('🔧 API exposta: window.LibraFlowTheme');
 })();

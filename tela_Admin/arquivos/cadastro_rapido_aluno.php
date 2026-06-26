@@ -64,6 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro Rápido de Aluno | LibraFlow Admin</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="darkmode-btn.css">
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
     <style>
         .cadastro-rapido {
@@ -258,6 +259,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </main>
 
+    <button id="themeToggle" class="theme-toggle-float" aria-label="Alternar tema claro/escuro">
+        <span id="themeIcon">🌙</span>
+        <span id="themeLabel">Escuro</span>
+    </button>
+
     <script>
         // Validar senhas em tempo real
         document.getElementById('senha_confirm').addEventListener('input', function() {
@@ -271,6 +277,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         });
     </script>
+    <script src="darkmode.js"></script>
 </body>
 </html>
 

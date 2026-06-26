@@ -1,12 +1,12 @@
 <?php
-$host = 'localhost';
-$banco = 'libraflow';
-$usuario = 'root';
-$senha = '';
+$host = getenv('LIBRAFLOW_DB_HOST') ?: 'localhost';
+$banco = getenv('LIBRAFLOW_DB_NAME') ?: 'libraflow';
+$usuario = getenv('LIBRAFLOW_DB_USER') ?: 'root';
+$senha = getenv('LIBRAFLOW_DB_PASS') ?: '';
 
 try {
     $conn = new PDO(
-        "mysql:host=$host;dbname=$banco;charset=utf8mb4",
+        "mysql:host={$host};dbname={$banco};charset=utf8mb4",
         $usuario,
         $senha,
         [
@@ -15,23 +15,8 @@ try {
             PDO::ATTR_EMULATE_PREPARES   => false,
         ]
     );
+    $pdo = $conn;
 } catch (PDOException $e) {
-    die("Erro na conexão: " . $e->getMessage());
+    error_log('Erro na conexao com banco LibraFlow: ' . $e->getMessage());
+    die('Erro ao conectar ao banco de dados.');
 }
-
-$titulo    = $_POST['titulo']    ?? '';
-$subtitulo = $_POST['subtitulo'] ?? '';
-$autor     = $_POST['autor']     ?? '';
-$ano       = $_POST['ano']       ?? '';
-$descricao = $_POST['descricao'] ?? '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $sql = "INSERT INTO livros (titulo, subtitulo, autor, ano, descricao)
-            VALUES (?, ?, ?, ?, ?)";
-
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([$titulo, $subtitulo, $autor, $ano, $descricao]);
-
-    echo "Livro cadastrado com sucesso!";
-}
-?>

@@ -1,8 +1,12 @@
 {
+    "name": "libraflow/libraflow",
+    "description": "Sistema PHP de gerenciamento de bibliotecas.",
+    "type": "project",
+    "license": "proprietary",
     "require": {
         "phpmailer/phpmailer": "^7.1",
         "tecnickcom/tcpdf": "^6.7",
-        "phpoffice/phpspreadsheet": "1.29.0"
+        "phpoffice/phpspreadsheet": "^5.7"
     },
     "config": {
         "allow-plugins": true,

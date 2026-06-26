@@ -1,7 +1,7 @@
 <?php
 // cadastros_e_logins/esqueceu_a_senha/redefinir-senha.php
 
-require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/cadastros_e_logins/configs/conexao.php';;
+require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/cadastros_e_logins/configs/conexao.php';
 
 $token       = trim($_GET['token'] ?? '');
 $erro        = '';
@@ -60,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tokenValido) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LibraFlow - Redefinir Senha</title>
+    <link rel="stylesheet" href="/LibraFlow/tela_Admin/arquivos/darkmode-btn.css">
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -142,6 +143,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tokenValido) {
             text-decoration: none;
         }
         .voltar:hover { text-decoration: underline; }
+        body.dark {
+            background: #1C2410;
+            color: #D4E8B0;
+        }
+        body.dark .card {
+            background: #243015;
+            border: 1px solid #3A4E1E;
+            box-shadow: 0 4px 24px rgba(0,0,0,.35);
+        }
+        body.dark h2 {
+            color: #D4E8B0;
+        }
+        body.dark .subtitulo,
+        body.dark label {
+            color: #A8C97F;
+        }
+        body.dark input[type="password"] {
+            background: #2A3318;
+            border-color: #3A4E1E;
+            color: #D4E8B0;
+        }
+        body.dark input[type="submit"] {
+            background: #4A6020;
+            color: #D4E8B0;
+        }
+        body.dark input[type="submit"]:hover {
+            background: #3A4E1E;
+        }
+        body.dark .voltar {
+            color: #A8C97F;
+        }
     </style>
 </head>
 <body>
@@ -181,5 +213,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tokenValido) {
             <a class="voltar" href="/LibraFlow/cadastros_e_logins/esqueceu_a_senha/esqueceu-a-senha.php">← Solicitar novo link</a>
         <?php endif; ?>
     </div>
+    <button id="themeToggle" class="theme-toggle-float" aria-label="Alternar tema claro/escuro">
+        <span id="themeIcon">🌙</span>
+        <span id="themeLabel">Escuro</span>
+    </button>
+
+    <script src="/LibraFlow/cadastros_e_logins/esqueceu_a_senha/darkmode.js"></script>
 </body>
 </html>

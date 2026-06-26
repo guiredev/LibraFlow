@@ -1,85 +1,59 @@
 <?php
 // cadastros_e_logins/esqueceu_a_senha/esqueceu-a-senha.php
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/vendor/autoload.php';;
-require '../configs/conexao.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/vendor/autoload.php';
+require_once '../configs/conexao.php';
+require_once '../configs/email.php';
 
 $mensagem = '';
-$tipo     = '';
+$tipo = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
 
-    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $mensagem = 'Digite um e-mail válido.';
-        $tipo     = 'erro';
+    if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $mensagem = 'Digite um e-mail valido.';
+        $tipo = 'erro';
     } else {
         $stmt = $conn->prepare("SELECT id, nome FROM usuarios WHERE email = ?");
         $stmt->execute([$email]);
         $usuario = $stmt->fetch();
 
-        // Resposta genérica por segurança
-        $mensagem = 'Se este e-mail estiver cadastrado, você receberá as instruções em breve.';
-        $tipo     = 'sucesso';
+        $mensagem = 'Se este e-mail estiver cadastrado, voce recebera as instrucoes em breve.';
+        $tipo = 'sucesso';
 
         if ($usuario) {
-            $token  = bin2hex(random_bytes(32));
+            $token = bin2hex(random_bytes(32));
             $expira = date('Y-m-d H:i:s', strtotime('+1 hour'));
+            $tokenCriado = false;
 
-            $conn->prepare("DELETE FROM recuperacao_senha WHERE id_usuario = ?")
-                 ->execute([$usuario['id']]);
-
-            $conn->prepare(
-                "INSERT INTO recuperacao_senha (id_usuario, token, expira_em) VALUES (?, ?, ?)"
-            )->execute([$usuario['id'], $token, $expira]);
-
-            $link = "http://localhost/LibraFlow/cadastros_e_logins/esqueceu_a_senha/redefinir-senha.php?token=$token";
-
-            $mail = new PHPMailer(true);
             try {
-                $mail->isSMTP();
-                $mail->Host       = 'smtp.gmail.com';
-                $mail->SMTPAuth   = true;
-                $mail->Username   = 'nexoratecnology@gmail.com';
-                $mail->Password   = 'ahjq hucu uicu mbis';
-                $mail->SMTPSecure = 'tls';
-                $mail->Port       = 587;
-                $mail->CharSet    = 'UTF-8';
+                $conn->prepare("DELETE FROM recuperacao_senha WHERE id_usuario = ?")
+                     ->execute([$usuario['id']]);
 
-                $mail->setFrom('nexoratecnology@gmail.com', 'LibraFlow');
-                $mail->addAddress($email, $usuario['nome']);
+                $conn->prepare(
+                    "INSERT INTO recuperacao_senha (id_usuario, token, expira_em) VALUES (?, ?, ?)"
+                )->execute([$usuario['id'], $token, $expira]);
 
-                $mail->isHTML(true);
-                $mail->Subject = 'Redefinição de senha — LibraFlow';
-                $mail->Body    = "
-                    <div style='font-family: sans-serif; max-width: 480px; margin: auto;'>
-                        <h2 style='color: #283618;'>Redefinição de senha</h2>
-                        <p>Olá, <strong>{$usuario['nome']}</strong>!</p>
-                        <p>Recebemos uma solicitação para redefinir a senha da sua conta no LibraFlow.</p>
-                        <p>Clique no botão abaixo para criar uma nova senha. O link expira em <strong>1 hora</strong>.</p>
-                        <a href='$link'
-                           style='display:inline-block; margin-top:1rem; padding:0.75rem 1.5rem;
-                                  background:#DDA15E; color:#fff; border-radius:1rem;
-                                  text-decoration:none; font-weight:bold;'>
-                            Redefinir minha senha
-                        </a>
-                        <p style='margin-top:1.5rem; font-size:0.85rem; color:#666;'>
-                            Se você não solicitou isso, ignore este e-mail.
-                        </p>
-                    </div>
-                ";
-                $mail->AltBody = "Acesse o link para redefinir sua senha: $link (válido por 1 hora)";
-                $mail->send();
-            } catch (Exception $e) {
-                    die("Erro ao enviar e-mail: " . $mail->ErrorInfo);
-}
+                $tokenCriado = true;
+
+                $link = libraflowBuildPasswordResetLink($token);
+                libraflowSendPasswordResetEmail($email, $usuario['nome'], $link);
+            } catch (Throwable $e) {
+                if ($tokenCriado) {
+                    try {
+                        $conn->prepare("DELETE FROM recuperacao_senha WHERE token = ?")
+                             ->execute([$token]);
+                    } catch (Throwable $cleanupError) {
+                        error_log('[LibraFlow][password-reset] Falha ao remover token apos erro: ' . $cleanupError->getMessage());
+                    }
+                }
+
+                error_log('[LibraFlow][password-reset] Falha no envio para usuario_id=' . $usuario['id'] . ': ' . $e->getMessage());
             }
         }
     }
-
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -159,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-size: 1.3rem;
             margin-bottom: 1.5rem;
         }
-        .alerta-erro    { background: #fff0f0; color: #8b0000; border: 1px solid #f5c6c6; }
+        .alerta-erro { background: #fff0f0; color: #8b0000; border: 1px solid #f5c6c6; }
         .alerta-sucesso { background: #f0fdf4; color: #1a4d2e; border: 1px solid #bbf7d0; }
         .voltar {
             display: block;
@@ -175,39 +149,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="inputs">
         <h2>Esqueceu a senha?</h2>
-        <p class="subtitulo">Digite seu e-mail e enviaremos as instruções.</p>
+        <p class="subtitulo">Digite seu e-mail e enviaremos as instrucoes.</p>
 
         <?php if ($mensagem): ?>
-            <div class="alerta alerta-<?= $tipo ?>">
+            <div class="alerta alerta-<?= htmlspecialchars($tipo) ?>">
                 <?= htmlspecialchars($mensagem) ?>
             </div>
         <?php endif; ?>
 
         <?php if ($tipo !== 'sucesso'): ?>
-        <form method="POST" action="">
-            <label for="email">E-mail cadastrado</label>
-            <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="seu@email.com"
-                value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
-                required>
-            <input type="submit" value="Enviar instruções">
-        </form>
-
-        <!-- Botão Dark Mode -->
-        <button id="themeToggle" class="theme-toggle-float" aria-label="Alternar tema claro/escuro">
-            <span id="themeIcon">🌙</span>
-            <span id="themeLabel">Escuro</span>
-        </button>
-    </div>
+            <form method="POST" action="">
+                <label for="email">E-mail cadastrado</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="seu@email.com"
+                    value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
+                    required>
+                <input type="submit" value="Enviar instrucoes">
+            </form>
         <?php endif; ?>
 
-        <a class="voltar" href="/LibraFlow/cadastros_e_logins/login/arquivos/login.php">← Voltar para o login</a>
+        <a class="voltar" href="/LibraFlow/cadastros_e_logins/login/arquivos/login.php">&#8592; Voltar para o login</a>
     </div>
 
+    <button id="themeToggle" class="theme-toggle-float" aria-label="Alternar tema claro/escuro">
+        <span id="themeIcon">&#127769;</span>
+        <span id="themeLabel">Escuro</span>
+    </button>
+
     <script src="/LibraFlow/cadastros_e_logins/esqueceu_a_senha/darkmode.js"></script>
-</body>
 </body>
 </html>
