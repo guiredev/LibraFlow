@@ -1,0 +1,471 @@
+﻿/*
+ * MAPA RAPIDO DO ARQUIVO
+ * Local: public/auth/senha/estilo.css
+ * Funcao: Estilos das telas de recuperacao e redefinicao de senha.
+ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4rem;
+    width: 100%;
+}
+
+.links-nav a {
+    font-size: 1.5rem;
+    text-decoration: none;
+    color: #BC6C25;
+    margin-left: 1rem;
+    font-weight: bold;
+}
+
+.login.btn button {
+    background-color: #DDA15E;
+    color: #FEFAE0;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    padding: 4rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 450px;
+    width: 90%;
+}
+
+h2 {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    font-weight: bold;
+    color: #283618;
+    font-family: "Lora", serif;
+}
+
+label {
+    font-size: 1.2rem;
+    color: #606C38;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+input[type="email"],
+input[type="text"] {
+    width: 25rem;
+    height: 3rem;
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+    border: 0.1rem solid #BC6C25;
+    border-radius: 1.5rem;
+    font-size: 1.2rem;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+input[type="submit"] {
+    width: 15rem;
+    height: 3.5rem;
+    background-color: #DDA15E;
+    color: #FAF9F6;
+    border: none;
+    border-radius: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: background-color 0.3s;
+}
+
+input[type="submit"]:hover {
+    background-color: #BC6C25;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.inputs a {
+    text-decoration: none;
+    color: #BC6C25;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-top: 2rem;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: color 0.3s;
+}
+
+.inputs a:hover {
+    color: #DDA15E;
+}
+
+@media (max-width: 768px) {
+    html {
+        font-size: 56.25%;
+    }
+
+    body {
+        height: auto;
+        min-height: 100vh;
+    }
+
+    nav {
+        flex-direction: column;
+        gap: 2rem;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .links-nav a {
+        margin: 0 0.5rem;
+        font-size: 1.3rem;
+    }
+
+    .inputs {
+        padding: 2rem;
+        margin: 2rem 1rem;
+        width: 95%;
+    }
+
+    h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    input[type="email"],
+    input[type="text"] {
+        width: 100%;
+        max-width: 25rem;
+    }
+
+    input[type="submit"] {
+        width: 100%;
+        max-width: 15rem;
+    }
+}
+
+@media (max-width: 480px) {
+    nav {
+        padding: 1.5rem;
+    }
+
+    .inputs {
+        padding: 1.5rem;
+        margin: 1.5rem 1rem;
+        border-radius: 0.8rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    label {
+        font-size: 1.1rem;
+    }
+
+    input[type="email"],
+    input[type="text"] {
+        height: 2.5rem;
+        font-size: 1.1rem;
+    }
+
+    input[type="submit"] {
+        height: 3rem;
+        font-size: 1.3rem;
+    }
+
+    .inputs a {
+        font-size: 1.1rem;
+    }
+}
+
+/* ==================== DARK MODE ==================== */
+body.dark {
+    background: #1C2410;
+    color: #D4E8B0;
+}
+
+body.dark nav {
+    background: #243015;
+}
+
+body.dark .inputs {
+    background: #243015;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+body.dark h2 {
+    color: #D4E8B0;
+}
+
+body.dark label {
+    color: #A8C97F;
+}
+
+body.dark input[type="email"],
+body.dark input[type="text"] {
+    background: #2A3318;
+    border-color: #3A4E1E;
+    color: #A8C97F;
+}
+
+body.dark input[type="submit"] {
+    background: #4A6020;
+    color: #D4E8B0;
+}
+
+body.dark input[type="submit"]:hover {
+    background: #3A4E1E;
+}
+
+body.dark .inputs a {
+    color: #A8C97F;
+}
+
+body.dark .links-nav a {
+    color: #A8C97F;
+}
+
+body.dark .voltar {
+    background: #2A3318;
+    color: #A8C97F;
+    border-color: #3A4E1E;
+}
+
+body.dark .voltar:hover {
+    background: #3A4E1E;
+    color: #D4E8B0;
+}
+
+/* ==================== BOTÃO DARK MODE ==================== */
+.theme-btn-wrapper {
+    position: fixed;
+    bottom: 1rem;
+    right: 4rem;
+    width: 5.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.theme-btn {
+    width: 5rem;
+    height: 5rem;
+    background: #DDA15E;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+    transition: background 0.4s ease;
+}
+
+.theme-btn:active {
+    transform: scale(0.95);
+}
+
+#themeLabel {
+    font-size: 1.3rem;
+    color: #606C38;
+    font-weight: 600;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: color 0.4s;
+}
+
+body.dark .theme-btn {
+    background: #3A4E1E;
+}
+
+body.dark #themeLabel {
+    color: #A8C97F;
+}
+
+@media (max-width: 768px) {
+    .theme-btn-wrapper {
+        bottom: 1.5rem;
+        right: 1.5rem;
+    }
+
+    .theme-btn {
+        width: 4.5rem;
+        height: 4.5rem;
+        font-size: 1.8rem;
+    }
+
+    #themeLabel {
+        font-size: 1.1rem;
+    }
+}
+
+/* ============================================================
+   Professional UI refresh - password recovery screens
+   ============================================================ */
+:root {
+    --bg-page: #F3F8F7;
+    --bg-card: #FFFFFF;
+    --bg-header: #FFFFFF;
+    --bg-input: #FFFFFF;
+    --text-title: #0F1F2E;
+    --text-body: #607182;
+    --text-link: #4FBFAE;
+    --border-color: #D9E7E4;
+    --btn-primary: #4FBFAE;
+    --btn-primary-hover: #37A391;
+    --btn-primary-text: #FFFFFF;
+    --shadow-sm: 0 1px 2px rgba(15, 31, 46, 0.06), 0 1px 8px rgba(15, 31, 46, 0.04);
+    --shadow-md: 0 10px 26px rgba(15, 31, 46, 0.10);
+}
+
+body.dark {
+    --bg-page: #121B1F;
+    --bg-card: #1E2E32;
+    --bg-header: #182529;
+    --bg-input: #182529;
+    --text-title: #E8F5F2;
+    --text-body: #A9BEBA;
+    --text-link: #6ED8C6;
+    --border-color: #31484D;
+    --btn-primary: #58C9B8;
+    --btn-primary-hover: #43B09F;
+    --btn-primary-text: #0E1A1D;
+}
+
+body {
+    min-height: 100vh;
+    height: auto;
+    background: var(--bg-page);
+    color: var(--text-title);
+}
+
+nav {
+    min-height: 6.4rem;
+    padding: 0 3.2rem;
+    background: var(--bg-header);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.links-nav a,
+.links-nav-login a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 3.6rem;
+    padding: 0 1.2rem;
+    margin-left: 0;
+    border-radius: 0.8rem;
+    color: var(--text-body);
+}
+
+.links-nav a:hover,
+.links-nav-login a:hover {
+    background: rgba(79, 191, 174, 0.12);
+    color: var(--text-link);
+}
+
+.inputs,
+.form-main {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.inputs {
+    padding: 3rem;
+}
+
+h2,
+.form-main h2 {
+    font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+    color: var(--text-title);
+    font-weight: 800;
+}
+
+label,
+p {
+    color: var(--text-body);
+}
+
+input[type="email"],
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    max-width: 30rem;
+    height: 4rem;
+    border-radius: 0.8rem;
+    border: 1px solid var(--border-color);
+    background: var(--bg-input);
+    color: var(--text-title);
+    font-size: 1.4rem;
+}
+
+input[type="submit"],
+button {
+    width: 100%;
+    max-width: 30rem;
+    height: 4rem;
+    border-radius: 0.8rem;
+    background: var(--btn-primary);
+    color: var(--btn-primary-text);
+    box-shadow: var(--shadow-sm);
+}
+
+input[type="submit"]:hover,
+button:hover {
+    background: var(--btn-primary-hover);
+}
+
+.inputs a,
+.voltar {
+    color: var(--text-link);
+}
+
+@media (max-width: 768px) {
+    nav {
+        padding: 1.2rem 1.6rem;
+    }
+
+    .inputs {
+        padding: 2.4rem;
+    }
+}
+
+
+/* Icones Font Awesome usados no lugar de setas em texto. */
+.voltar .fas { margin-right: 0.6rem; }
+
+
+/* Icones Font Awesome usados no lugar de emojis. */
+#themeIcon .fas { width: 1.4rem; text-align: center; }
+button .fas, a .fas, h2 .fas, h3 .fas, p .fas { margin-right: 0.6rem; }

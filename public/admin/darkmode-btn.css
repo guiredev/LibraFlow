@@ -1,0 +1,122 @@
+﻿/*
+ * MAPA RAPIDO DO ARQUIVO
+ * Local: public/admin/darkmode-btn.css
+ * Funcao: Estilos compartilhados do botao de tema.
+ */
+/**
+ * Botão Flutuante de Dark Mode - LibraFlow
+ * Posicionado no canto inferior direito
+ * Segue guia de estilização
+ */
+
+/* Botão flutuante de tema */
+.theme-toggle-float {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 9999;
+    background: var(--btn-primary, #DDA15E);
+    color: var(--btn-primary-text, #FEFAE0);
+    border: none;
+    border-radius: 50%;
+    width: 4.5rem;
+    height: 4.5rem;
+    font-size: 2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+.theme-toggle-float:hover {
+    background: var(--btn-primary-hover, #BC6C25);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+}
+
+.theme-toggle-float:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.theme-toggle-float:focus {
+    outline: 2px solid var(--border-color, #BC6C25);
+    outline-offset: 2px;
+}
+
+/* Ícone do botão */
+.theme-toggle-float #themeIcon {
+    font-size: 2rem;
+    line-height: 1;
+    transition: transform 0.3s ease;
+}
+
+.theme-toggle-float:hover #themeIcon {
+    transform: rotate(20deg) scale(1.1);
+}
+
+/* Label do botão */
+.theme-toggle-float #themeLabel {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.9;
+}
+
+/* Animação de troca de tema */
+body.theme-transition-enabled {
+    transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* Responsividade para dispositivos móveis */
+@media (max-width: 768px) {
+    .theme-toggle-float {
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 4rem;
+        height: 4rem;
+    }
+
+    .theme-toggle-float #themeIcon {
+        font-size: 1.8rem;
+    }
+
+    .theme-toggle-float #themeLabel {
+        font-size: 0.65rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .theme-toggle-float {
+        bottom: 1rem;
+        right: 1rem;
+        width: 3.5rem;
+        height: 3.5rem;
+    }
+
+    .theme-toggle-float #themeIcon {
+        font-size: 1.5rem;
+    }
+
+    .theme-toggle-float #themeLabel {
+        font-size: 0.6rem;
+    }
+}
+
+/* Acessibilidade - reduzir movimento */
+@media (prefers-reduced-motion: reduce) {
+    .theme-toggle-float,
+    .theme-toggle-float #themeIcon,
+    body.theme-transition-enabled {
+        transition: none;
+    }
+
+    .theme-toggle-float:hover {
+        transform: none;
+    }
+}

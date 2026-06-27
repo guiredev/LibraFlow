@@ -1,0 +1,951 @@
+﻿/*
+ * MAPA RAPIDO DO ARQUIVO
+ * Local: public/usuario/styles.css
+ * Funcao: Estilos da tela inicial do usuario.
+ */
+/**
+ * Tela de Usuário - LibraFlow
+ * Estilização completa com Dark Mode funcional
+ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+    scroll-behavior: smooth;
+}
+
+/* ==================== Variáveis de Cor ==================== */
+:root {
+    /* Tema Claro */
+    --bg-page: #FFFFFF;
+    --bg-card: #F5F5F0;
+    --bg-header: #FFFFFF;
+    --bg-input: #FFFFFF;
+
+    --text-title: #283618;
+    --text-body: #606C38;
+    --text-link: #BC6C25;
+
+    --border-color: #BC6C25;
+
+    --btn-primary: #DDA15E;
+    --btn-primary-text: #FEFAE0;
+
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==================== Tema Escuro ==================== */
+body.dark {
+    --bg-page: #1C2410;
+    --bg-card: #243015;
+    --bg-header: #243015;
+    --bg-input: #2A3318;
+
+    --text-title: #D4E8B0;
+    --text-body: #A8C97F;
+    --text-link: #A8C97F;
+
+    --border-color: #3A4E1E;
+
+    --btn-primary: #4A6020;
+    --btn-primary-text: #D4E8B0;
+
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+/* ==================== Base ==================== */
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    background: var(--bg-page);
+    color: var(--text-title);
+    font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+    transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* ==================== Navegação ==================== */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 3rem;
+    background: var(--bg-header);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: background 0.4s ease, box-shadow 0.3s ease;
+}
+
+nav:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.logo-nav,
+.links-nav,
+.user-badge {
+    display: flex;
+    align-items: center;
+}
+
+.logo-nav img {
+    width: 5rem;
+    transition: var(--transition);
+}
+
+.logo-nav img:hover {
+    transform: scale(1.05);
+}
+
+.links-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+nav a {
+    font-size: 1.5rem;
+    text-decoration: none;
+    color: var(--text-link);
+    font-weight: 600;
+    position: relative;
+    transition: var(--transition);
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -0.3rem;
+    left: 0;
+    width: 0;
+    height: 0.2rem;
+    background: var(--text-link);
+    transition: width 0.3s ease;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+nav a:hover {
+    color: var(--btn-primary);
+}
+
+.user-badge,
+.avatar {
+    width: 4.4rem;
+    height: 4.4rem;
+    border-radius: 50%;
+    background: var(--btn-primary);
+    color: var(--btn-primary-text);
+    font-size: 2rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.user-badge:hover,
+.avatar:hover {
+    transform: rotate(360deg) scale(1.1);
+    box-shadow: var(--shadow-md);
+}
+
+/* ==================== Header ==================== */
+header {
+    display: grid;
+    grid-template-columns: 1fr minmax(28rem, 38rem);
+    gap: 3rem;
+    align-items: center;
+    padding: 5rem 6rem;
+    background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-page) 100%);
+    transition: background 0.4s ease;
+}
+
+.perfil {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.avatar {
+    width: 8rem;
+    height: 8rem;
+    font-size: 3.6rem;
+    box-shadow: var(--shadow-md);
+}
+
+.avatar:hover {
+    transform: rotate(360deg) scale(1.1);
+}
+
+.text-header h1 {
+    font-family: 'Lora', serif;
+    font-size: 3.2rem;
+    line-height: 4rem;
+    color: var(--text-title);
+    transition: color 0.4s ease;
+}
+
+.text-header h1 span {
+    color: var(--text-link);
+}
+
+.text-header p,
+.dados-aluno p {
+    font-size: 1.5rem;
+    color: var(--text-body);
+    margin-top: 0.6rem;
+    transition: color 0.4s ease;
+}
+
+.dados-aluno {
+    background: var(--bg-card);
+    border-radius: 1.2rem;
+    padding: 2rem;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+.dados-aluno:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-0.2rem);
+}
+
+.dados-aluno p {
+    margin-bottom: 0.8rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.dados-aluno strong {
+    color: var(--text-link);
+    min-width: 8rem;
+}
+
+/* ==================== Main ==================== */
+main {
+    padding: 3rem 6rem 5rem;
+    max-width: 140rem;
+    margin: 0 auto;
+}
+
+/* ==================== Alertas ==================== */
+.alerta {
+    padding: 1.2rem 1.5rem;
+    border-radius: 0.8rem;
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+}
+
+.alerta-erro {
+    background: #FEE2E2;
+    color: #991B1B;
+    border: 1px solid #FECACA;
+}
+
+/* ==================== Estatísticas ==================== */
+section.estatisticas {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(18rem, 1fr));
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.estatistica-1,
+.estatistica-2,
+.estatistica-3 {
+    padding: 2.5rem;
+    border-radius: 1.2rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.estatistica-1 {
+    background: linear-gradient(135deg, #DDA15E 0%, #BC6C25 100%);
+    color: #FEFAE0;
+}
+
+.estatistica-2 {
+    background: linear-gradient(135deg, #606C38 0%, #283618 100%);
+    color: #FEFAE0;
+}
+
+.estatistica-3 {
+    background: linear-gradient(135deg, #BC6C25 0%, #96531D 100%);
+    color: #FEFAE0;
+}
+
+.estatistica-1:hover,
+.estatistica-2:hover,
+.estatistica-3:hover {
+    transform: translateY(-0.5rem) scale(1.02);
+    box-shadow: var(--shadow-lg);
+}
+
+.estatisticas h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+}
+
+.estatisticas span {
+    font-size: 3.6rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+/* ==================== Ações Rápidas ==================== */
+.acoes-rapidas {
+    display: flex;
+    gap: 1.2rem;
+    margin: 2.5rem 0;
+    flex-wrap: wrap;
+}
+
+.acoes-rapidas a {
+    padding: 1rem 2rem;
+    background: var(--btn-primary);
+    color: var(--btn-primary-text);
+    border-radius: 0.8rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.acoes-rapidas a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.acoes-rapidas a:hover::before {
+    left: 100%;
+}
+
+.acoes-rapidas a:hover {
+    transform: translateY(-0.2rem);
+    box-shadow: var(--shadow-md);
+}
+
+/* ==================== Livros Recentes ==================== */
+.livros-mais-lidos h2 {
+    font-family: 'Lora', serif;
+    font-size: 2.5rem;
+    margin: 2rem 0;
+    color: var(--text-title);
+    transition: color 0.4s ease;
+}
+
+.lista-livros {
+    display: grid;
+    gap: 1.2rem;
+}
+
+.livro-card {
+    display: grid;
+    grid-template-columns: 7rem 1fr auto;
+    gap: 1.5rem;
+    align-items: center;
+    background: var(--bg-card);
+    border-radius: 1.2rem;
+    padding: 1.4rem;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.livro-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateX(0.5rem);
+}
+
+.livro-card img,
+.sem-capa {
+    width: 7rem;
+    height: 9.5rem;
+    object-fit: cover;
+    border-radius: 0.8rem;
+    background: var(--bg-page);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-body);
+    font-size: 1.2rem;
+    font-weight: 700;
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+.livro-card:hover img,
+.livro-card:hover .sem-capa {
+    transform: scale(1.05);
+}
+
+.livro-card h3 {
+    font-family: 'Lora', serif;
+    font-size: 1.8rem;
+    color: var(--text-title);
+    transition: color 0.4s ease;
+}
+
+.livro-card p {
+    font-size: 1.3rem;
+    color: var(--text-body);
+    margin-top: 0.3rem;
+    transition: color 0.4s ease;
+}
+
+.status {
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: var(--transition);
+}
+
+.status:hover {
+    transform: scale(1.05);
+}
+
+.status-ativo {
+    background: #D1FAE5;
+    color: #065F46;
+    border: 1px solid #A7F3D0;
+}
+
+.status-devolvido {
+    background: #DBEAFE;
+    color: #1E40AF;
+    border: 1px solid #BFDBFE;
+}
+
+.status-vencido {
+    background: #FEE2E2;
+    color: #991B1B;
+    border: 1px solid #FECACA;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.vazio {
+    background: var(--bg-card);
+    border-radius: 1.2rem;
+    padding: 3rem;
+    color: var(--text-body);
+    font-size: 1.5rem;
+    text-align: center;
+    border: 1px dashed var(--border-color);
+}
+
+/* ==================== Footer ==================== */
+footer {
+    background-color: #283618;
+    color: #FAF9F6;
+    text-align: center;
+    padding: 2rem 3rem;
+    font-size: 1.3rem;
+    margin-top: auto;
+}
+
+/* ==================== Dark Mode Toggle Button ==================== */
+.theme-toggle-wrapper {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1000;
+}
+
+.theme-toggle-btn {
+    width: 5.5rem;
+    height: 5.5rem;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--btn-primary);
+}
+
+.theme-toggle-btn:hover {
+    transform: scale(1.1) rotate(20deg);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+
+.theme-toggle-btn:active {
+    transform: scale(0.95);
+}
+
+.theme-toggle-btn:focus-visible {
+    outline: 3px solid var(--text-link);
+    outline-offset: 3px;
+}
+
+/* ==================== Responsividade ==================== */
+@media (max-width: 1024px) {
+    nav,
+    main {
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+
+    header {
+        padding: 4rem 3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    html {
+        font-size: 56.25%;
+    }
+
+    nav {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem 2rem;
+    }
+
+    .links-nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    header {
+        display: flex;
+        flex-direction: column;
+        padding: 3rem 2rem;
+        gap: 2rem;
+    }
+
+    .perfil {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .dados-aluno p {
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+
+    main {
+        padding: 2rem;
+    }
+
+    section.estatisticas {
+        grid-template-columns: 1fr;
+    }
+
+    .acoes-rapidas {
+        flex-direction: column;
+    }
+
+    .acoes-rapidas a {
+        text-align: center;
+    }
+
+    .livro-card {
+        grid-template-columns: 6rem 1fr;
+        gap: 1rem;
+    }
+
+    .status {
+        grid-column: 1 / -1;
+        width: fit-content;
+        justify-self: start;
+    }
+
+    .theme-toggle-wrapper {
+        bottom: 1.5rem;
+        right: 1.5rem;
+    }
+
+    .theme-toggle-btn {
+        width: 4.5rem;
+        height: 4.5rem;
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    html {
+        font-size: 50%;
+    }
+
+    nav,
+    main {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    header {
+        padding: 2rem 1.5rem;
+    }
+
+    .text-header h1 {
+        font-size: 2.4rem;
+    }
+
+    .estatisticas span {
+        font-size: 2.8rem;
+    }
+}
+
+/* ==================== Print ==================== */
+@media print {
+    nav,
+    .acoes-rapidas,
+    footer,
+    .theme-toggle-wrapper {
+        display: none;
+    }
+
+    body {
+        background: white;
+        color: black;
+    }
+
+    .livro-card {
+        break-inside: avoid;
+    }
+}
+
+/* ==================== Accessibility ==================== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+a:focus-visible,
+button:focus-visible {
+    outline: 2px solid var(--text-link);
+    outline-offset: 2px;
+}
+
+/* ============================================================
+   Professional UI refresh - student workspace
+   ============================================================ */
+:root {
+    --bg-page: #F3F8F7;
+    --bg-card: #FFFFFF;
+    --bg-header: #FFFFFF;
+    --bg-input: #FFFFFF;
+    --text-title: #0F1F2E;
+    --text-body: #607182;
+    --text-link: #4FBFAE;
+    --border-color: #D9E7E4;
+    --btn-primary: #4FBFAE;
+    --btn-primary-text: #FFFFFF;
+    --shadow-sm: 0 1px 2px rgba(15, 31, 46, 0.06), 0 1px 8px rgba(15, 31, 46, 0.04);
+    --shadow-md: 0 10px 26px rgba(15, 31, 46, 0.10);
+    --shadow-lg: 0 18px 42px rgba(15, 31, 46, 0.14);
+    --radius-sm: 0.8rem;
+    --radius-md: 1rem;
+}
+
+body.dark {
+    --bg-page: #121B1F;
+    --bg-card: #1E2E32;
+    --bg-header: #182529;
+    --bg-input: #182529;
+    --text-title: #E8F5F2;
+    --text-body: #A9BEBA;
+    --text-link: #6ED8C6;
+    --border-color: #31484D;
+    --btn-primary: #58C9B8;
+    --btn-primary-text: #0E1A1D;
+}
+
+body {
+    background: var(--bg-page);
+}
+
+nav {
+    min-height: 6.4rem;
+    padding: 0 3.2rem;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: none;
+}
+
+nav:hover {
+    box-shadow: none;
+}
+
+.logo-nav img {
+    width: 4.2rem;
+    height: 4.2rem;
+    object-fit: contain;
+}
+
+.links-nav ul {
+    gap: 0.6rem;
+}
+
+nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 3.6rem;
+    padding: 0 1.2rem;
+    border-radius: var(--radius-sm);
+    color: var(--text-body);
+    font-size: 1.45rem;
+}
+
+nav a::after {
+    display: none;
+}
+
+nav a:hover {
+    background: rgba(79, 191, 174, 0.12);
+    color: var(--text-link);
+}
+
+.user-badge,
+.avatar {
+    background: rgba(79, 191, 174, 0.16);
+    color: var(--text-link);
+    box-shadow: none;
+}
+
+.user-badge:hover,
+.avatar:hover {
+    transform: none;
+    box-shadow: var(--shadow-sm);
+}
+
+header {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(28rem, 0.7fr);
+    max-width: 123.2rem;
+    margin: 0 auto;
+    padding: 3.2rem;
+    background: transparent;
+}
+
+.perfil,
+.dados-aluno,
+.livro-card,
+.vazio {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.perfil {
+    padding: 2.2rem;
+}
+
+.text-header h1 {
+    font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+    font-size: 2.7rem;
+    line-height: 1.15;
+    font-weight: 800;
+}
+
+.text-header p,
+.dados-aluno p {
+    color: var(--text-body);
+}
+
+.dados-aluno {
+    padding: 2.2rem;
+}
+
+.dados-aluno:hover {
+    transform: none;
+}
+
+main {
+    max-width: 123.2rem;
+    padding: 0 3.2rem 4rem;
+}
+
+section.estatisticas {
+    gap: 1.6rem;
+}
+
+.estatistica-1,
+.estatistica-2,
+.estatistica-3 {
+    min-height: 8.8rem;
+    padding: 1.8rem;
+    text-align: left;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.estatistica-1 {
+    background: #FFFFFF;
+    color: var(--text-title);
+    border: 1px solid #F0CF95;
+}
+
+.estatistica-2 {
+    background: #FFFFFF;
+    color: var(--text-title);
+    border: 1px solid #B7D8D2;
+}
+
+.estatistica-3 {
+    background: #FFFFFF;
+    color: var(--text-title);
+    border: 1px solid #F0B8B8;
+}
+
+body.dark .estatistica-1,
+body.dark .estatistica-2,
+body.dark .estatistica-3 {
+    background: var(--bg-card);
+    color: var(--text-title);
+}
+
+.estatistica-1:hover,
+.estatistica-2:hover,
+.estatistica-3:hover {
+    transform: none;
+    box-shadow: var(--shadow-md);
+}
+
+.estatisticas h3 {
+    color: var(--text-body);
+    font-size: 1.3rem;
+}
+
+.estatisticas span {
+    color: var(--text-title);
+    font-size: 2.8rem;
+}
+
+.acoes-rapidas {
+    margin: 1.8rem 0 2.8rem;
+}
+
+.acoes-rapidas a {
+    min-height: 3.8rem;
+    display: inline-flex;
+    align-items: center;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+}
+
+.acoes-rapidas a::before {
+    display: none;
+}
+
+.acoes-rapidas a:hover {
+    transform: none;
+    box-shadow: var(--shadow-md);
+}
+
+.livros-mais-lidos h2 {
+    font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.lista-livros {
+    gap: 1rem;
+}
+
+.livro-card {
+    border-radius: var(--radius-md);
+    padding: 1.2rem;
+}
+
+.livro-card:hover {
+    transform: none;
+    box-shadow: var(--shadow-md);
+}
+
+.livro-card h3 {
+    font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+}
+
+.livro-card img,
+.sem-capa {
+    border-radius: var(--radius-sm);
+    border-color: var(--border-color);
+}
+
+.status {
+    border-radius: 999px;
+}
+
+footer {
+    background: var(--bg-header);
+    border-top: 1px solid var(--border-color);
+    color: var(--text-body);
+}
+
+@media (max-width: 900px) {
+    header {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    nav {
+        align-items: stretch;
+        padding: 1.2rem 1.6rem;
+    }
+
+    .links-nav ul {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        padding-bottom: 0.4rem;
+    }
+
+    header,
+    main {
+        padding-left: 1.6rem;
+        padding-right: 1.6rem;
+    }
+}
+
+
+/* Icones Font Awesome usados no lugar de emojis. */
+#themeIcon .fas { width: 1.4rem; text-align: center; }
+button .fas, a .fas, h2 .fas, h3 .fas, p .fas { margin-right: 0.6rem; }

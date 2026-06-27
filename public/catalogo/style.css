@@ -1,0 +1,788 @@
+﻿/*
+ * MAPA RAPIDO DO ARQUIVO
+ * Local: public/catalogo/style.css
+ * Funcao: Estilos do catalogo, detalhe do livro e emprestimos do usuario.
+ */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html{
+    font-size: 62.5%;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Navegação */
+nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4rem;
+    width: 100%;
+}
+
+.logo-nav img{
+    width: 5rem;
+}
+
+.links-nav ul{
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+
+.links-nav li{
+    display: inline;
+}
+
+.links-nav a,
+nav a{
+    font-size: 1.5rem;
+    text-decoration: none;
+    color: #BC6C25;
+    margin-left: 1rem;
+    font-weight: bold;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+.user img{
+    width: 3rem;
+    border-radius: 50%;
+}
+
+/* Header/Cabeçalho */
+header{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 2rem 6rem;
+}
+
+.text-header{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 3rem;
+    color: #283618;
+}
+
+.text-header h1{
+    font-size: 4.7rem;
+    margin-bottom: 2rem;
+    font-weight: bold;
+    font-family: "Lora", serif;
+}
+
+.text-header p{
+    color: #606C38;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 3rem;
+    margin-bottom: 2rem;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+.search-header{
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+/* Inputs e Buttons */
+input{
+    width: 25rem;
+    height: 3rem;
+    padding: 0 1rem;
+    border: 0.1rem solid #BC6C25;
+    border-radius: 1.5rem;
+    font-size: 1.2rem;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+button{
+    width: 15rem;
+    height: 3.5rem;
+    background-color: #DDA15E;
+    color: #FAF9F6;
+    border: none;
+    border-radius: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+/* Animações e Hover */
+.links-nav a:hover,
+nav a:hover{
+    color: #96531D;
+    transition: 0.4s;
+    text-decoration: underline;
+}
+
+input:focus{
+    border-color: #96531D;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(150, 83, 29,0.15);
+    transition: 0.3s;
+}
+
+button:hover{
+    background-color: #96531D;
+    transition: 0.3s;
+}
+
+/* ==================== RESPONSIVIDADE ==================== */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    nav {
+        padding: 3rem;
+    }
+
+    header {
+        padding: 2rem 4rem;
+    }
+
+    .text-header h1 {
+        font-size: 3.5rem;
+    }
+
+    .text-header p {
+        font-size: 1.3rem;
+        line-height: 2.5rem;
+    }
+
+    .search-header {
+        flex-wrap: wrap;
+    }
+
+    input {
+        width: 20rem;
+    }
+
+    button {
+        width: 13rem;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    body {
+        height: auto;
+        min-height: 100vh;
+    }
+
+    nav {
+        flex-direction: column;
+        gap: 2rem;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .links-nav ul {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .links-nav a,
+    nav a {
+        margin: 0;
+    }
+
+    header {
+        padding: 2rem 1.5rem;
+    }
+
+    .text-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .text-header p {
+        font-size: 1.2rem;
+        line-height: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .search-header {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    input {
+        width: 100%;
+        max-width: 25rem;
+    }
+
+    button {
+        width: 100%;
+        max-width: 20rem;
+    }
+
+    .logo-nav img {
+        width: 4rem;
+    }
+
+    .user img {
+        width: 2.5rem;
+    }
+}
+
+/* Mobile Pequeno */
+@media (max-width: 480px) {
+    nav {
+        padding: 1.5rem;
+    }
+
+    header {
+        padding: 1.5rem 1rem;
+    }
+
+    .text-header h1 {
+        font-size: 2rem;
+    }
+
+    .text-header p {
+        font-size: 1.1rem;
+        line-height: 1.8rem;
+    }
+
+    input {
+        height: 2.5rem;
+        font-size: 1.1rem;
+    }
+
+    button {
+        height: 3rem;
+        font-size: 1.3rem;
+    }
+
+    .logo-nav img {
+        width: 3.5rem;
+    }
+
+    .user img {
+        width: 2rem;
+    }
+
+    .links-nav a,
+    nav a {
+        font-size: 1.3rem;
+    }
+}
+
+/* ==================== DARK MODE ==================== */
+body.dark {
+    background: #1C2410;
+    color: #D4E8B0;
+}
+
+body.dark nav {
+    background: #243015;
+}
+
+body.dark .text-header h1,
+body.dark .text-header p {
+    color: #D4E8B0;
+}
+
+body.dark .text-header p {
+    color: #A8C97F;
+}
+
+body.dark input {
+    background: #2A3318;
+    border-color: #3A4E1E;
+    color: #A8C97F;
+}
+
+body.dark button {
+    background: #4A6020;
+    color: #D4E8B0;
+}
+
+body.dark button:hover {
+    background: #3A4E1E;
+}
+
+body.dark .links-nav a:hover,
+body.dark nav a:hover {
+    color: #D4E8B0;
+}
+
+body.dark .links-nav a,
+body.dark nav a {
+    color: #A8C97F;
+}
+
+body.dark .user img {
+    filter: brightness(0.9);
+}
+
+body.dark .card-livro {
+    background: #243015;
+    border-color: #3A4E1E;
+}
+
+body.dark .card-livro:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+body.dark .sem-capa {
+    background: linear-gradient(135deg, #2A3318, #3A4E1E33);
+}
+
+body.dark .info-livro h3 {
+    color: #D4E8B0;
+}
+
+body.dark .info-livro p {
+    color: #A8C97F;
+}
+
+body.dark .info-livro .autor {
+    color: #8B9D6F;
+}
+
+body.dark .filtro-categorias a {
+    border-color: #3A4E1E;
+    color: #A8C97F;
+}
+
+body.dark .filtro-categorias a:hover,
+body.dark .filtro-categorias a.ativo {
+    background: #4A6020;
+    color: #D4E8B0;
+}
+
+body.dark .btn-emprestimo {
+    background: #4A6020;
+    color: #D4E8B0;
+}
+
+body.dark .btn-emprestimo:hover {
+    background: #3A4E1E;
+}
+
+body.dark .badge-status {
+    background: #2A3318;
+    color: #D4E8B0;
+    border-color: #3A4E1E;
+}
+
+/* ==================== BOTÃO DARK MODE ==================== */
+.theme-btn-wrapper {
+    position: fixed;
+    bottom: 1rem;
+    right: 4rem;
+    width: 5.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* ============================================================
+   Professional UI refresh - catalog and loan pages
+   ============================================================ */
+:root {
+    --bg-page: #F3F8F7;
+    --bg-card: #FFFFFF;
+    --bg-header: #FFFFFF;
+    --bg-input: #FFFFFF;
+    --text-title: #0F1F2E;
+    --text-body: #607182;
+    --text-link: #4FBFAE;
+    --border-color: #D9E7E4;
+    --btn-primary: #4FBFAE;
+    --btn-primary-hover: #37A391;
+    --btn-primary-text: #FFFFFF;
+    --shadow-sm: 0 1px 2px rgba(15, 31, 46, 0.06), 0 1px 8px rgba(15, 31, 46, 0.04);
+    --shadow-md: 0 10px 26px rgba(15, 31, 46, 0.10);
+    --radius-sm: 0.8rem;
+    --radius-md: 1rem;
+}
+
+body.dark {
+    --bg-page: #121B1F;
+    --bg-card: #1E2E32;
+    --bg-header: #182529;
+    --bg-input: #182529;
+    --text-title: #E8F5F2;
+    --text-body: #A9BEBA;
+    --text-link: #6ED8C6;
+    --border-color: #31484D;
+    --btn-primary: #58C9B8;
+    --btn-primary-hover: #43B09F;
+    --btn-primary-text: #0E1A1D;
+}
+
+body {
+    min-height: 100vh;
+    height: auto;
+    background: var(--bg-page);
+    color: var(--text-title);
+    font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+}
+
+nav {
+    width: 100%;
+    min-height: 6.4rem;
+    padding: 0 3.2rem;
+    background: var(--bg-header);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.logo-nav img {
+    width: 4.2rem;
+    height: 4.2rem;
+    object-fit: contain;
+}
+
+.links-nav ul {
+    gap: 0.6rem;
+}
+
+.links-nav a,
+nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 3.6rem;
+    margin-left: 0;
+    padding: 0 1.2rem;
+    border-radius: var(--radius-sm);
+    color: var(--text-body);
+    font-size: 1.45rem;
+}
+
+.links-nav a:hover,
+nav a:hover {
+    background: rgba(79, 191, 174, 0.12);
+    color: var(--text-link);
+    text-decoration: none;
+}
+
+header {
+    align-items: stretch;
+    max-width: 123.2rem;
+    margin: 0 auto;
+    padding: 3.2rem 3.2rem 1.4rem;
+}
+
+.text-header {
+    align-items: flex-start;
+    margin-bottom: 1.8rem;
+}
+
+.text-header h1 {
+    font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+    font-size: 2.8rem;
+    line-height: 1.1;
+    color: var(--text-title);
+    margin-bottom: 0.8rem;
+}
+
+.text-header p {
+    color: var(--text-body);
+    margin-bottom: 0;
+}
+
+.search-header {
+    justify-content: flex-start;
+    width: 100%;
+    gap: 1.2rem;
+}
+
+input,
+select {
+    height: 4rem;
+    min-width: 0;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+    background: var(--bg-input);
+    color: var(--text-title);
+    box-shadow: var(--shadow-sm);
+}
+
+.search-header input {
+    width: min(62rem, 100%);
+}
+
+button,
+.btn-ver-mais,
+.btn-solicitar,
+.btn-emprestimo,
+.btn-principal,
+.btn-secundario,
+.btn-devolver,
+.btn-voltar {
+    min-height: 3.8rem;
+    border-radius: var(--radius-sm) !important;
+    background: var(--btn-primary);
+    color: var(--btn-primary-text);
+    box-shadow: var(--shadow-sm);
+}
+
+button:hover,
+.btn-ver-mais:hover,
+.btn-solicitar:hover,
+.btn-emprestimo:hover,
+.btn-principal:hover,
+.btn-secundario:hover,
+.btn-devolver:hover,
+.btn-voltar:hover {
+    background: var(--btn-primary-hover);
+    color: var(--btn-primary-text);
+    transform: none;
+    text-decoration: none;
+}
+
+.filtro-categorias {
+    max-width: 123.2rem;
+    justify-content: flex-start !important;
+    margin: 0 auto 1.2rem !important;
+    padding: 0 3.2rem !important;
+}
+
+.filtro-categorias a {
+    border-color: var(--border-color) !important;
+    color: var(--text-body) !important;
+    background: var(--bg-card);
+    border-radius: 999px !important;
+}
+
+.filtro-categorias a:hover,
+.filtro-categorias a.ativo {
+    background: rgba(79, 191, 174, 0.14) !important;
+    color: var(--text-link) !important;
+}
+
+.total-resultados {
+    max-width: 123.2rem;
+    margin: 0 auto;
+    padding: 0 3.2rem !important;
+    color: var(--text-body) !important;
+}
+
+.grid-livros {
+    max-width: 123.2rem;
+    margin: 0 auto;
+    grid-template-columns: repeat(auto-fill, minmax(18.5rem, 1fr)) !important;
+    gap: 1.6rem !important;
+    padding: 1.6rem 3.2rem 4rem !important;
+}
+
+.card-livro,
+.livro-container,
+.solicitar-container,
+.emprestimo-card,
+.vazio {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md) !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+.card-livro {
+    overflow: hidden;
+}
+
+.card-livro:hover,
+.emprestimo-card:hover {
+    transform: none !important;
+    box-shadow: var(--shadow-md) !important;
+}
+
+.capa-livro,
+.sem-capa {
+    height: 22rem !important;
+    background: #ECF6F3 !important;
+}
+
+body.dark .capa-livro,
+body.dark .sem-capa {
+    background: #172529 !important;
+}
+
+.info-livro {
+    padding: 1.3rem !important;
+}
+
+.titulo-livro,
+.info-livro h3,
+.livro-info h1,
+.livro-info h3,
+.meus-emprestimos h2 {
+    font-family: 'Source Sans 3', 'Segoe UI', sans-serif !important;
+    color: var(--text-title) !important;
+    font-weight: 800;
+}
+
+.autor-livro,
+.info-livro p,
+.livro-info p,
+.data-info,
+.total-resultados {
+    color: var(--text-body) !important;
+}
+
+.badge-categoria,
+.badge-status,
+.status {
+    background: rgba(79, 191, 174, 0.12) !important;
+    border: 1px solid rgba(79, 191, 174, 0.26) !important;
+    color: var(--text-link) !important;
+    border-radius: 999px !important;
+}
+
+.disponivel {
+    color: #16866F !important;
+}
+
+.indisponivel,
+.status.vencido {
+    color: #C24141 !important;
+}
+
+.card-botoes {
+    padding: 0 1.3rem 1.3rem !important;
+}
+
+.btn-ver-mais {
+    background: #EAF4F1 !important;
+    color: var(--text-title) !important;
+}
+
+body.dark .btn-ver-mais {
+    background: #26383D !important;
+    color: var(--text-title) !important;
+}
+
+.btn-solicitar.desabilitado {
+    background: #DDE5E3 !important;
+    color: #82918E !important;
+}
+
+.livro-container,
+.solicitar-container {
+    max-width: 105rem;
+    margin: 3.2rem auto !important;
+    padding: 2.4rem !important;
+}
+
+.meus-emprestimos {
+    max-width: 123.2rem;
+    margin: 0 auto;
+    padding: 3.2rem;
+    width: 100%;
+}
+
+.emprestimo-card {
+    padding: 1.4rem !important;
+}
+
+@media (max-width: 768px) {
+    nav {
+        padding: 1.2rem 1.6rem;
+        gap: 1rem;
+    }
+
+    .links-nav ul {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        max-width: 100%;
+        padding-bottom: 0.4rem;
+    }
+
+    header,
+    .filtro-categorias,
+    .total-resultados,
+    .grid-livros,
+    .meus-emprestimos {
+        padding-left: 1.6rem !important;
+        padding-right: 1.6rem !important;
+    }
+
+    .search-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-header input,
+    .search-header button {
+        width: 100%;
+        max-width: none;
+    }
+}
+
+.theme-btn {
+    width: 5rem;
+    height: 5rem;
+    background: #DDA15E;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+    transition: background 0.4s ease;
+}
+
+.theme-btn:active {
+    transform: scale(0.95);
+}
+
+#themeLabel {
+    font-size: 1.3rem;
+    color: #606C38;
+    font-weight: 600;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: color 0.4s;
+}
+
+body.dark .theme-btn {
+    background: #3A4E1E;
+}
+
+body.dark #themeLabel {
+    color: #A8C97F;
+}
+
+@media (max-width: 768px) {
+    .theme-btn-wrapper {
+        bottom: 1.5rem;
+        right: 1.5rem;
+    }
+
+    .theme-btn {
+        width: 4.5rem;
+        height: 4rem;
+        font-size: 1.8rem;
+    }
+
+    #themeLabel {
+        font-size: 1.1rem;
+    }
+}
+
+
+/* Icones Font Awesome usados no lugar de emojis. */
+.status-icon { margin-right: 0.5rem; }.autor-detalhe .fas, .btn-voltar .fas, .vazio .fas { margin-right: 0.6rem; }.sem-capa .fas, .sem-capa-detalhe .fas { font-size: inherit; }
+
+
+/* Icones Font Awesome usados no lugar de emojis. */
+#themeIcon .fas { width: 1.4rem; text-align: center; }
+button .fas, a .fas, h2 .fas, h3 .fas, p .fas { margin-right: 0.6rem; }

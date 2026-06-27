@@ -149,6 +149,22 @@ INSERT INTO `usuarios` (`id`, `nome`, `email`, `telefone`, `rm`, `endereco`, `id
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `login_tokens`
+--
+
+CREATE TABLE `login_tokens` (
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `selector` char(24) NOT NULL,
+  `token_hash` char(64) NOT NULL,
+  `expira_em` datetime NOT NULL,
+  `criado_em` timestamp NOT NULL DEFAULT current_timestamp(),
+  `usado_em` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `visitas_biblioteca`
 --
 
@@ -217,6 +233,15 @@ ALTER TABLE `usuarios`
   ADD UNIQUE KEY `email` (`email`);
 
 --
+-- Índices de tabela `login_tokens`
+--
+ALTER TABLE `login_tokens`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uk_login_tokens_selector` (`selector`),
+  ADD KEY `idx_login_tokens_usuario` (`id_usuario`),
+  ADD KEY `idx_login_tokens_expira` (`expira_em`);
+
+--
 -- Índices de tabela `visitas_biblioteca`
 --
 ALTER TABLE `visitas_biblioteca`
@@ -259,6 +284,12 @@ ALTER TABLE `usuarios`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de tabela `login_tokens`
+--
+ALTER TABLE `login_tokens`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de tabela `visitas_biblioteca`
 --
 ALTER TABLE `visitas_biblioteca`
@@ -286,6 +317,12 @@ ALTER TABLE `livros`
 --
 ALTER TABLE `recuperacao_senha`
   ADD CONSTRAINT `recuperacao_senha_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
+
+--
+-- Restrições para tabelas `login_tokens`
+--
+ALTER TABLE `login_tokens`
+  ADD CONSTRAINT `fk_login_tokens_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

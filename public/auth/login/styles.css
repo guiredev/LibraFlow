@@ -1,0 +1,421 @@
+﻿/*
+ * MAPA RAPIDO DO ARQUIVO
+ * Local: public/auth/login/styles.css
+ * Funcao: Estilos da tela de login.
+ */
+/**
+ * Login Styles - LibraFlow
+ * Com suporte a Dark Mode funcional usando variáveis CSS
+ */
+
+/* ==================== Variáveis de Cor ==================== */
+:root {
+    /* Tema Claro */
+    --bg-page: #FFFFFF;
+    --bg-card: #F5F5F0;
+    --bg-header: #FFFFFF;
+    --bg-input: #FFFFFF;
+
+    --text-title: #283618;
+    --text-body: #606C38;
+    --text-link: #BC6C25;
+
+    --border-color: #BC6C25;
+
+    --btn-primary: #DDA15E;
+    --btn-primary-hover: #BC6C25;
+    --btn-primary-text: #FEFAE0;
+
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==================== Tema Escuro ==================== */
+body.dark {
+    --bg-page: #1C2410;
+    --bg-card: #243015;
+    --bg-header: #1C2410;
+    --bg-input: #2A3318;
+
+    --text-title: #D4E8B0;
+    --text-body: #A8C97F;
+    --text-link: #A8C97F;
+
+    --border-color: #3A4E1E;
+
+    --btn-primary: #4A6020;
+    --btn-primary-hover: #3A4E1E;
+    --btn-primary-text: #D4E8B0;
+
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+}
+
+/* ==================== Base ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    background: var(--bg-page);
+    color: var(--text-title);
+    transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* ==================== Navegação ==================== */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4rem;
+    background: var(--bg-header);
+    transition: background 0.4s ease;
+}
+
+.links-nav-login li {
+    display: inline;
+}
+
+.links-nav-login a {
+    font-size: 1.5rem;
+    text-decoration: none;
+    color: var(--text-link);
+    margin-left: 1rem;
+    font-weight: bold;
+    transition: color 0.4s ease;
+}
+
+.links-nav-login a:hover {
+    color: var(--text-title);
+}
+
+.login.btn button {
+    background: var(--btn-primary);
+    color: var(--btn-primary-text);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: background 0.4s ease;
+}
+
+.login.btn button:hover {
+    background: var(--btn-primary-hover);
+}
+
+/* ==================== Main ==================== */
+main {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 80vh;
+    padding: 0 6rem;
+}
+
+form, .others-forms {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.text-main, .form-main {
+    width: 35%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    color: var(--text-title);
+}
+
+body {
+    height: 100vh;
+}
+
+.text-main, .form-main {
+    height: 70%;
+}
+
+.text-main h1 {
+    font-size: 4.7rem;
+    margin-bottom: 2rem;
+    font-weight: bold;
+    font-family: "Lora", serif;
+    color: var(--text-title);
+}
+
+.text-main p {
+    color: var(--text-body);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 3rem;
+    margin-bottom: 4rem;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+.img-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    width: 80%;
+    height: 100%;
+}
+
+.img-main img {
+    width: 80%;
+    margin-top: 3rem;
+}
+
+.form-main h2 {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    font-weight: bold;
+    font-family: "Lora", serif;
+    display: flex;
+    justify-content: center;
+    color: var(--text-title);
+}
+
+input {
+    width: 25rem;
+    height: 3rem;
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+    border: 0.1rem solid var(--border-color);
+    border-radius: 1.5rem;
+    font-size: 1.2rem;
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--bg-input);
+    color: var(--text-title);
+}
+
+button {
+    width: 15rem;
+    height: 3.5rem;
+    background: var(--btn-primary);
+    color: var(--btn-primary-text);
+    border: none;
+    border-radius: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: background 0.4s ease;
+}
+
+button:hover {
+    background: var(--btn-primary-hover);
+}
+
+.others-forms {
+    margin-top: 2rem;
+}
+
+.others-forms p {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-family: 'Source Sans 3', sans-serif;
+    color: var(--text-body);
+}
+
+.others-forms a {
+    text-decoration: none;
+    color: var(--text-link);
+    font-weight: bold;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+span>a {
+    margin: 0 1rem;
+    font-size: 1.2rem;
+    color: var(--text-link);
+    font-family: 'Source Sans 3', sans-serif;
+    text-decoration: none;
+    margin-bottom: 2rem;
+}
+
+span {
+    margin-bottom: 1rem;
+}
+
+/* ==================== ALERTAS ==================== */
+.alerta {
+    width: 25rem;
+    padding: 1rem 1.5rem;
+    border-radius: 1rem;
+    font-size: 1.3rem;
+    font-family: 'Source Sans 3', sans-serif;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.alerta-erro {
+    background: #fff0f0;
+    color: #8b0000;
+    border: 1px solid #f5c6c6;
+}
+
+.alerta-sucesso {
+    background: #f0fdf4;
+    color: #1a4d2e;
+    border: 1px solid #bbf7d0;
+}
+
+body.dark .alerta-erro {
+    background: #4A3020;
+    color: #FFB0B0;
+    border-color: #6B4040;
+}
+
+body.dark .alerta-sucesso {
+    background: #2A4020;
+    color: #B0FFB0;
+    border-color: #406B40;
+}
+
+/* ==================== RESPONSIVIDADE ==================== */
+
+/* Tablet */
+@media (max-width: 1200px) {
+    main {
+        padding: 0 4rem;
+    }
+
+    .text-main h1 {
+        font-size: 3.5rem;
+    }
+
+    .img-main img {
+        width: 70%;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    body {
+        height: auto;
+        min-height: 100vh;
+    }
+
+    nav {
+        flex-direction: column;
+        gap: 2rem;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .links-nav-login li {
+        display: block;
+        margin: 0.5rem 0;
+    }
+
+    .links-nav-login a {
+        margin: 0;
+    }
+
+    main {
+        flex-direction: column;
+        height: auto;
+        padding: 2rem 1.5rem;
+        gap: 3rem;
+    }
+
+    .text-main, .form-main {
+        width: 100%;
+        height: auto;
+        align-items: center;
+        text-align: center;
+    }
+
+    .text-main h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .text-main p {
+        font-size: 1.2rem;
+        line-height: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .img-main {
+        display: none;
+    }
+
+    .form-main h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    input {
+        width: 100%;
+        max-width: 25rem;
+    }
+
+    button {
+        width: 100%;
+        max-width: 20rem;
+    }
+
+    .others-forms {
+        text-align: center;
+    }
+
+    span>a {
+        display: block;
+        margin: 0.5rem 0;
+    }
+}
+
+/* Mobile Pequeno */
+@media (max-width: 480px) {
+    nav {
+        padding: 1.5rem;
+    }
+
+    main {
+        padding: 1.5rem 1rem;
+    }
+
+    .text-main h1 {
+        font-size: 2rem;
+    }
+
+    .text-main p {
+        font-size: 1.1rem;
+        line-height: 1.8rem;
+    }
+
+    .form-main h2 {
+        font-size: 1.5rem;
+    }
+
+    input {
+        height: 2.5rem;
+        font-size: 1.1rem;
+    }
+
+    button {
+        height: 3rem;
+        font-size: 1.3rem;
+    }
+}
+
+
+/* Icones Font Awesome usados no lugar de emojis. */
+#themeIcon .fas { width: 1.4rem; text-align: center; }
+button .fas, a .fas, h2 .fas, h3 .fas, p .fas { margin-right: 0.6rem; }
