@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
  * MAPA RAPIDO DO ARQUIVO
  * Local: app/config/auth_check.php

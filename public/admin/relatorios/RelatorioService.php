@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
  * MAPA RAPIDO DO ARQUIVO
  * Local: public/admin/relatorios/RelatorioService.php
@@ -16,7 +16,7 @@
 
 class RelatorioService
 {
-    /** Prazo de devolução em dias, contado a partir da aprovação do empréstimo */
+    /** Prazo padrao de devolucao em dias. */
     const PRAZO_DIAS = 7;
 
     private PDO $pdo;
@@ -28,8 +28,7 @@ class RelatorioService
 
     /**
      * 1) Empréstimos em atraso
-     * Considera "atrasado" todo empréstimo com status='aprovado' cuja
-     * data_aprovacao + PRAZO_DIAS já passou e ainda não foi devolvido.
+     * Considera "atrasado" todo emprestimo ativo cuja data prevista ja passou.
      */
     public function emprestimosAtrasados(): array
     {
@@ -107,13 +106,14 @@ class RelatorioService
                 l.titulo,
                 l.subtitulo,
                 l.autor,
-                l.categoria,
+                COALESCE(c.nome, 'Sem categoria') AS categoria,
                 l.isbn,
                 l.ano,
                 l.quantidade AS quantidade_total,
                 COALESCE(emp.qtd_emprestada, 0) AS quantidade_emprestada,
                 (l.quantidade - COALESCE(emp.qtd_emprestada, 0)) AS quantidade_disponivel
             FROM livros l
+            LEFT JOIN categorias c ON c.id = l.id_categoria
             LEFT JOIN (
                 SELECT id_livro, COUNT(*) AS qtd_emprestada
                 FROM emprestimos
@@ -138,13 +138,14 @@ class RelatorioService
                 l.id,
                 l.titulo,
                 l.autor,
-                l.categoria,
+                COALESCE(c.nome, 'Sem categoria') AS categoria,
                 COUNT(e.id) AS total_solicitacoes,
                 SUM(CASE WHEN e.status IN ('A', 'V') THEN 1 ELSE 0 END) AS total_aprovados,
                 SUM(CASE WHEN e.status = 'D' THEN 1 ELSE 0 END) AS total_devolvidos
             FROM livros l
+            LEFT JOIN categorias c ON c.id = l.id_categoria
             LEFT JOIN emprestimos e ON e.id_livro = l.id
-            GROUP BY l.id, l.titulo, l.autor, l.categoria
+            GROUP BY l.id, l.titulo, l.autor, c.nome
             HAVING total_solicitacoes > 0
             ORDER BY total_solicitacoes DESC
             LIMIT :limite
@@ -168,7 +169,8 @@ class RelatorioService
             SELECT COUNT(*) FROM emprestimos
             WHERE status = 'A'
               AND data_prevista_devolucao < CURDATE()
-        ";        $totalAtrasados = (int) $this->pdo->query($sqlAtraso)->fetchColumn();
+        ";
+        $totalAtrasados = (int) $this->pdo->query($sqlAtraso)->fetchColumn();
 
         return [
             'total_livros'        => $totalLivros,

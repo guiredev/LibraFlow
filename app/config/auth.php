@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
  * MAPA RAPIDO DO ARQUIVO
  * Local: app/config/auth.php
@@ -67,6 +67,30 @@ function libraflowStartUserSession(array $usuario): void
     $_SESSION['usuario_nome'] = $usuario['nome'];
     $_SESSION['usuario_email'] = $usuario['email'];
     $_SESSION['usuario_tipo'] = $usuario['tipo'];
+}
+
+function libraflowCsrfToken(): string
+{
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+
+    return $_SESSION['csrf_token'];
+}
+
+function libraflowValidateCsrfToken(?string $token): bool
+{
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    return isset($_SESSION['csrf_token'])
+        && is_string($token)
+        && hash_equals($_SESSION['csrf_token'], $token);
 }
 
 function libraflowRememberUser(PDO $conn, int $usuarioId): void

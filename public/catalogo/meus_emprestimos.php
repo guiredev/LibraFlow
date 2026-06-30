@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
  * MAPA RAPIDO DO ARQUIVO
  * Local: public/catalogo/meus_emprestimos.php
@@ -310,7 +310,5 @@ $statusInfo = [
     </main>
 
     <script src="/LibraFlow/public/catalogo/darkmode.js"></script>
-</body>
-    </main>
 </body>
 </html>

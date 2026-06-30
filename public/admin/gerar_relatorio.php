@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
  * MAPA RAPIDO DO ARQUIVO
  * Local: public/admin/gerar_relatorio.php
@@ -17,8 +17,15 @@
  */
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/auth_check.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/public/admin/conexao.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/conexao.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/vendor/autoload.php';
+
+if ($_SESSION['usuario_tipo'] !== 'D') {
+    http_response_code(403);
+    exit('Acesso negado.');
+}
+
+$pdo = $conn;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -55,13 +62,13 @@ switch ($tipo) {
         $colunas  = ['Aluno', 'RM', 'Livro', 'Data Empréstimo', 'Data Devolução', 'Dias de Atraso'];
         $stmt = $pdo->prepare("
             SELECT u.nome AS aluno, u.rm, l.titulo AS livro,
-                   e.data_emprestimo, e.data_devolucao,
-                   DATEDIFF(CURDATE(), e.data_devolucao) AS dias_atraso
+                   e.data_emprestimo, e.data_prevista_devolucao,
+                   DATEDIFF(CURDATE(), e.data_prevista_devolucao) AS dias_atraso
             FROM emprestimos e
-            JOIN usuarios u ON u.id = e.usuario_id
-            JOIN livros   l ON l.id = e.livro_id
-            WHERE e.status = 'ativo'
-              AND e.data_devolucao < CURDATE()
+            JOIN usuarios u ON u.id = e.id_usuario
+            JOIN livros   l ON l.id = e.id_livro
+            WHERE e.status IN ('A', 'V')
+              AND e.data_prevista_devolucao < CURDATE()
             ORDER BY dias_atraso DESC
         ");
         $stmt->execute();
@@ -71,7 +78,7 @@ switch ($tipo) {
                 $r['rm'] ?? '—',
                 $r['livro'],
                 date('d/m/Y', strtotime($r['data_emprestimo'])),
-                date('d/m/Y', strtotime($r['data_devolucao'])),
+                date('d/m/Y', strtotime($r['data_prevista_devolucao'])),
                 $r['dias_atraso'] . ' dias',
             ];
         }
@@ -83,10 +90,10 @@ switch ($tipo) {
         $colunas  = ['Aluno', 'RM', 'Livro', 'Data Empréstimo', 'Data Devolução', 'Status'];
         $stmt = $pdo->prepare("
             SELECT u.nome AS aluno, u.rm, l.titulo AS livro,
-                   e.data_emprestimo, e.data_devolucao, e.status
+                   e.data_emprestimo, e.data_prevista_devolucao, e.data_devolucao, e.status
             FROM emprestimos e
-            JOIN usuarios u ON u.id = e.usuario_id
-            JOIN livros   l ON l.id = e.livro_id
+            JOIN usuarios u ON u.id = e.id_usuario
+            JOIN livros   l ON l.id = e.id_livro
             WHERE e.data_emprestimo BETWEEN :ini AND :fim
             ORDER BY e.data_emprestimo DESC
         ");
@@ -108,19 +115,18 @@ switch ($tipo) {
         $titulo  = 'Visitas à Biblioteca';
         $colunas = ['Data', 'Aluno', 'RM', 'Hora de Entrada'];
         $stmt = $pdo->prepare("
-            SELECT v.data_visita, u.nome AS aluno, u.rm, v.hora_entrada
-            FROM visitas v
-            JOIN usuarios u ON u.id = v.usuario_id
-            WHERE v.data_visita BETWEEN :ini AND :fim
-            ORDER BY v.data_visita DESC, v.hora_entrada ASC
+            SELECT data_registro, periodo, quantidade
+            FROM visitas_biblioteca
+            WHERE data_registro BETWEEN :ini AND :fim
+            ORDER BY data_registro DESC, periodo ASC
         ");
         $stmt->execute([':ini' => $inicio, ':fim' => $fim]);
         while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $dados[] = [
-                date('d/m/Y', strtotime($r['data_visita'])),
-                $r['aluno'],
-                $r['rm'] ?? '—',
-                $r['hora_entrada'] ?? '—',
+                date('d/m/Y', strtotime($r['data_registro'])),
+                'Total de visitas',
+                '—',
+                $r['periodo'] . ': ' . $r['quantidade'],
             ];
         }
         break;
@@ -134,9 +140,9 @@ switch ($tipo) {
                    COALESCE(c.nome, '—') AS categoria,
                    COUNT(e.id) AS total
             FROM livros l
-            LEFT JOIN emprestimos e ON e.livro_id = l.id
+            LEFT JOIN emprestimos e ON e.id_livro = l.id
                 AND e.data_emprestimo BETWEEN :ini AND :fim
-            LEFT JOIN categorias c ON c.id = l.categoria_id
+            LEFT JOIN categorias c ON c.id = l.id_categoria
             GROUP BY l.id
             ORDER BY total DESC
             LIMIT 20
@@ -170,8 +176,8 @@ switch ($tipo) {
             SELECT l.titulo, l.autor,
                    e.data_emprestimo, e.data_devolucao, e.status
             FROM emprestimos e
-            JOIN livros l ON l.id = e.livro_id
-            WHERE e.usuario_id = :uid
+            JOIN livros l ON l.id = e.id_livro
+            WHERE e.id_usuario = :uid
               AND e.data_emprestimo BETWEEN :ini AND :fim
             ORDER BY e.data_emprestimo DESC
         ");

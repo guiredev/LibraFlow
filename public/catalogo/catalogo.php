@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
  * MAPA RAPIDO DO ARQUIVO
  * Local: public/catalogo/catalogo.php
@@ -517,6 +517,5 @@ $emprestimosAtivos = array_flip($stmt->fetchAll(PDO::FETCH_COLUMN));
     </main>
 
     <script src="/LibraFlow/public/catalogo/darkmode.js"></script>
-</body>
 </body>
 </html>

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
  * MAPA RAPIDO DO ARQUIVO
  * Local: public/auth/login/login.php
@@ -22,7 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $senha = $_POST['senha']       ?? '';
 
-    if (empty($email) || empty($senha)) {
+    if (!libraflowValidateCsrfToken($_POST['csrf_token'] ?? null)) {
+        $erro = 'Sessao expirada. Recarregue a pagina e tente novamente.';
+    } elseif (empty($email) || empty($senha)) {
         $erro = 'Preencha e-mail e senha.';
     } else {
         $stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = ?");
@@ -37,7 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['usuario_email'] = $usuario['email'];
             $_SESSION['usuario_tipo']  = $usuario['tipo'];
 
-            libraflowRememberUser($conn, (int) $usuario['id']);
+            if (!empty($_POST['lembrar'])) {
+                libraflowRememberUser($conn, (int) $usuario['id']);
+            } else {
+                libraflowForgetRememberToken($conn);
+            }
 
             libraflowRedirectByUserType($usuario['tipo']);
         } else {
@@ -47,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $cadastroOk = isset($_GET['cadastro']) && $_GET['cadastro'] === 'ok';
+$csrfToken = libraflowCsrfToken();
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -86,7 +93,7 @@ $cadastroOk = isset($_GET['cadastro']) && $_GET['cadastro'] === 'ok';
             </div>
             <div class="login btn">
                 <a href="/LibraFlow/public/auth/cadastro/register.php">
-                    <button id="btn.log">Cadastrar</button>
+                    <button id="btn-log" type="button">Cadastrar</button>
                 </a>
             </div>
         </nav>
@@ -113,6 +120,8 @@ $cadastroOk = isset($_GET['cadastro']) && $_GET['cadastro'] === 'ok';
                 <?php endif; ?>
 
                 <form method="POST" action="">
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
+
                     <input
                         type="email"
                         name="email"
@@ -120,27 +129,31 @@ $cadastroOk = isset($_GET['cadastro']) && $_GET['cadastro'] === 'ok';
                         value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
                         required>
 
-                    <input
-                        type="password"
-                        name="senha"
-                        placeholder="senha"
-                        required>
+                    <div class="password-field">
+                        <input
+                            type="password"
+                            name="senha"
+                            placeholder="senha"
+                            required>
+                        <button type="button" class="password-toggle" aria-label="Mostrar senha">
+                            <i class="fas fa-eye" aria-hidden="true"></i>
+                        </button>
+                    </div>
 
-                    <span>
+                    <div class="form-options">
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="lembrar" value="1">
+                            <span>Lembrar-me neste dispositivo</span>
+                        </label>
+
                         <a href="/LibraFlow/public/auth/senha/esqueceu-a-senha.php">
                             Esqueceu a senha?
                         </a>
-                    </span>
+                    </div>
 
                     <button type="submit">Entrar</button>
                 </form>
-
-                <div class="others-forms">
-                    <p>Ou</p>
-                    <a href="#"><p>Entrar com Google</p></a>
-                </div>
             </div>
-        </main>
         </main>
     </div>
 
@@ -151,6 +164,18 @@ $cadastroOk = isset($_GET['cadastro']) && $_GET['cadastro'] === 'ok';
     </button>
 
     <script src="/LibraFlow/public/auth/login/darkmode.js"></script>
-</body>
+    <script>
+        document.querySelectorAll('.password-toggle').forEach(function (button) {
+            button.addEventListener('click', function () {
+                const input = button.parentElement.querySelector('input');
+                const isPassword = input.type === 'password';
+                input.type = isPassword ? 'text' : 'password';
+                button.setAttribute('aria-label', isPassword ? 'Ocultar senha' : 'Mostrar senha');
+                button.innerHTML = isPassword
+                    ? '<i class="fas fa-eye-slash" aria-hidden="true"></i>'
+                    : '<i class="fas fa-eye" aria-hidden="true"></i>';
+            });
+        });
+    </script>
 </body>
 </html>

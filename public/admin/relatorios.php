@@ -1,11 +1,16 @@
-﻿<?php
+<?php
 /*
  * MAPA RAPIDO DO ARQUIVO
  * Local: public/admin/relatorios.php
  * Funcao: Tela antiga/simples de relatorios administrativos.
  */
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/auth_check.php';
-require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/public/admin/conexao.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/conexao.php';
+
+if ($_SESSION['usuario_tipo'] !== 'D') {
+    header('Location: /LibraFlow/public/usuario/index.php');
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -444,14 +449,12 @@ require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/public/admin/conexao.php';
         return true;
     }
 
-    // CORRIGIDO: gerar_relatorio.php está na MESMA pasta (public/admin/),
-    // então o caminho é direto, sem "../../"
     function gerar(tipo, formato) {
         const ini = document.getElementById('data_inicio').value;
         const fim = document.getElementById('data_fim').value;
         if (!ini || !fim) { alert('Selecione o período antes de gerar o relatório.'); return; }
         mostrarToast('⏳ Gerando relatório...');
-        const url = `../relatorios/gerar_relatorio.php?tipo=${tipo}&formato=${formato}&inicio=${ini}&fim=${fim}`;
+        const url = `gerar_relatorio.php?tipo=${tipo}&formato=${formato}&inicio=${ini}&fim=${fim}`;
         window.open(url, '_blank');
     }
 
@@ -462,7 +465,7 @@ require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/public/admin/conexao.php';
         const fim = document.getElementById('data_fim').value;
         if (!ini || !fim) { alert('Selecione o período antes de gerar o relatório.'); return; }
         mostrarToast('⏳ Gerando relatório...');
-        const url = `../relatorios/gerar_relatorio.php?tipo=historico_aluno&formato=${formato}&inicio=${ini}&fim=${fim}&aluno_id=${aluno_id}`;
+        const url = `gerar_relatorio.php?tipo=historico_aluno&formato=${formato}&inicio=${ini}&fim=${fim}&aluno_id=${aluno_id}`;
         window.open(url, '_blank');
     }
 

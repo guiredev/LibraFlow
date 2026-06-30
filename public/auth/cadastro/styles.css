@@ -186,6 +186,51 @@ span {
     margin-bottom: 1rem;
 }
 
+.form-description {
+    width: 30rem;
+    max-width: 100%;
+    margin: -1.6rem auto 2rem;
+    color: #606C38;
+    font-size: 1.25rem;
+    line-height: 1.8rem;
+    text-align: center;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+.password-field {
+    position: relative;
+    width: 25rem;
+    margin-bottom: 2rem;
+}
+
+.password-field input {
+    width: 100%;
+    margin-bottom: 0;
+    padding-right: 4rem;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 0;
+    right: 0.4rem;
+    width: 3rem;
+    height: 3rem;
+    max-width: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #BC6C25;
+    font-size: 1.3rem;
+}
+
+.password-toggle:hover {
+    background: transparent;
+    color: #283618;
+}
+
+.password-toggle .fas {
+    margin-right: 0;
+}
+
 /* Wrapper que posiciona o conjunto botão + texto na tela */
 .theme-btn-wrapper {
     position: fixed;        /* fixed = grudado na tela ao rolar */
@@ -242,9 +287,23 @@ body.dark .text-main p {
     color: #A8C97F;
 }
 
+body.dark .form-description {
+    color: #A8C97F;
+}
+
 body.dark input {
     background: #243015;
     border-color: #3A4E1E;
+    color: #D4E8B0;
+}
+
+body.dark .password-toggle {
+    background: transparent;
+    color: #A8C97F;
+}
+
+body.dark .password-toggle:hover {
+    background: transparent;
     color: #D4E8B0;
 }
 
@@ -387,7 +446,17 @@ body.dark #themeLabel {
         margin-bottom: 2rem;
     }
 
+    .form-description {
+        width: 100%;
+        margin-top: -1rem;
+    }
+
     input {
+        width: 100%;
+        max-width: 25rem;
+    }
+
+    .password-field {
         width: 100%;
         max-width: 25rem;
     }

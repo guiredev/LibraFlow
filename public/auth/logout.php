@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
  * MAPA RAPIDO DO ARQUIVO
  * Local: public/auth/logout.php
@@ -8,8 +8,10 @@
 
 session_start();
 
-require_once __DIR__ . '/../../../app/config/conexao.php';
-require_once __DIR__ . '/../../../app/config/auth.php';
+$projectRoot = dirname(__DIR__, 2);
+
+require_once $projectRoot . '/app/config/conexao.php';
+require_once $projectRoot . '/app/config/auth.php';
 
 libraflowForgetRememberToken($conn);
 

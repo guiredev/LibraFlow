@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
  * MAPA RAPIDO DO ARQUIVO
  * Local: public/catalogo/solicitar.php
@@ -321,6 +321,5 @@ try {
     </main>
 
     <script src="/LibraFlow/public/catalogo/darkmode.js"></script>
-</body>
 </body>
 </html>

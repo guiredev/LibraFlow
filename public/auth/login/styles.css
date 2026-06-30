@@ -203,6 +203,40 @@ input {
     color: var(--text-title);
 }
 
+.password-field {
+    position: relative;
+    width: 25rem;
+    margin-bottom: 2rem;
+}
+
+.password-field input {
+    width: 100%;
+    margin-bottom: 0;
+    padding-right: 4rem;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 0;
+    right: 0.4rem;
+    width: 3rem;
+    height: 3rem;
+    max-width: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--text-link);
+    font-size: 1.3rem;
+}
+
+.password-toggle:hover {
+    background: transparent;
+    color: var(--text-title);
+}
+
+.password-toggle .fas {
+    margin-right: 0;
+}
+
 button {
     width: 15rem;
     height: 3.5rem;
@@ -250,6 +284,44 @@ span>a {
 
 span {
     margin-bottom: 1rem;
+}
+
+.form-options {
+    width: 25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+    margin: -0.4rem 0 1.6rem;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+.form-options a {
+    color: var(--text-link);
+    font-size: 1.2rem;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.checkbox-option {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    color: var(--text-body);
+    font-size: 1.2rem;
+    line-height: 1.4rem;
+    cursor: pointer;
+}
+
+.checkbox-option input[type="checkbox"] {
+    width: 1.4rem;
+    height: 1.4rem;
+    margin: 0;
+    accent-color: var(--btn-primary-hover);
+}
+
+.checkbox-option span {
+    margin: 0;
 }
 
 /* ==================== ALERTAS ==================== */
@@ -366,12 +438,24 @@ body.dark .alerta-sucesso {
         max-width: 25rem;
     }
 
+    .password-field {
+        width: 100%;
+        max-width: 25rem;
+    }
+
     button {
         width: 100%;
         max-width: 20rem;
     }
 
     .others-forms {
+        text-align: center;
+    }
+
+    .form-options {
+        width: 100%;
+        max-width: 25rem;
+        align-items: center;
         text-align: center;
     }
 

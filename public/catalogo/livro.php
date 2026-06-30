@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
  * MAPA RAPIDO DO ARQUIVO
  * Local: public/catalogo/livro.php
@@ -454,6 +454,5 @@ $jaEmprestado = (bool) $stmt->fetch();
     </div>
 
     <script src="/LibraFlow/public/catalogo/darkmode.js"></script>
-</body>
 </body>
 </html>
