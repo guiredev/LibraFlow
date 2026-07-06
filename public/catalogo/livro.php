@@ -8,8 +8,12 @@
 
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/auth_check.php';
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/conexao.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/user_features.php';
+
+libraflowEnsureUserFeatureTables($conn);
 
 $id = intval($_GET['id'] ?? 0);
+$csrfToken = libraflowCsrfToken();
 if (!$id) { header('Location: catalogo.php'); exit; }
 
 $stmt = $conn->prepare("
@@ -33,6 +37,8 @@ $stmt = $conn->prepare("
 ");
 $stmt->execute([$_SESSION['usuario_id'], $id]);
 $jaEmprestado = (bool) $stmt->fetch();
+$favoritos = libraflowFavoritosDoUsuario($conn, (int) $_SESSION['usuario_id']);
+$favoritado = isset($favoritos[$id]);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -385,6 +391,7 @@ $jaEmprestado = (bool) $stmt->fetch();
         <div class="links-nav">
             <ul>
                 <li><a href="/LibraFlow/public/usuario/index.php"><i class="fas fa-house" aria-hidden="true"></i> Inicio</a></li>
+                <li><a href="/LibraFlow/public/usuario/perfil.php"><i class="fas fa-user" aria-hidden="true"></i> Perfil</a></li>
                 <li><a class="ativo" href="/LibraFlow/public/catalogo/catalogo.php"><i class="fas fa-book-open" aria-hidden="true"></i> Catalogo</a></li>
                 <li><a href="/LibraFlow/public/catalogo/meus_emprestimos.php"><i class="fas fa-bookmark" aria-hidden="true"></i> Meus emprestimos</a></li>
                 <li><a href="/LibraFlow/public/auth/logout.php"><i class="fas fa-right-from-bracket" aria-hidden="true"></i> Sair</a></li>
@@ -439,6 +446,15 @@ $jaEmprestado = (bool) $stmt->fetch();
 
             <div class="botoes-detalhe">
                 <a href="catalogo.php" class="btn-voltar"><i class="fas fa-arrow-left" aria-hidden="true"></i> Voltar</a>
+                <form method="POST" action="favorito.php" class="favorito-form">
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
+                    <input type="hidden" name="id_livro" value="<?= (int) $livro['id'] ?>">
+                    <input type="hidden" name="redirect" value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>">
+                    <button type="submit" class="btn-favorito-texto <?= $favoritado ? 'ativo' : '' ?>">
+                        <i class="<?= $favoritado ? 'fas' : 'far' ?> fa-heart" aria-hidden="true"></i>
+                        <?= $favoritado ? 'Favorito' : 'Favoritar' ?>
+                    </button>
+                </form>
                 <a href="solicitar.php?id=<?= $livro['id'] ?>"
                    class="btn-solicitar <?= ($livro['quantidade'] <= 0 || $jaEmprestado) ? 'desabilitado' : '' ?>">
                     <?= $jaEmprestado ? 'Já solicitado' : 'Solicitar empréstimo' ?>

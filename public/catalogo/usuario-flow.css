@@ -388,6 +388,10 @@ main {
 }
 
 .card-botoes {
+    display: grid !important;
+    grid-template-columns: auto 1fr 1fr;
+    gap: 0.8rem;
+    align-items: center;
     padding: 0 1.3rem 1.3rem !important;
 }
 
@@ -503,6 +507,48 @@ main {
     width: 100%;
 }
 
+.favorito-form {
+    margin: 0;
+}
+
+.btn-favorito,
+.btn-favorito-texto {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid color-mix(in srgb, var(--u-danger) 24%, transparent) !important;
+    background: var(--u-bg-card) !important;
+    color: var(--u-danger) !important;
+    cursor: pointer;
+    font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+    font-weight: 900;
+}
+
+.btn-favorito {
+    width: 3.8rem !important;
+    min-width: 3.8rem;
+    height: 3.8rem !important;
+    padding: 0 !important;
+    border-radius: var(--u-radius-sm) !important;
+    font-size: 1.5rem !important;
+}
+
+.btn-favorito-texto {
+    gap: 0.6rem;
+    min-height: 4rem;
+    padding: 0 1.2rem;
+    border-radius: var(--u-radius-sm);
+    font-size: 1.35rem !important;
+}
+
+.btn-favorito.ativo,
+.btn-favorito-texto.ativo,
+.btn-favorito:hover,
+.btn-favorito-texto:hover {
+    background: var(--u-danger-bg);
+    color: var(--u-danger) !important;
+}
+
 .emprestimo-card {
     grid-template-columns: 7rem minmax(0, 1fr) auto !important;
     margin-bottom: 1rem !important;
@@ -559,10 +605,10 @@ main {
     justify-content: center;
     min-height: 3.2rem;
     padding: 0 1rem;
-    border: 1px solid color-mix(in srgb, var(--u-text-link) 26%, transparent);
+    border: 1px solid color-mix(in srgb, var(--u-text-link) 26%, transparent) !important;
     border-radius: var(--u-radius-sm);
-    background: color-mix(in srgb, var(--u-text-link) 10%, var(--u-bg-card));
-    color: var(--u-text-link);
+    background: color-mix(in srgb, var(--u-text-link) 10%, var(--u-bg-card)) !important;
+    color: var(--u-text-link) !important;
     cursor: pointer;
     font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
     font-size: 1.2rem;
@@ -572,8 +618,23 @@ main {
 
 .renovar-form button:hover {
     border-color: var(--u-text-link);
-    background: var(--u-text-link);
-    color: #FFFFFF;
+    background: var(--u-text-link) !important;
+    color: #FFFFFF !important;
+}
+
+.renovacao-pendente {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3.2rem;
+    padding: 0 1rem;
+    border: 1px solid color-mix(in srgb, var(--u-info) 28%, transparent);
+    border-radius: var(--u-radius-sm);
+    background: var(--u-info-bg);
+    color: var(--u-info);
+    font-size: 1.2rem;
+    font-weight: 900;
+    white-space: nowrap;
 }
 
 .emprestimo-card img,

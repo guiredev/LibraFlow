@@ -14,6 +14,9 @@ if ($_SESSION['usuario_tipo'] !== 'D') {
 }
 
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/conexao.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/user_features.php';
+
+libraflowEnsureUserFeatureTables($conn);
 
 $erro = '';
 $sucesso = '';
@@ -104,10 +107,10 @@ try {
           AND data_prevista_devolucao < CURDATE()
     ");
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'devolver') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && in_array($_POST['acao'] ?? '', ['devolver', 'aprovar_renovacao', 'rejeitar_renovacao'], true)) {
         if (!libraflowValidateCsrfToken($_POST['csrf_token'] ?? null)) {
             $erro = 'Sessao expirada. Recarregue a pagina e tente novamente.';
-        } else {
+        } elseif (($_POST['acao'] ?? '') === 'devolver') {
         $idEmprestimo = intval($_POST['id_emprestimo'] ?? 0);
 
         $conn->beginTransaction();
@@ -139,6 +142,69 @@ try {
         }
 
         $conn->commit();
+        } else {
+            $idRenovacao = (int) ($_POST['id_renovacao'] ?? 0);
+            $acaoRenovacao = $_POST['acao'];
+
+            $conn->beginTransaction();
+
+            $stmt = $conn->prepare("
+                SELECT r.*, e.data_prevista_devolucao, e.status AS status_emprestimo, l.titulo
+                FROM renovacoes_emprestimos r
+                JOIN emprestimos e ON e.id = r.id_emprestimo
+                JOIN livros l ON l.id = e.id_livro
+                WHERE r.id = ?
+                  AND r.status = 'P'
+                FOR UPDATE
+            ");
+            $stmt->execute([$idRenovacao]);
+            $renovacao = $stmt->fetch();
+
+            if (!$renovacao) {
+                $erro = 'Solicitacao de renovacao nao encontrada.';
+            } elseif ($renovacao['status_emprestimo'] !== 'A') {
+                $erro = 'Este emprestimo nao esta ativo para renovacao.';
+            } elseif ($acaoRenovacao === 'aprovar_renovacao') {
+                $conn->prepare("
+                    UPDATE emprestimos
+                    SET data_prevista_devolucao = DATE_ADD(data_prevista_devolucao, INTERVAL ? DAY)
+                    WHERE id = ?
+                ")->execute([(int) $renovacao['dias_solicitados'], (int) $renovacao['id_emprestimo']]);
+
+                $conn->prepare("
+                    UPDATE renovacoes_emprestimos
+                    SET status = 'A', analisado_em = NOW(), id_admin = ?
+                    WHERE id = ?
+                ")->execute([(int) $_SESSION['usuario_id'], $idRenovacao]);
+
+                libraflowCriarNotificacao(
+                    $conn,
+                    (int) $renovacao['id_usuario'],
+                    'Renovacao aprovada',
+                    'Seu prazo foi renovado por mais ' . (int) $renovacao['dias_solicitados'] . ' dias.',
+                    '/LibraFlow/public/catalogo/meus_emprestimos.php?status=A'
+                );
+
+                $sucesso = 'Renovacao aprovada com sucesso.';
+            } else {
+                $conn->prepare("
+                    UPDATE renovacoes_emprestimos
+                    SET status = 'R', analisado_em = NOW(), id_admin = ?
+                    WHERE id = ?
+                ")->execute([(int) $_SESSION['usuario_id'], $idRenovacao]);
+
+                libraflowCriarNotificacao(
+                    $conn,
+                    (int) $renovacao['id_usuario'],
+                    'Renovacao recusada',
+                    'A biblioteca nao aprovou a renovacao de "' . $renovacao['titulo'] . '".',
+                    '/LibraFlow/public/catalogo/meus_emprestimos.php?status=A'
+                );
+
+                $sucesso = 'Renovacao recusada.';
+            }
+
+            $conn->commit();
         }
     }
 
@@ -170,11 +236,25 @@ try {
     $stmt = $conn->prepare($sql);
     $stmt->execute($params);
     $emprestimos = $stmt->fetchAll();
+
+    $renovacoesPendentes = $conn->query("
+        SELECT r.id, r.dias_solicitados, r.criado_em,
+               e.data_prevista_devolucao,
+               l.titulo,
+               u.nome AS usuario_nome
+        FROM renovacoes_emprestimos r
+        JOIN emprestimos e ON e.id = r.id_emprestimo
+        JOIN livros l ON l.id = e.id_livro
+        JOIN usuarios u ON u.id = r.id_usuario
+        WHERE r.status = 'P'
+        ORDER BY r.criado_em ASC
+    ")->fetchAll();
 } catch (PDOException $e) {
     if ($conn->inTransaction()) {
         $conn->rollBack();
     }
     $emprestimos = [];
+    $renovacoesPendentes = [];
     $erro = 'Não foi possível carregar os empréstimos. Verifique se a tabela foi criada.';
 }
 
@@ -215,6 +295,63 @@ $statusInfo = [
 
         .btn-devolver:hover { background: #dcfce7; }
         .muted { color: #888; font-size: 1.2rem; }
+
+        .renovacoes-admin {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .renovacao-admin-card {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 1rem;
+            align-items: center;
+            padding: 1.2rem;
+            border: 1px solid #D9DFC8;
+            border-radius: 1rem;
+            background: #fff;
+            box-shadow: 0 2px 12px rgba(40, 54, 24, 0.07);
+        }
+
+        .renovacao-admin-card strong,
+        .renovacao-admin-card span {
+            display: block;
+        }
+
+        .renovacao-admin-card strong {
+            color: #283618;
+            font-size: 1.45rem;
+        }
+
+        .renovacao-admin-acoes {
+            display: flex;
+            gap: 0.7rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .btn-renovar-aprovar,
+        .btn-renovar-rejeitar {
+            min-height: 3.4rem;
+            padding: 0 1rem;
+            border-radius: 0.7rem;
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-weight: 800;
+        }
+
+        .btn-renovar-aprovar {
+            background: #DCFCE7;
+            color: #166534;
+            border-color: #BBF7D0;
+        }
+
+        .btn-renovar-rejeitar {
+            background: #FEE2E2;
+            color: #B91C1C;
+            border-color: #FECACA;
+        }
 
         /* Modal Styles */
         .modal-overlay {
@@ -511,6 +648,38 @@ $statusInfo = [
 
         <?php if ($sucesso): ?>
             <div class="alerta alerta-sucesso"><?= htmlspecialchars($sucesso) ?></div>
+        <?php endif; ?>
+
+        <?php if (!empty($renovacoesPendentes)): ?>
+            <section class="renovacoes-admin">
+                <?php foreach ($renovacoesPendentes as $renovacao): ?>
+                    <article class="renovacao-admin-card">
+                        <div>
+                            <strong><?= htmlspecialchars($renovacao['titulo']) ?></strong>
+                            <span class="muted">
+                                <?= htmlspecialchars($renovacao['usuario_nome']) ?>
+                                solicitou +<?= (int) $renovacao['dias_solicitados'] ?> dias.
+                                Prazo atual:
+                                <?= $renovacao['data_prevista_devolucao'] ? date('d/m/Y', strtotime($renovacao['data_prevista_devolucao'])) : '-' ?>
+                            </span>
+                        </div>
+                        <div class="renovacao-admin-acoes">
+                            <form method="POST" action="emprestimos.php">
+                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
+                                <input type="hidden" name="acao" value="aprovar_renovacao">
+                                <input type="hidden" name="id_renovacao" value="<?= (int) $renovacao['id'] ?>">
+                                <button type="submit" class="btn-renovar-aprovar">Aprovar</button>
+                            </form>
+                            <form method="POST" action="emprestimos.php">
+                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
+                                <input type="hidden" name="acao" value="rejeitar_renovacao">
+                                <input type="hidden" name="id_renovacao" value="<?= (int) $renovacao['id'] ?>">
+                                <button type="submit" class="btn-renovar-rejeitar">Recusar</button>
+                            </form>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+            </section>
         <?php endif; ?>
 
         <div class="filtro-header">

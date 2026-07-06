@@ -8,6 +8,7 @@
 
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/auth_check.php';
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/conexao.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/user_features.php';
 
 if ($_SESSION['usuario_tipo'] === 'D') {
     header('Location: /LibraFlow/public/admin/Admin.php');
@@ -15,8 +16,16 @@ if ($_SESSION['usuario_tipo'] === 'D') {
 }
 
 $erro = '';
+libraflowEnsureUserFeatureTables($conn);
 
 try {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'marcar_notificacoes') {
+        if (libraflowValidateCsrfToken($_POST['csrf_token'] ?? null)) {
+            $stmt = $conn->prepare("UPDATE notificacoes_usuario SET lida = 1 WHERE id_usuario = ?");
+            $stmt->execute([$_SESSION['usuario_id']]);
+        }
+    }
+
     $conn->prepare("
         UPDATE emprestimos
         SET status = 'V'
@@ -63,6 +72,28 @@ try {
     ");
     $stmt->execute([$_SESSION['usuario_id']]);
     $livrosRecentes = $stmt->fetchAll();
+
+    $stmt = $conn->prepare("
+        SELECT l.id, l.titulo, l.autor, l.capa
+        FROM favoritos_livros f
+        JOIN livros l ON l.id = f.id_livro
+        WHERE f.id_usuario = ?
+        ORDER BY f.criado_em DESC
+        LIMIT 3
+    ");
+    $stmt->execute([$_SESSION['usuario_id']]);
+    $favoritosRecentes = $stmt->fetchAll();
+
+    $stmt = $conn->prepare("
+        SELECT id, titulo, mensagem, link, lida, criado_em
+        FROM notificacoes_usuario
+        WHERE id_usuario = ?
+        ORDER BY criado_em DESC
+        LIMIT 4
+    ");
+    $stmt->execute([$_SESSION['usuario_id']]);
+    $notificacoes = $stmt->fetchAll();
+    $notificacoesNaoLidas = libraflowContarNotificacoesNaoLidas($conn, (int) $_SESSION['usuario_id']);
 } catch (PDOException $e) {
     $usuario = [
         'nome' => $_SESSION['usuario_nome'] ?? 'Aluno',
@@ -77,6 +108,9 @@ try {
     $pendencias = 0;
     $proximoPrazo = null;
     $livrosRecentes = [];
+    $favoritosRecentes = [];
+    $notificacoes = [];
+    $notificacoesNaoLidas = 0;
     $erro = 'Nao foi possivel carregar todos os dados do painel.';
 }
 
@@ -153,6 +187,7 @@ $proximoPrazoInfo = libraflowPrazoInfo($proximoPrazo['data_prevista_devolucao'] 
         <div class="links-nav">
             <ul>
                 <li><a class="ativo" href="/LibraFlow/public/usuario/index.php"><i class="fas fa-house" aria-hidden="true"></i> Inicio</a></li>
+                <li><a href="/LibraFlow/public/usuario/perfil.php"><i class="fas fa-user" aria-hidden="true"></i> Perfil</a></li>
                 <li><a href="/LibraFlow/public/catalogo/catalogo.php"><i class="fas fa-book-open" aria-hidden="true"></i> Catalogo</a></li>
                 <li><a href="/LibraFlow/public/catalogo/meus_emprestimos.php"><i class="fas fa-bookmark" aria-hidden="true"></i> Meus emprestimos</a></li>
                 <li><a href="/LibraFlow/public/auth/logout.php"><i class="fas fa-right-from-bracket" aria-hidden="true"></i> Sair</a></li>
@@ -211,6 +246,11 @@ $proximoPrazoInfo = libraflowPrazoInfo($proximoPrazo['data_prevista_devolucao'] 
                 <div class="stat-icon"><i class="fas fa-triangle-exclamation" aria-hidden="true"></i></div>
                 <h3>Pendencias</h3>
                 <span><?= $pendencias ?></span>
+            </article>
+            <article class="stat-card stat-notificacoes">
+                <div class="stat-icon"><i class="fas fa-bell" aria-hidden="true"></i></div>
+                <h3>Notificacoes</h3>
+                <span><?= $notificacoesNaoLidas ?></span>
             </article>
         </section>
 
@@ -275,6 +315,61 @@ $proximoPrazoInfo = libraflowPrazoInfo($proximoPrazo['data_prevista_devolucao'] 
                                 </div>
                                 <span class="status <?= $status[1] ?>"><?= $status[0] ?></span>
                             </article>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </section>
+
+            <section class="painel favoritos-recentes">
+                <div class="painel-topo">
+                    <h2>Favoritos</h2>
+                    <a href="/LibraFlow/public/catalogo/catalogo.php">Explorar</a>
+                </div>
+                <div class="lista-livros">
+                    <?php if (empty($favoritosRecentes)): ?>
+                        <div class="vazio">Nenhum favorito salvo ainda.</div>
+                    <?php else: ?>
+                        <?php foreach ($favoritosRecentes as $livro): ?>
+                            <article class="livro-card">
+                                <?php if ($livro['capa']): ?>
+                                    <img src="/LibraFlow/public/catalogo/capas/<?= htmlspecialchars($livro['capa']) ?>" alt="Capa de <?= htmlspecialchars($livro['titulo']) ?>">
+                                <?php else: ?>
+                                    <div class="sem-capa"><i class="fas fa-book" aria-hidden="true"></i></div>
+                                <?php endif; ?>
+                                <div class="livro-info">
+                                    <h3><?= htmlspecialchars($livro['titulo']) ?></h3>
+                                    <p><?= htmlspecialchars($livro['autor']) ?></p>
+                                    <small><a href="/LibraFlow/public/catalogo/livro.php?id=<?= (int) $livro['id'] ?>">Ver detalhes</a></small>
+                                </div>
+                            </article>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </section>
+
+            <section class="painel notificacoes-painel">
+                <div class="painel-topo">
+                    <h2>Notificacoes</h2>
+                    <?php if ($notificacoesNaoLidas > 0): ?>
+                        <form method="POST" class="marcar-notificacoes-form">
+                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(libraflowCsrfToken()) ?>">
+                            <input type="hidden" name="acao" value="marcar_notificacoes">
+                            <button type="submit">Marcar lidas</button>
+                        </form>
+                    <?php else: ?>
+                        <span>0 novas</span>
+                    <?php endif; ?>
+                </div>
+                <div class="lista-notificacoes">
+                    <?php if (empty($notificacoes)): ?>
+                        <div class="vazio">Nenhuma notificacao por enquanto.</div>
+                    <?php else: ?>
+                        <?php foreach ($notificacoes as $notificacao): ?>
+                            <?php $tag = $notificacao['link'] ? 'a' : 'div'; ?>
+                            <<?= $tag ?> class="notificacao-item <?= $notificacao['lida'] ? '' : 'nao-lida' ?>" <?= $notificacao['link'] ? 'href="' . htmlspecialchars($notificacao['link']) . '"' : '' ?>>
+                                <strong><?= htmlspecialchars($notificacao['titulo']) ?></strong>
+                                <span><?= htmlspecialchars($notificacao['mensagem']) ?></span>
+                            </<?= $tag ?>>
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </div>

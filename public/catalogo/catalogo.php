@@ -8,9 +8,13 @@
 
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/auth_check.php';
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/conexao.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/user_features.php';
+
+libraflowEnsureUserFeatureTables($conn);
 
 $busca     = trim($_GET['txtBusca']    ?? '');
 $filtrocat = intval($_GET['categoria'] ?? 0);
+$csrfToken = libraflowCsrfToken();
 
 $sql    = "SELECT l.*, c.nome AS categoria_nome FROM livros l LEFT JOIN categorias c ON c.id = l.id_categoria WHERE 1=1";
 $params = [];
@@ -32,6 +36,7 @@ $stmt = $conn->prepare("
 ");
 $stmt->execute([$_SESSION['usuario_id']]);
 $emprestimosAtivos = array_flip($stmt->fetchAll(PDO::FETCH_COLUMN));
+$favoritos = libraflowFavoritosDoUsuario($conn, (int) $_SESSION['usuario_id']);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -426,6 +431,7 @@ $emprestimosAtivos = array_flip($stmt->fetchAll(PDO::FETCH_COLUMN));
         <div class="links-nav">
             <ul>
                 <li><a href="/LibraFlow/public/usuario/index.php"><i class="fas fa-house" aria-hidden="true"></i> Inicio</a></li>
+                <li><a href="/LibraFlow/public/usuario/perfil.php"><i class="fas fa-user" aria-hidden="true"></i> Perfil</a></li>
                 <li><a class="ativo" href="/LibraFlow/public/catalogo/catalogo.php"><i class="fas fa-book-open" aria-hidden="true"></i> Catalogo</a></li>
                 <li><a href="/LibraFlow/public/catalogo/meus_emprestimos.php"><i class="fas fa-bookmark" aria-hidden="true"></i> Meus emprestimos</a></li>
                 <li><a href="/LibraFlow/public/auth/logout.php"><i class="fas fa-right-from-bracket" aria-hidden="true"></i> Sair</a></li>
@@ -476,6 +482,7 @@ $emprestimosAtivos = array_flip($stmt->fetchAll(PDO::FETCH_COLUMN));
             <?php else: ?>
                 <?php foreach ($livros as $livro): ?>
                 <?php $jaEmprestado = isset($emprestimosAtivos[$livro['id']]); ?>
+                <?php $favoritado = isset($favoritos[$livro['id']]); ?>
                 <div class="card-livro">
                     <?php if ($livro['capa']): ?>
                         <img src="/LibraFlow/public/catalogo/capas/<?= htmlspecialchars($livro['capa']) ?>"
@@ -498,6 +505,14 @@ $emprestimosAtivos = array_flip($stmt->fetchAll(PDO::FETCH_COLUMN));
                     </div>
 
                     <div class="card-botoes">
+                        <form method="POST" action="favorito.php" class="favorito-form">
+                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
+                            <input type="hidden" name="id_livro" value="<?= (int) $livro['id'] ?>">
+                            <input type="hidden" name="redirect" value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>">
+                            <button type="submit" class="btn-favorito <?= $favoritado ? 'ativo' : '' ?>" aria-label="<?= $favoritado ? 'Remover dos favoritos' : 'Adicionar aos favoritos' ?>">
+                                <i class="<?= $favoritado ? 'fas' : 'far' ?> fa-heart" aria-hidden="true"></i>
+                            </button>
+                        </form>
                         <a href="livro.php?id=<?= $livro['id'] ?>" class="btn-ver-mais">Ver mais</a>
                         <a href="solicitar.php?id=<?= $livro['id'] ?>"
                            class="btn-solicitar <?= ($livro['quantidade'] <= 0 || $jaEmprestado) ? 'desabilitado' : '' ?>">

@@ -8,6 +8,9 @@
 
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/auth_check.php';
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/conexao.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/user_features.php';
+
+libraflowEnsureUserFeatureTables($conn);
 
 $idLivro = intval($_GET['id'] ?? $_POST['id_livro'] ?? 0);
 
@@ -61,6 +64,14 @@ try {
 
                     $stmt = $conn->prepare("UPDATE livros SET quantidade = quantidade - 1 WHERE id = ?");
                     $stmt->execute([$idLivro]);
+
+                    libraflowCriarNotificacao(
+                        $conn,
+                        (int) $_SESSION['usuario_id'],
+                        'Emprestimo solicitado',
+                        'O livro "' . $livro['titulo'] . '" foi reservado para voce.',
+                        '/LibraFlow/public/catalogo/meus_emprestimos.php?status=A'
+                    );
 
                     $sucesso = 'Emprestimo solicitado com sucesso!';
                 }
@@ -314,6 +325,7 @@ try {
         <div class="links-nav">
             <ul>
                 <li><a href="/LibraFlow/public/usuario/index.php"><i class="fas fa-house" aria-hidden="true"></i> Inicio</a></li>
+                <li><a href="/LibraFlow/public/usuario/perfil.php"><i class="fas fa-user" aria-hidden="true"></i> Perfil</a></li>
                 <li><a class="ativo" href="/LibraFlow/public/catalogo/catalogo.php"><i class="fas fa-book-open" aria-hidden="true"></i> Catalogo</a></li>
                 <li><a href="/LibraFlow/public/catalogo/meus_emprestimos.php"><i class="fas fa-bookmark" aria-hidden="true"></i> Meus emprestimos</a></li>
                 <li><a href="/LibraFlow/public/auth/logout.php"><i class="fas fa-right-from-bracket" aria-hidden="true"></i> Sair</a></li>
