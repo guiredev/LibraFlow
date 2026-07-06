@@ -25,15 +25,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conf     = $_POST['confirmar_senha']        ?? '';
 
     if (!libraflowValidateCsrfToken($_POST['csrf_token'] ?? null)) {
-        $erro = 'Sessao expirada. Recarregue a pagina e tente novamente.';
+        $erro = 'Sessão expirada. Recarregue a página e tente novamente.';
     } elseif (empty($nome) || empty($email) || empty($senha) || empty($conf)) {
         $erro = 'Preencha nome, e-mail e senha.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $erro = 'E-mail invalido.';
+        $erro = 'E-mail inválido.';
     } elseif (strlen($senha) < 8) {
-        $erro = 'A senha deve ter no minimo 8 caracteres.';
+        $erro = 'A senha deve ter no mínimo 8 caracteres.';
     } elseif ($senha !== $conf) {
-        $erro = 'As senhas nao coincidem.';
+        $erro = 'As senhas não coincidem.';
     } else {
         $hash = password_hash($senha, PASSWORD_BCRYPT);
 
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) {
-                $erro = 'Este e-mail ja esta cadastrado.';
+                $erro = 'Este e-mail já está cadastrado.';
             } else {
                 $erro = 'Erro ao cadastrar. Tente novamente em alguns instantes.';
             }
@@ -63,31 +63,21 @@ $csrfToken = libraflowCsrfToken();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./styles.css">
-    <link rel="stylesheet" href="./animations.css">
+    <link rel="stylesheet" href="./styles.css?v=20260706-auth5">
+    <link rel="stylesheet" href="./animations.css?v=20260706-auth5">
+    <link rel="stylesheet" href="/LibraFlow/public/admin/darkmode-btn.css">
+    <link rel="shortcut icon" href="imgs/Logo-LibraFlow.png" type="image/x-icon">
     <title>Cadastro | LibraFlow</title>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
-    <style>
-        body { min-height: 100vh; height: auto; }
-        main { min-height: 80vh; height: auto; align-items: flex-start; padding-top: 2rem; }
-        .form-main { height: auto; }
-        .alerta {
-            width: 30rem;
-            padding: 1rem 1.5rem;
-            border-radius: 1rem;
-            font-size: 1.3rem;
-            font-family: 'Source Sans 3', sans-serif;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-        .alerta-erro { background: #fff0f0; color: #8b0000; border: 1px solid #f5c6c6; }
-    </style>
-    <link rel="stylesheet" href="/LibraFlow/public/admin/darkmode-btn.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
     <div class="conteiner-main">
-        <nav>
+        <nav class="auth-nav">
+            <a class="brand-link" href="/LibraFlow/public/auth/login/login.php" aria-label="LibraFlow">
+                <img src="imgs/Logo-LibraFlow.png" alt="" aria-hidden="true">
+                <span>LibraFlow</span>
+            </a>
             <div class="links-nav-login">
                 <ul>
                     <li><a href="/LibraFlow/public/auth/login/login.php">Início</a></li>
@@ -103,18 +93,25 @@ $csrfToken = libraflowCsrfToken();
         </nav>
 
         <main>
-            <div class="text-main">
-                <h1>Bem-vindo ao LibraFlow</h1>
-                <p>Sua porta de entrada para um mundo de livros digitais!</p>
-            </div>
+            <section class="text-main" aria-labelledby="register-title">
+                <span class="eyebrow">Conta de estudante</span>
+                <h1>Comece com uma conta LibraFlow</h1>
+                <p>Depois do cadastro, seu acesso fica pronto para catálogo, reservas, favoritos e acompanhamento de empréstimos.</p>
+                <div class="auth-highlights" aria-label="Dados usados no cadastro">
+                    <span><i class="fas fa-user-check" aria-hidden="true"></i> Identificação clara</span>
+                    <span><i class="fas fa-envelope-circle-check" aria-hidden="true"></i> E-mail de acesso</span>
+                    <span><i class="fas fa-shield-halved" aria-hidden="true"></i> Senha protegida</span>
+                </div>
+            </section>
 
             <div class="img-main">
                 <img src="imgs/img-main.png" alt="imagem de livros">
             </div>
 
             <div class="form-main">
-                <h2>Crie sua conta LibraFlow</h2>
-                <p class="form-description">Depois você poderá entrar em uma escola, biblioteca, livraria ou outra organização por convite, código ou solicitação.</p>
+                <span class="form-kicker">Cadastro</span>
+                <h2 id="register-title">Crie sua conta</h2>
+                <p class="form-description">Use dados reais para facilitar reservas, avisos de prazo e atendimento da biblioteca.</p>
 
                 <?php if ($erro): ?>
                     <div class="alerta alerta-erro"><?= htmlspecialchars($erro) ?></div>
@@ -123,46 +120,69 @@ $csrfToken = libraflowCsrfToken();
                 <form method="POST" action="">
                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
 
-                    <input type="text" name="nome" placeholder="nome completo" value="<?= htmlspecialchars($_POST['nome'] ?? '') ?>" required>
-                    <input type="email" name="email" placeholder="e-mail" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" required>
-                    <input type="tel" name="telefone" placeholder="telefone (opcional)" value="<?= htmlspecialchars($_POST['telefone'] ?? '') ?>">
-                    <div class="password-field">
-                        <input type="password" name="senha" placeholder="senha (min. 8 caracteres)" required>
-                        <button type="button" class="password-toggle" aria-label="Mostrar senha">
-                            <i class="fas fa-eye" aria-hidden="true"></i>
-                        </button>
+                    <label class="field-group" for="nome">
+                        <span>Nome completo</span>
+                        <span class="field-control">
+                            <i class="fas fa-user" aria-hidden="true"></i>
+                            <input id="nome" type="text" name="nome" placeholder="Seu nome completo" autocomplete="name" value="<?= htmlspecialchars($_POST['nome'] ?? '') ?>" required>
+                        </span>
+                    </label>
+
+                    <label class="field-group" for="email">
+                        <span>E-mail</span>
+                        <span class="field-control">
+                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                            <input id="email" type="email" name="email" placeholder="seu@email.com" autocomplete="email" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" required>
+                        </span>
+                    </label>
+
+                    <label class="field-group" for="telefone">
+                        <span>Telefone <small>opcional</small></span>
+                        <span class="field-control">
+                            <i class="fas fa-phone" aria-hidden="true"></i>
+                            <input id="telefone" type="tel" name="telefone" placeholder="(00) 00000-0000" autocomplete="tel" value="<?= htmlspecialchars($_POST['telefone'] ?? '') ?>">
+                        </span>
+                    </label>
+
+                    <label class="field-group" for="senha">
+                        <span>Senha</span>
+                        <span class="field-control password-field">
+                            <i class="fas fa-lock" aria-hidden="true"></i>
+                            <input id="senha" type="password" name="senha" placeholder="Mínimo de 8 caracteres" autocomplete="new-password" data-password-strength required>
+                            <button type="button" class="password-toggle" aria-label="Mostrar senha">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                    </label>
+
+                    <div class="password-meter" aria-live="polite">
+                        <span class="password-meter-bar"></span>
+                        <small>Use letras, números e símbolos para uma senha mais forte.</small>
                     </div>
-                    <div class="password-field">
-                        <input type="password" name="confirmar_senha" placeholder="confirmar senha" required>
-                        <button type="button" class="password-toggle" aria-label="Mostrar senha">
-                            <i class="fas fa-eye" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                    <button type="submit">Cadastrar</button>
+
+                    <label class="field-group" for="confirmar_senha">
+                        <span>Confirmar senha</span>
+                        <span class="field-control password-field">
+                            <i class="fas fa-lock" aria-hidden="true"></i>
+                            <input id="confirmar_senha" type="password" name="confirmar_senha" placeholder="Repita a senha" autocomplete="new-password" required>
+                            <button type="button" class="password-toggle" aria-label="Mostrar senha">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                    </label>
+
+                    <button type="submit" class="primary-action">Cadastrar</button>
                 </form>
             </div>
         </main>
     </div>
 
-    <!-- Dark Mode Toggle -->
     <button id="themeToggle" class="theme-toggle-float" aria-label="Alternar tema claro/escuro">
         <span id="themeIcon"><i class="fas fa-moon" aria-hidden="true"></i></span>
         <span id="themeLabel">Escuro</span>
     </button>
 
-    <script src="/LibraFlow/public/auth/cadastro/darkmode.js"></script>
-    <script>
-        document.querySelectorAll('.password-toggle').forEach(function (button) {
-            button.addEventListener('click', function () {
-                const input = button.parentElement.querySelector('input');
-                const isPassword = input.type === 'password';
-                input.type = isPassword ? 'text' : 'password';
-                button.setAttribute('aria-label', isPassword ? 'Ocultar senha' : 'Mostrar senha');
-                button.innerHTML = isPassword
-                    ? '<i class="fas fa-eye-slash" aria-hidden="true"></i>'
-                    : '<i class="fas fa-eye" aria-hidden="true"></i>';
-            });
-        });
-    </script>
+    <script src="/LibraFlow/public/auth/cadastro/darkmode.js?v=20260706-auth5"></script>
+    <script src="/LibraFlow/public/auth/auth-form.js?v=20260706-auth5"></script>
 </body>
 </html>

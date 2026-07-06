@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $senha = $_POST['senha']       ?? '';
 
     if (!libraflowValidateCsrfToken($_POST['csrf_token'] ?? null)) {
-        $erro = 'Sessao expirada. Recarregue a pagina e tente novamente.';
+        $erro = 'Sessão expirada. Recarregue a página e tente novamente.';
     } elseif (empty($email) || empty($senha)) {
         $erro = 'Preencha e-mail e senha.';
     } else {
@@ -60,30 +60,21 @@ $csrfToken = libraflowCsrfToken();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./styles.css">
-    <link rel="stylesheet" href="./animations.css">
+    <link rel="stylesheet" href="./styles.css?v=20260706-auth5">
+    <link rel="stylesheet" href="./animations.css?v=20260706-auth5">
     <link rel="stylesheet" href="/LibraFlow/public/admin/darkmode-btn.css">
     <link rel="shortcut icon" href="imgs/Logo-LibraFlow.png" type="image/x-icon">
     <title>Bem-vindo | LibraFlow</title>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
-    <style>
-        .alerta {
-            width: 25rem;
-            padding: 1rem 1.5rem;
-            border-radius: 1rem;
-            font-size: 1.3rem;
-            font-family: 'Source Sans 3', sans-serif;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-        .alerta-erro    { background: #fff0f0; color: #8b0000; border: 1px solid #f5c6c6; }
-        .alerta-sucesso { background: #f0fdf4; color: #1a4d2e; border: 1px solid #bbf7d0; }
-    </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
     <div class="conteiner-main">
-        <nav>
+        <nav class="auth-nav">
+            <a class="brand-link" href="/LibraFlow/public/catalogo/catalogo.php" aria-label="LibraFlow">
+                <img src="imgs/Logo-LibraFlow.png" alt="" aria-hidden="true">
+                <span>LibraFlow</span>
+            </a>
             <div class="links-nav-login">
                 <ul>
                     <li><a href="/LibraFlow/public/catalogo/catalogo.php">Início</a></li>
@@ -99,17 +90,24 @@ $csrfToken = libraflowCsrfToken();
         </nav>
 
         <main>
-            <div class="text-main">
+            <section class="text-main" aria-labelledby="auth-title">
+                <span class="eyebrow">Biblioteca digital escolar</span>
                 <h1>Bem-vindo ao LibraFlow</h1>
-                <p>Sua porta de entrada para um mundo de livros digitais!</p>
-            </div>
+                <p>Acesse seus empréstimos, favoritos, prazos e solicitações em um painel simples de acompanhar.</p>
+                <div class="auth-highlights" aria-label="Recursos do LibraFlow">
+                    <span><i class="fas fa-book-open" aria-hidden="true"></i> Catálogo organizado</span>
+                    <span><i class="fas fa-clock" aria-hidden="true"></i> Controle de prazos</span>
+                    <span><i class="fas fa-bell" aria-hidden="true"></i> Avisos importantes</span>
+                </div>
+            </section>
 
             <div class="img-main">
                 <img src="imgs/img-main.png" alt="imagem de livros">
             </div>
 
             <div class="form-main">
-                <h2>Faça login na sua conta</h2>
+                <span class="form-kicker">Acesso</span>
+                <h2 id="auth-title">Faça login na sua conta</h2>
 
                 <?php if ($cadastroOk): ?>
                     <div class="alerta alerta-sucesso">Cadastro realizado! Faça seu login.</div>
@@ -122,23 +120,37 @@ $csrfToken = libraflowCsrfToken();
                 <form method="POST" action="">
                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
 
-                    <input
-                        type="email"
-                        name="email"
-                        placeholder="e-mail"
-                        value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
-                        required>
+                    <label class="field-group" for="email">
+                        <span>E-mail</span>
+                        <span class="field-control">
+                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                            <input
+                                id="email"
+                                type="email"
+                                name="email"
+                                placeholder="seu@email.com"
+                                autocomplete="email"
+                                value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
+                                required>
+                        </span>
+                    </label>
 
-                    <div class="password-field">
-                        <input
-                            type="password"
-                            name="senha"
-                            placeholder="senha"
-                            required>
-                        <button type="button" class="password-toggle" aria-label="Mostrar senha">
-                            <i class="fas fa-eye" aria-hidden="true"></i>
-                        </button>
-                    </div>
+                    <label class="field-group" for="senha">
+                        <span>Senha</span>
+                        <span class="field-control password-field">
+                            <i class="fas fa-lock" aria-hidden="true"></i>
+                            <input
+                                id="senha"
+                                type="password"
+                                name="senha"
+                                placeholder="Digite sua senha"
+                                autocomplete="current-password"
+                                required>
+                            <button type="button" class="password-toggle" aria-label="Mostrar senha">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                    </label>
 
                     <div class="form-options">
                         <label class="checkbox-option">
@@ -151,31 +163,18 @@ $csrfToken = libraflowCsrfToken();
                         </a>
                     </div>
 
-                    <button type="submit">Entrar</button>
+                    <button type="submit" class="primary-action">Entrar</button>
                 </form>
             </div>
         </main>
     </div>
 
-    <!-- Botão Dark Mode -->
     <button id="themeToggle" class="theme-toggle-float" aria-label="Alternar tema claro/escuro">
         <span id="themeIcon"><i class="fas fa-moon" aria-hidden="true"></i></span>
         <span id="themeLabel">Escuro</span>
     </button>
 
-    <script src="/LibraFlow/public/auth/login/darkmode.js"></script>
-    <script>
-        document.querySelectorAll('.password-toggle').forEach(function (button) {
-            button.addEventListener('click', function () {
-                const input = button.parentElement.querySelector('input');
-                const isPassword = input.type === 'password';
-                input.type = isPassword ? 'text' : 'password';
-                button.setAttribute('aria-label', isPassword ? 'Ocultar senha' : 'Mostrar senha');
-                button.innerHTML = isPassword
-                    ? '<i class="fas fa-eye-slash" aria-hidden="true"></i>'
-                    : '<i class="fas fa-eye" aria-hidden="true"></i>';
-            });
-        });
-    </script>
+    <script src="/LibraFlow/public/auth/login/darkmode.js?v=20260706-auth5"></script>
+    <script src="/LibraFlow/public/auth/auth-form.js?v=20260706-auth5"></script>
 </body>
 </html>
