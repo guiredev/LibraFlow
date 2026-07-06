@@ -42,6 +42,18 @@ try {
     $pendencias = $stmt->fetchColumn();
 
     $stmt = $conn->prepare("
+        SELECT e.data_prevista_devolucao, l.titulo
+        FROM emprestimos e
+        JOIN livros l ON l.id = e.id_livro
+        WHERE e.id_usuario = ?
+          AND e.status IN ('A', 'V')
+        ORDER BY e.data_prevista_devolucao ASC
+        LIMIT 1
+    ");
+    $stmt->execute([$_SESSION['usuario_id']]);
+    $proximoPrazo = $stmt->fetch();
+
+    $stmt = $conn->prepare("
         SELECT e.*, l.titulo, l.autor, l.capa
         FROM emprestimos e
         JOIN livros l ON l.id = e.id_livro
@@ -63,9 +75,21 @@ try {
     $totalLidos = 0;
     $livrosComigo = 0;
     $pendencias = 0;
+    $proximoPrazo = null;
     $livrosRecentes = [];
     $erro = 'Nao foi possivel carregar todos os dados do painel.';
 }
+
+$camposCadastro = ['telefone', 'rm', 'endereco', 'idade'];
+$camposPreenchidos = 0;
+foreach ($camposCadastro as $campo) {
+    if (!empty($usuario[$campo])) {
+        $camposPreenchidos++;
+    }
+}
+$cadastroCompleto = count($camposCadastro) > 0
+    ? (int) round(($camposPreenchidos / count($camposCadastro)) * 100)
+    : 0;
 
 $statusInfo = [
     'A' => ['Ativo', 'status-ativo'],
@@ -88,32 +112,45 @@ $statusInfo = [
     <nav>
         <div class="logo-nav">
             <img src="imgs/Logo-LibraFlow.png" alt="Logo LibraFlow">
+            <span>LibraFlow</span>
         </div>
         <div class="links-nav">
             <ul>
-                <li><a href="/LibraFlow/public/usuario/index.php">Inicio</a></li>
-                <li><a href="/LibraFlow/public/catalogo/meus_emprestimos.php">Meus Livros</a></li>
-                <li><a href="/LibraFlow/public/catalogo/catalogo.php">Catalogo</a></li>
-                <li><a href="/LibraFlow/public/auth/logout.php">Sair</a></li>
+                <li><a class="ativo" href="/LibraFlow/public/usuario/index.php"><i class="fas fa-house" aria-hidden="true"></i> Inicio</a></li>
+                <li><a href="/LibraFlow/public/catalogo/catalogo.php"><i class="fas fa-book-open" aria-hidden="true"></i> Catalogo</a></li>
+                <li><a href="/LibraFlow/public/catalogo/meus_emprestimos.php"><i class="fas fa-bookmark" aria-hidden="true"></i> Meus livros</a></li>
+                <li><a href="/LibraFlow/public/auth/logout.php"><i class="fas fa-right-from-bracket" aria-hidden="true"></i> Sair</a></li>
             </ul>
         </div>
         <div class="user-badge"><?= htmlspecialchars(substr($usuario['nome'], 0, 1)) ?></div>
     </nav>
 
     <header>
-        <div class="perfil">
-            <div class="avatar"><?= htmlspecialchars(substr($usuario['nome'], 0, 1)) ?></div>
+        <section class="perfil painel">
+            <div class="avatar" aria-hidden="true"><?= htmlspecialchars(substr($usuario['nome'], 0, 1)) ?></div>
             <div class="text-header">
-                <h1>Bem-vindo de volta, <span><?= htmlspecialchars($usuario['nome']) ?></span>!</h1>
-                <p>Acompanhe seus emprestimos, prazos e informacoes de cadastro.</p>
+                <span class="eyebrow">Painel do aluno</span>
+                <h1>Olá, <?= htmlspecialchars($usuario['nome']) ?></h1>
+                <p>Acompanhe seus livros, prazos e pendências em um só lugar.</p>
+                <div class="header-actions">
+                    <a href="/LibraFlow/public/catalogo/catalogo.php" class="btn-primary"><i class="fas fa-magnifying-glass" aria-hidden="true"></i> Buscar livro</a>
+                    <a href="/LibraFlow/public/catalogo/meus_emprestimos.php" class="btn-secondary"><i class="fas fa-list-check" aria-hidden="true"></i> Meus emprestimos</a>
+                </div>
             </div>
-        </div>
-        <div class="dados-aluno">
-            <p><strong>RM:</strong> <?= htmlspecialchars($usuario['rm'] ?: '-') ?></p>
-            <p><strong>Telefone:</strong> <?= htmlspecialchars($usuario['telefone'] ?: '-') ?></p>
-            <p><strong>Idade:</strong> <?= htmlspecialchars($usuario['idade'] ?: '-') ?></p>
-            <p><strong>Endereco:</strong> <?= htmlspecialchars($usuario['endereco'] ?: '-') ?></p>
-        </div>
+        </section>
+        <aside class="dados-aluno painel">
+            <div class="painel-topo">
+                <h2>Cadastro</h2>
+                <span><?= $cadastroCompleto ?>%</span>
+            </div>
+            <div class="progress-bar"><span style="width: <?= $cadastroCompleto ?>%"></span></div>
+            <dl>
+                <div><dt>RM</dt><dd><?= htmlspecialchars($usuario['rm'] ?: '-') ?></dd></div>
+                <div><dt>Telefone</dt><dd><?= htmlspecialchars($usuario['telefone'] ?: '-') ?></dd></div>
+                <div><dt>Idade</dt><dd><?= htmlspecialchars($usuario['idade'] ?: '-') ?></dd></div>
+                <div><dt>Endereco</dt><dd><?= htmlspecialchars($usuario['endereco'] ?: '-') ?></dd></div>
+            </dl>
+        </aside>
     </header>
 
     <main>
@@ -122,50 +159,77 @@ $statusInfo = [
         <?php endif; ?>
 
         <section class="estatisticas">
-            <div class="estatistica-1">
-                <h3>Lidos</h3>
+            <article class="stat-card stat-lidos">
+                <div class="stat-icon"><i class="fas fa-circle-check" aria-hidden="true"></i></div>
+                <h3>Livros devolvidos</h3>
                 <span><?= $totalLidos ?></span>
-            </div>
-            <div class="estatistica-2">
-                <h3>Livros Comigo</h3>
+            </article>
+            <article class="stat-card stat-comigo">
+                <div class="stat-icon"><i class="fas fa-book" aria-hidden="true"></i></div>
+                <h3>Comigo agora</h3>
                 <span><?= $livrosComigo ?></span>
-            </div>
-            <div class="estatistica-3">
+            </article>
+            <article class="stat-card stat-pendencias">
+                <div class="stat-icon"><i class="fas fa-triangle-exclamation" aria-hidden="true"></i></div>
                 <h3>Pendencias</h3>
                 <span><?= $pendencias ?></span>
-            </div>
+            </article>
         </section>
 
-        <section class="acoes-rapidas">
-            <a href="/LibraFlow/public/catalogo/catalogo.php">Buscar livros</a>
-            <a href="/LibraFlow/public/catalogo/meus_emprestimos.php">Ver emprestimos</a>
-        </section>
+        <div class="conteudo-grid">
+            <section class="painel acoes-rapidas">
+                <div class="painel-topo">
+                    <h2>Acoes rapidas</h2>
+                </div>
+                <a href="/LibraFlow/public/catalogo/catalogo.php">
+                    <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+                    <span><strong>Explorar catalogo</strong><small>Encontre novos titulos disponiveis</small></span>
+                </a>
+                <a href="/LibraFlow/public/catalogo/meus_emprestimos.php">
+                    <i class="fas fa-bookmark" aria-hidden="true"></i>
+                    <span><strong>Meus emprestimos</strong><small>Veja prazos, status e historico</small></span>
+                </a>
+                <div class="prazo-card">
+                    <span>Proximo prazo</span>
+                    <?php if ($proximoPrazo): ?>
+                        <strong><?= date('d/m/Y', strtotime($proximoPrazo['data_prevista_devolucao'])) ?></strong>
+                        <small><?= htmlspecialchars($proximoPrazo['titulo']) ?></small>
+                    <?php else: ?>
+                        <strong>Sem prazo aberto</strong>
+                        <small>Nenhum livro ativo no momento</small>
+                    <?php endif; ?>
+                </div>
+            </section>
 
-        <section class="livros-mais-lidos">
-            <h2>Livros Recentes</h2>
-            <div class="lista-livros">
-                <?php if (empty($livrosRecentes)): ?>
-                    <div class="vazio">Voce ainda nao possui emprestimos. Explore o catalogo para comecar.</div>
-                <?php else: ?>
-                    <?php foreach ($livrosRecentes as $livro): ?>
-                        <?php $status = $statusInfo[$livro['status']] ?? ['Desconhecido', 'status-devolvido']; ?>
-                        <article class="livro-card">
-                            <?php if ($livro['capa']): ?>
-                                <img src="/LibraFlow/public/catalogo/capas/<?= htmlspecialchars($livro['capa']) ?>" alt="Capa de <?= htmlspecialchars($livro['titulo']) ?>">
-                            <?php else: ?>
-                                <div class="sem-capa">Livro</div>
-                            <?php endif; ?>
-                            <div>
-                                <h3><?= htmlspecialchars($livro['titulo']) ?></h3>
-                                <p><?= htmlspecialchars($livro['autor']) ?></p>
-                                <p>Retirado em <?= date('d/m/Y', strtotime($livro['data_emprestimo'])) ?></p>
-                            </div>
-                            <span class="status <?= $status[1] ?>"><?= $status[0] ?></span>
-                        </article>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
-        </section>
+            <section class="painel livros-recentes">
+                <div class="painel-topo">
+                    <h2>Livros recentes</h2>
+                    <a href="/LibraFlow/public/catalogo/meus_emprestimos.php">Ver todos</a>
+                </div>
+                <div class="lista-livros">
+                    <?php if (empty($livrosRecentes)): ?>
+                        <div class="vazio">Voce ainda nao possui emprestimos. Explore o catalogo para comecar.</div>
+                    <?php else: ?>
+                        <?php foreach ($livrosRecentes as $livro): ?>
+                            <?php $status = $statusInfo[$livro['status']] ?? ['Desconhecido', 'status-devolvido']; ?>
+                            <article class="livro-card">
+                                <?php if ($livro['capa']): ?>
+                                    <img src="/LibraFlow/public/catalogo/capas/<?= htmlspecialchars($livro['capa']) ?>" alt="Capa de <?= htmlspecialchars($livro['titulo']) ?>">
+                                <?php else: ?>
+                                    <div class="sem-capa"><i class="fas fa-book" aria-hidden="true"></i></div>
+                                <?php endif; ?>
+                                <div class="livro-info">
+                                    <h3><?= htmlspecialchars($livro['titulo']) ?></h3>
+                                    <p><?= htmlspecialchars($livro['autor']) ?></p>
+                                    <small>Retirado em <?= date('d/m/Y', strtotime($livro['data_emprestimo'])) ?></small>
+                                </div>
+                                <span class="status <?= $status[1] ?>"><?= $status[0] ?></span>
+                            </article>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </section>
+        </div>
     </main>
 
     <footer>

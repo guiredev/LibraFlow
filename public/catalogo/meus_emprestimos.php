@@ -9,6 +9,10 @@
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/auth_check.php';
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/conexao.php';
 
+$statusFiltro = $_GET['status'] ?? '';
+$busca = trim($_GET['busca'] ?? '');
+$statusPermitidos = ['A', 'V', 'D'];
+
 try {
     $conn->prepare("
         UPDATE emprestimos
@@ -19,18 +23,54 @@ try {
     ")->execute([$_SESSION['usuario_id']]);
 
     $stmt = $conn->prepare("
+        SELECT
+            COUNT(*) AS total,
+            SUM(status = 'A') AS ativos,
+            SUM(status = 'V') AS vencidos,
+            SUM(status = 'D') AS devolvidos
+        FROM emprestimos
+        WHERE id_usuario = ?
+    ");
+    $stmt->execute([$_SESSION['usuario_id']]);
+    $resumo = $stmt->fetch() ?: ['total' => 0, 'ativos' => 0, 'vencidos' => 0, 'devolvidos' => 0];
+
+    $sql = "
         SELECT e.*, l.titulo, l.autor, l.capa
         FROM emprestimos e
         JOIN livros l ON l.id = e.id_livro
         WHERE e.id_usuario = ?
-        ORDER BY e.data_emprestimo DESC, e.id DESC
-    ");
-    $stmt->execute([$_SESSION['usuario_id']]);
+    ";
+    $params = [$_SESSION['usuario_id']];
+
+    if (in_array($statusFiltro, $statusPermitidos, true)) {
+        $sql .= " AND e.status = ?";
+        $params[] = $statusFiltro;
+    }
+
+    if ($busca !== '') {
+        $sql .= " AND (l.titulo LIKE ? OR l.autor LIKE ?)";
+        $termo = "%$busca%";
+        $params[] = $termo;
+        $params[] = $termo;
+    }
+
+    $sql .= " ORDER BY e.data_emprestimo DESC, e.id DESC";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->execute($params);
     $emprestimos = $stmt->fetchAll();
 } catch (PDOException $e) {
     $emprestimos = [];
+    $resumo = ['total' => 0, 'ativos' => 0, 'vencidos' => 0, 'devolvidos' => 0];
     $erro = 'Não foi possível carregar seus empréstimos.';
 }
+
+$resumo = [
+    'total' => (int) ($resumo['total'] ?? 0),
+    'ativos' => (int) ($resumo['ativos'] ?? 0),
+    'vencidos' => (int) ($resumo['vencidos'] ?? 0),
+    'devolvidos' => (int) ($resumo['devolvidos'] ?? 0),
+];
 
 $statusInfo = [
     'A' => ['Ativo', 'status-ativo'],
@@ -242,6 +282,7 @@ $statusInfo = [
             color: #A8C97F;
         }
     </style>
+    <link rel="stylesheet" href="/LibraFlow/public/catalogo/usuario-flow.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -251,10 +292,10 @@ $statusInfo = [
         </div>
         <div class="links-nav">
             <ul>
-                <li><a href="/LibraFlow/public/usuario/index.php">Início</a></li>
-                <li><a href="/LibraFlow/public/catalogo/catalogo.php">Catálogo</a></li>
-                <li><a href="/LibraFlow/public/catalogo/meus_emprestimos.php">Meus empréstimos</a></li>
-                <li><a href="/LibraFlow/public/auth/logout.php">Sair</a></li>
+                <li><a href="/LibraFlow/public/usuario/index.php"><i class="fas fa-house" aria-hidden="true"></i> Inicio</a></li>
+                <li><a href="/LibraFlow/public/catalogo/catalogo.php"><i class="fas fa-book-open" aria-hidden="true"></i> Catalogo</a></li>
+                <li><a class="ativo" href="/LibraFlow/public/catalogo/meus_emprestimos.php"><i class="fas fa-bookmark" aria-hidden="true"></i> Meus emprestimos</a></li>
+                <li><a href="/LibraFlow/public/auth/logout.php"><i class="fas fa-right-from-bracket" aria-hidden="true"></i> Sair</a></li>
             </ul>
         </div>
         <div class="user">
@@ -272,10 +313,42 @@ $statusInfo = [
     </header>
 
     <main class="lista-emprestimos">
+        <section class="emprestimos-filtros">
+            <div class="filtro-status">
+                <a href="meus_emprestimos.php<?= $busca !== '' ? '?busca=' . urlencode($busca) : '' ?>"
+                   class="<?= $statusFiltro === '' ? 'ativo' : '' ?>">
+                    Todos <span><?= $resumo['total'] ?></span>
+                </a>
+                <a href="meus_emprestimos.php?status=A<?= $busca !== '' ? '&busca=' . urlencode($busca) : '' ?>"
+                   class="<?= $statusFiltro === 'A' ? 'ativo' : '' ?>">
+                    Ativos <span><?= $resumo['ativos'] ?></span>
+                </a>
+                <a href="meus_emprestimos.php?status=V<?= $busca !== '' ? '&busca=' . urlencode($busca) : '' ?>"
+                   class="<?= $statusFiltro === 'V' ? 'ativo' : '' ?>">
+                    Vencidos <span><?= $resumo['vencidos'] ?></span>
+                </a>
+                <a href="meus_emprestimos.php?status=D<?= $busca !== '' ? '&busca=' . urlencode($busca) : '' ?>"
+                   class="<?= $statusFiltro === 'D' ? 'ativo' : '' ?>">
+                    Devolvidos <span><?= $resumo['devolvidos'] ?></span>
+                </a>
+            </div>
+
+            <form method="GET" action="meus_emprestimos.php" class="busca-emprestimos">
+                <?php if (in_array($statusFiltro, $statusPermitidos, true)): ?>
+                    <input type="hidden" name="status" value="<?= htmlspecialchars($statusFiltro) ?>">
+                <?php endif; ?>
+                <input type="text" name="busca" placeholder="Buscar por titulo ou autor" value="<?= htmlspecialchars($busca) ?>">
+                <button type="submit"><i class="fas fa-magnifying-glass" aria-hidden="true"></i> Buscar</button>
+                <?php if ($busca !== '' || $statusFiltro !== ''): ?>
+                    <a href="meus_emprestimos.php" class="limpar-filtros">Limpar</a>
+                <?php endif; ?>
+            </form>
+        </section>
+
         <?php if (!empty($erro)): ?>
             <div class="vazio"><?= htmlspecialchars($erro) ?></div>
         <?php elseif (empty($emprestimos)): ?>
-            <div class="vazio">Você ainda não possui empréstimos.</div>
+            <div class="vazio">Nenhum emprestimo encontrado para os filtros selecionados.</div>
         <?php else: ?>
             <?php foreach ($emprestimos as $emprestimo): ?>
                 <?php $info = $statusInfo[$emprestimo['status']] ?? ['Desconhecido', 'status-devolvido']; ?>

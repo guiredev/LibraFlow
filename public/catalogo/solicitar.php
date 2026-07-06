@@ -302,19 +302,20 @@ try {
             filter: brightness(0.9);
         }
     </style>
+    <link rel="stylesheet" href="/LibraFlow/public/catalogo/usuario-flow.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
     <nav>
         <div class="logo-nav">
-            <img src="" alt="Logo LibraFlow">
+            <img src="/LibraFlow/public/catalogo/imgs/Logo-LibraFlow.png" alt="Logo LibraFlow">
         </div>
         <div class="links-nav">
             <ul>
-                <li><a href="/LibraFlow/public/usuario/index.php">Início</a></li>
-                <li><a href="/LibraFlow/public/catalogo/catalogo.php">Catálogo</a></li>
-                <li><a href="/LibraFlow/public/catalogo/meus_emprestimos.php">Meus empréstimos</a></li>
-                <li><a href="/LibraFlow/public/auth/logout.php">Sair</a></li>
+                <li><a href="/LibraFlow/public/usuario/index.php"><i class="fas fa-house" aria-hidden="true"></i> Inicio</a></li>
+                <li><a class="ativo" href="/LibraFlow/public/catalogo/catalogo.php"><i class="fas fa-book-open" aria-hidden="true"></i> Catalogo</a></li>
+                <li><a href="/LibraFlow/public/catalogo/meus_emprestimos.php"><i class="fas fa-bookmark" aria-hidden="true"></i> Meus emprestimos</a></li>
+                <li><a href="/LibraFlow/public/auth/logout.php"><i class="fas fa-right-from-bracket" aria-hidden="true"></i> Sair</a></li>
             </ul>
         </div>
         <div class="user">
