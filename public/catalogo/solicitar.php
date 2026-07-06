@@ -11,6 +11,7 @@ require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/conexao.php';
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/user_features.php';
 
 libraflowEnsureUserFeatureTables($conn);
+$usuarioMenu = libraflowUsuarioMenu($conn, (int) $_SESSION['usuario_id']);
 
 $idLivro = intval($_GET['id'] ?? $_POST['id_livro'] ?? 0);
 
@@ -325,14 +326,29 @@ try {
         <div class="links-nav">
             <ul>
                 <li><a href="/LibraFlow/public/usuario/index.php"><i class="fas fa-house" aria-hidden="true"></i> Inicio</a></li>
-                <li><a href="/LibraFlow/public/usuario/perfil.php"><i class="fas fa-user" aria-hidden="true"></i> Perfil</a></li>
                 <li><a class="ativo" href="/LibraFlow/public/catalogo/catalogo.php"><i class="fas fa-book-open" aria-hidden="true"></i> Catalogo</a></li>
                 <li><a href="/LibraFlow/public/catalogo/meus_emprestimos.php"><i class="fas fa-bookmark" aria-hidden="true"></i> Meus emprestimos</a></li>
                 <li><a href="/LibraFlow/public/auth/logout.php"><i class="fas fa-right-from-bracket" aria-hidden="true"></i> Sair</a></li>
             </ul>
         </div>
         <div class="user">
-            <span><i class="fas fa-user" aria-hidden="true"></i> <?= htmlspecialchars($_SESSION['usuario_nome']) ?></span>
+            <button type="button" class="user-menu-button" aria-expanded="false" aria-controls="userMenu">
+                <span class="user-avatar">
+                    <?php if (!empty($usuarioMenu['foto_perfil'])): ?>
+                        <img src="/LibraFlow/public/usuario/fotos/<?= htmlspecialchars($usuarioMenu['foto_perfil']) ?>" alt="">
+                    <?php else: ?>
+                        <?= htmlspecialchars(substr($usuarioMenu['nome'], 0, 1)) ?>
+                    <?php endif; ?>
+                </span>
+                <span class="user-menu-name"><?= htmlspecialchars($usuarioMenu['nome']) ?></span>
+                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <div class="user-menu" id="userMenu">
+                <a href="/LibraFlow/public/usuario/perfil.php"><i class="fas fa-gear" aria-hidden="true"></i> Configuracoes</a>
+                <a href="/LibraFlow/public/catalogo/meus_emprestimos.php"><i class="fas fa-bookmark" aria-hidden="true"></i> Meus emprestimos</a>
+                <a href="/LibraFlow/public/catalogo/catalogo.php"><i class="fas fa-book-open" aria-hidden="true"></i> Catalogo</a>
+                <a href="/LibraFlow/public/auth/logout.php" class="sair"><i class="fas fa-right-from-bracket" aria-hidden="true"></i> Sair</a>
+            </div>
         </div>
     </nav>
 
@@ -375,5 +391,6 @@ try {
     </main>
 
     <script src="/LibraFlow/public/catalogo/darkmode.js"></script>
+    <script src="/LibraFlow/public/usuario/user-menu.js"></script>
 </body>
 </html>

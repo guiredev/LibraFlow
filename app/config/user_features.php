@@ -7,6 +7,8 @@
 
 function libraflowEnsureUserFeatureTables(PDO $conn): void
 {
+    libraflowEnsureUserProfileColumns($conn);
+
     $conn->exec("
         CREATE TABLE IF NOT EXISTS favoritos_livros (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -74,6 +76,18 @@ function libraflowCriarNotificacao(PDO $conn, int $idUsuario, string $titulo, st
     $stmt->execute([$idUsuario, $titulo, $mensagem, $link]);
 }
 
+function libraflowUsuarioMenu(PDO $conn, int $idUsuario): array
+{
+    $stmt = $conn->prepare("SELECT nome, foto_perfil FROM usuarios WHERE id = ?");
+    $stmt->execute([$idUsuario]);
+    $usuario = $stmt->fetch() ?: [];
+
+    return [
+        'nome' => $usuario['nome'] ?? ($_SESSION['usuario_nome'] ?? 'Aluno'),
+        'foto_perfil' => $usuario['foto_perfil'] ?? null,
+    ];
+}
+
 function libraflowContarNotificacoesNaoLidas(PDO $conn, int $idUsuario): int
 {
     $stmt = $conn->prepare("SELECT COUNT(*) FROM notificacoes_usuario WHERE id_usuario = ? AND lida = 0");
@@ -86,6 +100,32 @@ function libraflowFavoritosDoUsuario(PDO $conn, int $idUsuario): array
     $stmt = $conn->prepare("SELECT id_livro FROM favoritos_livros WHERE id_usuario = ?");
     $stmt->execute([$idUsuario]);
     return array_flip($stmt->fetchAll(PDO::FETCH_COLUMN));
+}
+
+function libraflowEnsureUserProfileColumns(PDO $conn): void
+{
+    $database = (string) $conn->query('SELECT DATABASE()')->fetchColumn();
+    $stmt = $conn->prepare("
+        SELECT COLUMN_NAME
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_SCHEMA = ?
+          AND TABLE_NAME = 'usuarios'
+          AND COLUMN_NAME IN ('foto_perfil', 'biografia', 'preferencia_notificacoes')
+    ");
+    $stmt->execute([$database]);
+    $existing = array_flip($stmt->fetchAll(PDO::FETCH_COLUMN));
+
+    if (!isset($existing['foto_perfil'])) {
+        $conn->exec("ALTER TABLE usuarios ADD COLUMN foto_perfil VARCHAR(255) DEFAULT NULL AFTER idade");
+    }
+
+    if (!isset($existing['biografia'])) {
+        $conn->exec("ALTER TABLE usuarios ADD COLUMN biografia TEXT DEFAULT NULL AFTER foto_perfil");
+    }
+
+    if (!isset($existing['preferencia_notificacoes'])) {
+        $conn->exec("ALTER TABLE usuarios ADD COLUMN preferencia_notificacoes TINYINT(1) NOT NULL DEFAULT 1 AFTER biografia");
+    }
 }
 
 function libraflowRenovacoesPendentesDoUsuario(PDO $conn, int $idUsuario): array
