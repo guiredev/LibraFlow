@@ -309,6 +309,7 @@ try {
     <nav>
         <div class="logo-nav">
             <img src="/LibraFlow/public/catalogo/imgs/Logo-LibraFlow.png" alt="Logo LibraFlow">
+            <span>LibraFlow</span>
         </div>
         <div class="links-nav">
             <ul>
@@ -319,9 +320,7 @@ try {
             </ul>
         </div>
         <div class="user">
-            <span style="font-size:1.3rem;color:#606C38;font-family:'Source Sans 3',sans-serif;">
-                <?= htmlspecialchars($_SESSION['usuario_nome']) ?>
-            </span>
+            <span><i class="fas fa-user" aria-hidden="true"></i> <?= htmlspecialchars($_SESSION['usuario_nome']) ?></span>
         </div>
     </nav>
 

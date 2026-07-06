@@ -86,6 +86,7 @@ body > nav {
     display: inline-flex;
     align-items: center;
     gap: 1rem;
+    min-width: 0;
 }
 
 .logo-nav img {
@@ -94,8 +95,7 @@ body > nav {
     object-fit: contain;
 }
 
-.logo-nav::after {
-    content: 'LibraFlow';
+.logo-nav span {
     color: var(--u-text-title);
     font-family: 'Lora', serif;
     font-size: 1.9rem;
@@ -133,10 +133,15 @@ nav a:hover {
     color: var(--u-text-link) !important;
 }
 
+.user {
+    min-width: 0;
+}
+
 .user span {
     display: inline-flex;
     align-items: center;
     gap: 0.6rem;
+    max-width: 22rem;
     min-height: 3.8rem;
     padding: 0 1.2rem;
     border: 1px solid var(--u-border);
@@ -145,6 +150,9 @@ nav a:hover {
     color: var(--u-text-title) !important;
     font-size: 1.35rem !important;
     font-weight: 800;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 header {
@@ -500,6 +508,74 @@ main {
     margin-bottom: 1rem !important;
 }
 
+.emprestimo-tags {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.6rem;
+}
+
+.prazo-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.8rem;
+    padding: 0 0.9rem;
+    border: 1px solid var(--u-border);
+    border-radius: 999px;
+    background: var(--u-bg-muted);
+    color: var(--u-text-body);
+    font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.prazo-tag.prazo-ok {
+    border-color: color-mix(in srgb, var(--u-success) 28%, transparent);
+    background: var(--u-success-bg);
+    color: var(--u-success);
+}
+
+.prazo-tag.prazo-alerta {
+    border-color: color-mix(in srgb, #D97706 30%, transparent);
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.prazo-tag.prazo-critico {
+    border-color: color-mix(in srgb, var(--u-danger) 30%, transparent);
+    background: var(--u-danger-bg);
+    color: var(--u-danger);
+}
+
+.renovar-form {
+    margin: 0;
+}
+
+.renovar-form button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3.2rem;
+    padding: 0 1rem;
+    border: 1px solid color-mix(in srgb, var(--u-text-link) 26%, transparent);
+    border-radius: var(--u-radius-sm);
+    background: color-mix(in srgb, var(--u-text-link) 10%, var(--u-bg-card));
+    color: var(--u-text-link);
+    cursor: pointer;
+    font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 900;
+    transition: background var(--u-transition), border-color var(--u-transition), color var(--u-transition);
+}
+
+.renovar-form button:hover {
+    border-color: var(--u-text-link);
+    background: var(--u-text-link);
+    color: #FFFFFF;
+}
+
 .emprestimo-card img,
 .emprestimo-card .sem-capa-lista {
     width: 7rem !important;
@@ -535,6 +611,10 @@ main {
 .alerta-sucesso {
     background: var(--u-success-bg) !important;
     color: var(--u-success) !important;
+}
+
+.lista-emprestimos > .alerta {
+    margin-bottom: 1rem;
 }
 
 .vazio {
@@ -596,7 +676,7 @@ p .fas {
 }
 
 @media (max-width: 620px) {
-    .logo-nav::after {
+    .logo-nav span {
         display: none;
     }
 
@@ -617,6 +697,11 @@ p .fas {
     .emprestimo-card .status {
         grid-column: 2;
         justify-self: start;
+    }
+
+    .emprestimo-tags {
+        grid-column: 2;
+        align-items: flex-start;
     }
 
     .busca-emprestimos {

@@ -96,6 +96,42 @@ $statusInfo = [
     'D' => ['Devolvido', 'status-devolvido'],
     'V' => ['Vencido', 'status-vencido'],
 ];
+
+function libraflowPrazoInfo(?string $data): array
+{
+    if (!$data) {
+        return ['Sem prazo aberto', 'Nenhum livro ativo no momento', 'prazo-ok'];
+    }
+
+    $hoje = new DateTimeImmutable('today');
+    $prazo = new DateTimeImmutable($data);
+    $dias = (int) $hoje->diff($prazo)->format('%r%a');
+
+    if ($dias < 0) {
+        $atraso = abs($dias);
+        return [
+            'Vencido há ' . $atraso . ' dia' . ($atraso === 1 ? '' : 's'),
+            'Regularize a devolução na biblioteca.',
+            'prazo-critico',
+        ];
+    }
+
+    if ($dias === 0) {
+        return ['Vence hoje', 'Devolva o livro até o fim do dia.', 'prazo-alerta'];
+    }
+
+    if ($dias <= 2) {
+        return [
+            'Vence em ' . $dias . ' dia' . ($dias === 1 ? '' : 's'),
+            'Separe o livro para devolução.',
+            'prazo-alerta',
+        ];
+    }
+
+    return ['Vence em ' . $dias . ' dias', 'Prazo em dia.', 'prazo-ok'];
+}
+
+$proximoPrazoInfo = libraflowPrazoInfo($proximoPrazo['data_prevista_devolucao'] ?? null);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -111,18 +147,20 @@ $statusInfo = [
 <body>
     <nav>
         <div class="logo-nav">
-            <img src="imgs/Logo-LibraFlow.png" alt="Logo LibraFlow">
+            <img src="/LibraFlow/public/catalogo/imgs/Logo-LibraFlow.png" alt="Logo LibraFlow">
             <span>LibraFlow</span>
         </div>
         <div class="links-nav">
             <ul>
                 <li><a class="ativo" href="/LibraFlow/public/usuario/index.php"><i class="fas fa-house" aria-hidden="true"></i> Inicio</a></li>
                 <li><a href="/LibraFlow/public/catalogo/catalogo.php"><i class="fas fa-book-open" aria-hidden="true"></i> Catalogo</a></li>
-                <li><a href="/LibraFlow/public/catalogo/meus_emprestimos.php"><i class="fas fa-bookmark" aria-hidden="true"></i> Meus livros</a></li>
+                <li><a href="/LibraFlow/public/catalogo/meus_emprestimos.php"><i class="fas fa-bookmark" aria-hidden="true"></i> Meus emprestimos</a></li>
                 <li><a href="/LibraFlow/public/auth/logout.php"><i class="fas fa-right-from-bracket" aria-hidden="true"></i> Sair</a></li>
             </ul>
         </div>
-        <div class="user-badge"><?= htmlspecialchars(substr($usuario['nome'], 0, 1)) ?></div>
+        <div class="user">
+            <span><i class="fas fa-user" aria-hidden="true"></i> <?= htmlspecialchars($usuario['nome']) ?></span>
+        </div>
     </nav>
 
     <header>
@@ -176,24 +214,36 @@ $statusInfo = [
             </article>
         </section>
 
+        <?php if ($proximoPrazo && $proximoPrazoInfo[2] !== 'prazo-ok'): ?>
+            <section class="prazo-alerta-painel <?= htmlspecialchars($proximoPrazoInfo[2]) ?>">
+                <i class="fas fa-clock" aria-hidden="true"></i>
+                <div>
+                    <strong><?= htmlspecialchars($proximoPrazoInfo[0]) ?></strong>
+                    <span><?= htmlspecialchars($proximoPrazo['titulo']) ?> - <?= htmlspecialchars($proximoPrazoInfo[1]) ?></span>
+                </div>
+                <a href="/LibraFlow/public/catalogo/meus_emprestimos.php?status=<?= $pendencias > 0 ? 'V' : 'A' ?>">Ver empréstimos</a>
+            </section>
+        <?php endif; ?>
+
         <div class="conteudo-grid">
             <section class="painel acoes-rapidas">
                 <div class="painel-topo">
-                    <h2>Acoes rapidas</h2>
+                    <h2>Ações rápidas</h2>
                 </div>
                 <a href="/LibraFlow/public/catalogo/catalogo.php">
                     <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
-                    <span><strong>Explorar catalogo</strong><small>Encontre novos titulos disponiveis</small></span>
+                    <span><strong>Explorar catálogo</strong><small>Encontre novos títulos disponíveis</small></span>
                 </a>
                 <a href="/LibraFlow/public/catalogo/meus_emprestimos.php">
                     <i class="fas fa-bookmark" aria-hidden="true"></i>
-                    <span><strong>Meus emprestimos</strong><small>Veja prazos, status e historico</small></span>
+                    <span><strong>Meus empréstimos</strong><small>Veja prazos, status e histórico</small></span>
                 </a>
-                <div class="prazo-card">
-                    <span>Proximo prazo</span>
+                <div class="prazo-card <?= htmlspecialchars($proximoPrazoInfo[2]) ?>">
+                    <span>Próximo prazo</span>
                     <?php if ($proximoPrazo): ?>
                         <strong><?= date('d/m/Y', strtotime($proximoPrazo['data_prevista_devolucao'])) ?></strong>
                         <small><?= htmlspecialchars($proximoPrazo['titulo']) ?></small>
+                        <em><?= htmlspecialchars($proximoPrazoInfo[0]) ?> - <?= htmlspecialchars($proximoPrazoInfo[1]) ?></em>
                     <?php else: ?>
                         <strong>Sem prazo aberto</strong>
                         <small>Nenhum livro ativo no momento</small>

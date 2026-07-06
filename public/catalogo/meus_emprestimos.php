@@ -12,6 +12,11 @@ require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/conexao.php';
 $statusFiltro = $_GET['status'] ?? '';
 $busca = trim($_GET['busca'] ?? '');
 $statusPermitidos = ['A', 'V', 'D'];
+$csrfToken = libraflowCsrfToken();
+$erroAcao = '';
+$sucessoAcao = ($_GET['renovado'] ?? '') === '1'
+    ? 'Prazo renovado por mais 7 dias.'
+    : '';
 
 try {
     $conn->prepare("
@@ -21,6 +26,61 @@ try {
           AND status = 'A'
           AND data_prevista_devolucao < CURDATE()
     ")->execute([$_SESSION['usuario_id']]);
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'renovar') {
+        if (!libraflowValidateCsrfToken($_POST['csrf_token'] ?? null)) {
+            $erroAcao = 'Sessao expirada. Recarregue a pagina e tente novamente.';
+        } else {
+            $idEmprestimo = (int) ($_POST['id_emprestimo'] ?? 0);
+
+            if ($idEmprestimo <= 0) {
+                $erroAcao = 'Emprestimo invalido.';
+            } else {
+                $conn->beginTransaction();
+
+                $stmt = $conn->prepare("
+                    SELECT id, status, data_prevista_devolucao
+                    FROM emprestimos
+                    WHERE id = ?
+                      AND id_usuario = ?
+                    FOR UPDATE
+                ");
+                $stmt->execute([$idEmprestimo, $_SESSION['usuario_id']]);
+                $emprestimoRenovar = $stmt->fetch();
+
+                if (!$emprestimoRenovar) {
+                    $erroAcao = 'Emprestimo nao encontrado.';
+                } elseif ($emprestimoRenovar['status'] !== 'A' || empty($emprestimoRenovar['data_prevista_devolucao'])) {
+                    $erroAcao = 'Este emprestimo nao pode ser renovado.';
+                } else {
+                    $hoje = new DateTimeImmutable('today');
+                    $prazo = new DateTimeImmutable($emprestimoRenovar['data_prevista_devolucao']);
+                    $dias = (int) $hoje->diff($prazo)->format('%r%a');
+
+                    if ($dias < 0) {
+                        $erroAcao = 'Emprestimos vencidos precisam ser regularizados na biblioteca.';
+                    } elseif ($dias > 2) {
+                        $erroAcao = 'A renovacao fica disponivel quando faltarem 2 dias ou menos para vencer.';
+                    } else {
+                        $stmt = $conn->prepare("
+                            UPDATE emprestimos
+                            SET data_prevista_devolucao = DATE_ADD(data_prevista_devolucao, INTERVAL 7 DAY)
+                            WHERE id = ?
+                              AND id_usuario = ?
+                              AND status = 'A'
+                        ");
+                        $stmt->execute([$idEmprestimo, $_SESSION['usuario_id']]);
+
+                        $conn->commit();
+                        header('Location: meus_emprestimos.php?status=A&renovado=1');
+                        exit;
+                    }
+                }
+
+                $conn->commit();
+            }
+        }
+    }
 
     $stmt = $conn->prepare("
         SELECT
@@ -60,6 +120,9 @@ try {
     $stmt->execute($params);
     $emprestimos = $stmt->fetchAll();
 } catch (PDOException $e) {
+    if ($conn->inTransaction()) {
+        $conn->rollBack();
+    }
     $emprestimos = [];
     $resumo = ['total' => 0, 'ativos' => 0, 'vencidos' => 0, 'devolvidos' => 0];
     $erro = 'Não foi possível carregar seus empréstimos.';
@@ -77,6 +140,45 @@ $statusInfo = [
     'D' => ['Devolvido', 'status-devolvido'],
     'V' => ['Vencido', 'status-vencido'],
 ];
+
+function libraflowPrazoEmprestimo(array $emprestimo): array
+{
+    if (($emprestimo['status'] ?? '') === 'D' || empty($emprestimo['data_prevista_devolucao'])) {
+        return ['Finalizado', 'prazo-ok'];
+    }
+
+    $hoje = new DateTimeImmutable('today');
+    $prazo = new DateTimeImmutable($emprestimo['data_prevista_devolucao']);
+    $dias = (int) $hoje->diff($prazo)->format('%r%a');
+
+    if (($emprestimo['status'] ?? '') === 'V' || $dias < 0) {
+        $atraso = abs($dias);
+        return ['Vencido há ' . $atraso . ' dia' . ($atraso === 1 ? '' : 's'), 'prazo-critico'];
+    }
+
+    if ($dias === 0) {
+        return ['Vence hoje', 'prazo-alerta'];
+    }
+
+    if ($dias <= 2) {
+        return ['Vence em ' . $dias . ' dia' . ($dias === 1 ? '' : 's'), 'prazo-alerta'];
+    }
+
+    return ['Em dia', 'prazo-ok'];
+}
+
+function libraflowPodeRenovar(array $emprestimo): bool
+{
+    if (($emprestimo['status'] ?? '') !== 'A' || empty($emprestimo['data_prevista_devolucao'])) {
+        return false;
+    }
+
+    $hoje = new DateTimeImmutable('today');
+    $prazo = new DateTimeImmutable($emprestimo['data_prevista_devolucao']);
+    $dias = (int) $hoje->diff($prazo)->format('%r%a');
+
+    return $dias >= 0 && $dias <= 2;
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -289,6 +391,7 @@ $statusInfo = [
     <nav>
         <div class="logo-nav">
             <img src="/LibraFlow/public/catalogo/imgs/Logo-LibraFlow.png" alt="Logo LibraFlow">
+            <span>LibraFlow</span>
         </div>
         <div class="links-nav">
             <ul>
@@ -299,9 +402,7 @@ $statusInfo = [
             </ul>
         </div>
         <div class="user">
-            <span style="font-size:1.3rem;color:#606C38;font-family:'Source Sans 3',sans-serif;">
-                <?= htmlspecialchars($_SESSION['usuario_nome']) ?>
-            </span>
+            <span><i class="fas fa-user" aria-hidden="true"></i> <?= htmlspecialchars($_SESSION['usuario_nome']) ?></span>
         </div>
     </nav>
 
@@ -313,6 +414,14 @@ $statusInfo = [
     </header>
 
     <main class="lista-emprestimos">
+        <?php if ($sucessoAcao): ?>
+            <div class="alerta alerta-sucesso"><?= htmlspecialchars($sucessoAcao) ?></div>
+        <?php endif; ?>
+
+        <?php if ($erroAcao): ?>
+            <div class="alerta alerta-erro"><?= htmlspecialchars($erroAcao) ?></div>
+        <?php endif; ?>
+
         <section class="emprestimos-filtros">
             <div class="filtro-status">
                 <a href="meus_emprestimos.php<?= $busca !== '' ? '?busca=' . urlencode($busca) : '' ?>"
@@ -352,6 +461,7 @@ $statusInfo = [
         <?php else: ?>
             <?php foreach ($emprestimos as $emprestimo): ?>
                 <?php $info = $statusInfo[$emprestimo['status']] ?? ['Desconhecido', 'status-devolvido']; ?>
+                <?php $prazo = libraflowPrazoEmprestimo($emprestimo); ?>
                 <article class="emprestimo-card">
                     <?php if ($emprestimo['capa']): ?>
                         <img src="/LibraFlow/public/catalogo/capas/<?= htmlspecialchars($emprestimo['capa']) ?>" alt="Capa de <?= htmlspecialchars($emprestimo['titulo']) ?>">
@@ -365,12 +475,28 @@ $statusInfo = [
                         <p>
                             Retirado em <?= date('d/m/Y', strtotime($emprestimo['data_emprestimo'])) ?>
                             <?php if (!empty($emprestimo['data_prevista_devolucao'])): ?>
-                                · devolver até <?= date('d/m/Y', strtotime($emprestimo['data_prevista_devolucao'])) ?>
+                                &middot; devolver até <?= date('d/m/Y', strtotime($emprestimo['data_prevista_devolucao'])) ?>
                             <?php endif; ?>
                         </p>
                     </div>
 
-                    <span class="status <?= $info[1] ?>"><?= $info[0] ?></span>
+                    <div class="emprestimo-tags">
+                        <span class="status <?= $info[1] ?>"><?= $info[0] ?></span>
+                        <?php if ($emprestimo['status'] !== 'D'): ?>
+                            <span class="prazo-tag <?= $prazo[1] ?>"><?= htmlspecialchars($prazo[0]) ?></span>
+                        <?php endif; ?>
+                        <?php if (libraflowPodeRenovar($emprestimo)): ?>
+                            <form method="POST" action="meus_emprestimos.php" class="renovar-form">
+                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
+                                <input type="hidden" name="acao" value="renovar">
+                                <input type="hidden" name="id_emprestimo" value="<?= (int) $emprestimo['id'] ?>">
+                                <button type="submit">
+                                    <i class="fas fa-rotate-right" aria-hidden="true"></i>
+                                    Renovar
+                                </button>
+                            </form>
+                        <?php endif; ?>
+                    </div>
                 </article>
             <?php endforeach; ?>
         <?php endif; ?>

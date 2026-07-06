@@ -421,6 +421,7 @@ $emprestimosAtivos = array_flip($stmt->fetchAll(PDO::FETCH_COLUMN));
     <nav>
         <div class="logo-nav">
             <img src="/LibraFlow/public/catalogo/imgs/Logo-LibraFlow.png" alt="Logo LibraFlow">
+            <span>LibraFlow</span>
         </div>
         <div class="links-nav">
             <ul>
@@ -431,9 +432,7 @@ $emprestimosAtivos = array_flip($stmt->fetchAll(PDO::FETCH_COLUMN));
             </ul>
         </div>
         <div class="user">
-            <span style="font-size:1.3rem;color:#606C38;font-family:'Source Sans 3',sans-serif;">
-                <i class="fas fa-user" aria-hidden="true"></i> <?= htmlspecialchars($_SESSION['usuario_nome']) ?>
-            </span>
+            <span><i class="fas fa-user" aria-hidden="true"></i> <?= htmlspecialchars($_SESSION['usuario_nome']) ?></span>
         </div>
     </nav>
 
