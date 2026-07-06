@@ -250,20 +250,25 @@ nav .right {
 /* ==================== Header ==================== */
 header {
     margin-left: 15%;
-    padding: 10rem 4rem 3rem;
+    padding: 9.5rem 4rem 2rem;
 }
 
 header h1 {
-    font-size: 2.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 3rem;
     color: var(--text-title);
     font-family: 'Lora', serif;
     transition: color 0.4s ease;
 }
 
 header p {
-    font-size: 1.5rem;
+    max-width: 72rem;
+    font-size: 1.55rem;
     color: var(--text-body);
-    margin-top: 0.5rem;
+    margin-top: 0.6rem;
+    line-height: 1.45;
     transition: color 0.4s ease;
 }
 
@@ -271,6 +276,21 @@ header p {
 main {
     margin-left: 15%;
     padding: 0 4rem 4rem;
+}
+
+header,
+main {
+    max-width: 148rem;
+}
+
+header::after {
+    content: '';
+    display: block;
+    width: 8rem;
+    height: 0.4rem;
+    margin-top: 1.4rem;
+    border-radius: 999px;
+    background: var(--btn-primary);
 }
 
 /* ==================== Cards de Resumo ==================== */
@@ -289,6 +309,7 @@ main {
     border-radius: 1.2rem;
     padding: 2rem;
     box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(188, 108, 37, 0.10);
     transition: var(--transition);
 }
 
@@ -429,7 +450,8 @@ button:active,
 .form-card {
     background: var(--bg-card);
     border-radius: 1.2rem;
-    padding: 2rem;
+    padding: 2.2rem;
+    border: 1px solid rgba(188, 108, 37, 0.12);
     box-shadow: var(--shadow-sm);
     transition: var(--transition);
 }
@@ -445,7 +467,7 @@ button:active,
 .form-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
-    gap: 1rem;
+    gap: 1.2rem;
 }
 
 .form-group {
@@ -454,10 +476,11 @@ button:active,
 
 .form-group label {
     display: block;
-    font-size: 1rem;
+    font-size: 1.2rem;
     color: var(--text-title);
-    margin-bottom: 0.5rem;
-    font-weight: 600;
+    margin-bottom: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0;
     transition: color 0.4s ease;
 }
 
@@ -465,13 +488,20 @@ button:active,
 .form-group select,
 .form-group textarea {
     width: 100%;
-    padding: 0.8rem;
-    border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
-    font-size: 1rem;
+    min-height: 4.2rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid rgba(188, 108, 37, 0.34);
+    border-radius: 0.8rem;
+    font-size: 1.35rem;
     background: var(--bg-page);
     color: var(--text-title);
     transition: var(--transition);
+}
+
+.form-group textarea {
+    min-height: 12rem;
+    resize: vertical;
+    line-height: 1.45;
 }
 
 .form-group input:focus,
@@ -518,7 +548,12 @@ button:active,
     align-items: center;
     gap: 1rem;
     flex-wrap: wrap;
-    margin-bottom: 2rem;
+    margin-bottom: 1.4rem;
+    padding: 1.5rem;
+    background: var(--bg-card);
+    border: 1px solid rgba(188, 108, 37, 0.12);
+    border-radius: 1.2rem;
+    box-shadow: var(--shadow-sm);
 }
 
 .topo-lista h2,
@@ -590,9 +625,10 @@ button:active,
     flex-wrap: wrap;
     gap: 1rem;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     padding: 1.5rem;
     background: var(--bg-card);
+    border: 1px solid rgba(188, 108, 37, 0.12);
     border-radius: 1.2rem;
     box-shadow: var(--shadow-sm);
 }
@@ -616,8 +652,43 @@ button:active,
     background: var(--bg-card);
     border-radius: 1.2rem;
     padding: 1.5rem;
+    border: 1px solid rgba(188, 108, 37, 0.12);
     box-shadow: var(--shadow-sm);
     overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+th {
+    color: var(--text-body);
+    font-size: 1.25rem;
+    font-weight: 900;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+td {
+    color: var(--text-title);
+    font-size: 1.35rem;
+}
+
+th,
+td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(188, 108, 37, 0.10);
+    vertical-align: middle;
+}
+
+tbody tr:hover {
+    background: rgba(188, 108, 37, 0.045);
+}
+
+tbody tr:last-child td {
+    border-bottom: 0;
 }
 
 .vazio-tabela {
