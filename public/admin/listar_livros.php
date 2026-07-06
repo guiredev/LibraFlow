@@ -10,6 +10,8 @@ require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/auth_check.php';
 if ($_SESSION['usuario_tipo'] !== 'D') { header('Location: /LibraFlow/public/usuario/index.php'); exit; }
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/conexao.php';
 
+$csrfToken = libraflowCsrfToken();
+
 // Endpoint AJAX para carregar livros
 if (isset($_GET['ajax'])) {
     header('Content-Type: application/json');
@@ -24,8 +26,21 @@ if (isset($_GET['ajax'])) {
 }
 
 // Excluir
-if (isset($_GET['excluir'])) {
-    $id = intval($_GET['excluir']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'excluir') {
+    if (!libraflowValidateCsrfToken($_POST['csrf_token'] ?? null)) {
+        header('Location: listar_livros.php?erro=csrf');
+        exit;
+    }
+
+    $id = intval($_POST['id'] ?? 0);
+    $h = $conn->prepare("SELECT COUNT(*) FROM emprestimos WHERE id_livro = ?");
+    $h->execute([$id]);
+
+    if ((int) $h->fetchColumn() > 0) {
+        header('Location: listar_livros.php?erro=historico');
+        exit;
+    }
+
     $l = $conn->prepare("SELECT capa FROM livros WHERE id = ?");
     $l->execute([$id]);
     $dados = $l->fetch();
@@ -94,6 +109,11 @@ $categorias = $conn->query("SELECT id, nome FROM categorias ORDER BY nome")->fet
         <?php if (isset($_GET['deletado'])): ?>
             <div class="alerta alerta-sucesso">Livro excluído com sucesso.</div>
         <?php endif; ?>
+        <?php if (($_GET['erro'] ?? '') === 'historico'): ?>
+            <div class="alerta alerta-erro">Este livro possui histórico de empréstimos e não pode ser excluído.</div>
+        <?php elseif (($_GET['erro'] ?? '') === 'csrf'): ?>
+            <div class="alerta alerta-erro">Sessão expirada. Recarregue a página e tente novamente.</div>
+        <?php endif; ?>
 
         <div class="topo-lista">
             <h2><i class="fas fa-book-open" aria-hidden="true"></i> <?= count($livros) ?> livro<?= count($livros) !== 1 ? 's' : '' ?> encontrado<?= count($livros) !== 1 ? 's' : '' ?></h2>
@@ -148,8 +168,12 @@ $categorias = $conn->query("SELECT id, nome FROM categorias ORDER BY nome")->fet
                         <td>
                             <div class="acoes">
                                 <a href="detalhe_livro.php?id=<?= $livro['id'] ?>" class="btn-editar">Detalhes</a><a href="editar_livro.php?id=<?= $livro['id'] ?>" class="btn-editar">Editar</a>
-                                <a href="listar_livros.php?excluir=<?= $livro['id'] ?>" class="btn-excluir"
-                                   onclick="return confirm('Excluir este livro permanentemente?')">Excluir</a>
+                                <form method="POST" action="listar_livros.php" style="margin:0;">
+                                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
+                                    <input type="hidden" name="acao" value="excluir">
+                                    <input type="hidden" name="id" value="<?= (int) $livro['id'] ?>">
+                                    <button type="submit" class="btn-excluir" onclick="return confirm('Excluir este livro permanentemente?')">Excluir</button>
+                                </form>
                             </div>
                         </td>
                     </tr>

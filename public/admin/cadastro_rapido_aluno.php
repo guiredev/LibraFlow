@@ -17,6 +17,7 @@ require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/conexao.php';
 
 $erro = '';
 $sucesso = '';
+$csrfToken = libraflowCsrfToken();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = trim($_POST['nome'] ?? '');
@@ -25,7 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $senha_confirm = trim($_POST['senha_confirm'] ?? '');
 
     // Validações
-    if ($nome === '') {
+    if (!libraflowValidateCsrfToken($_POST['csrf_token'] ?? null)) {
+        $erro = 'Sessao expirada. Recarregue a pagina e tente novamente.';
+    } elseif ($nome === '') {
         $erro = 'O nome do aluno é obrigatório.';
     } elseif ($email === '') {
         $erro = 'O e-mail é obrigatório.';
@@ -227,6 +230,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <form method="POST" class="cadastro-rapido">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
             <div class="form-group">
                 <label for="nome">Nome Completo do Aluno *</label>
                 <input type="text" id="nome" name="nome" required

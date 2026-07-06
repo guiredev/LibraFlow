@@ -14,10 +14,12 @@ if ($_SESSION['usuario_tipo'] !== 'D') {
 }
 
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/conexao.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/uploads.php';
 
 $categorias = $conn->query("SELECT id, nome FROM categorias ORDER BY nome")->fetchAll();
 $erro    = '';
 $sucesso = '';
+$csrfToken = libraflowCsrfToken();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo      = trim($_POST['titulo']      ?? '');
@@ -29,21 +31,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $quantidade  = intval($_POST['quantidade'] ?? 1);
     $id_categoria = intval($_POST['id_categoria'] ?? 0);
 
-    if (empty($titulo) || empty($autor)) {
+    if (!libraflowValidateCsrfToken($_POST['csrf_token'] ?? null)) {
+        $erro = 'Sessao expirada. Recarregue a pagina e tente novamente.';
+    } elseif (empty($titulo) || empty($autor)) {
         $erro = 'Título e autor são obrigatórios.';
     } else {
         $capa = null;
 
         if (isset($_FILES['capa']) && $_FILES['capa']['error'] === UPLOAD_ERR_OK) {
-            $ext        = strtolower(pathinfo($_FILES['capa']['name'], PATHINFO_EXTENSION));
-            $permitidos = ['jpg', 'jpeg', 'png', 'webp'];
+            [$uploadValido, $uploadResultado] = libraflowValidateUploadedImage($_FILES['capa']);
 
-            if (!in_array($ext, $permitidos)) {
-                $erro = 'Formato inválido. Use JPG, PNG ou WEBP.';
-            } elseif ($_FILES['capa']['size'] > 2 * 1024 * 1024) {
-                $erro = 'A imagem deve ter no máximo 2MB.';
+            if (!$uploadValido) {
+                $erro = $uploadResultado;
             } else {
-                $nomeCapa = uniqid('capa_') . '.' . $ext;
+                $nomeCapa = bin2hex(random_bytes(12)) . '.' . $uploadResultado;
                 $destino  = $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/public/catalogo/capas/' . $nomeCapa;
 
                 if (!is_dir(dirname($destino))) mkdir(dirname($destino), 0755, true);
@@ -136,6 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
 
             <form method="POST" action="" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
                 <div class="form-grid">
 
                     <div class="form-group full">

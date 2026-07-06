@@ -109,9 +109,9 @@ class RelatorioService
                 COALESCE(c.nome, 'Sem categoria') AS categoria,
                 l.isbn,
                 l.ano,
-                l.quantidade AS quantidade_total,
+                (l.quantidade + COALESCE(emp.qtd_emprestada, 0)) AS quantidade_total,
                 COALESCE(emp.qtd_emprestada, 0) AS quantidade_emprestada,
-                (l.quantidade - COALESCE(emp.qtd_emprestada, 0)) AS quantidade_disponivel
+                l.quantidade AS quantidade_disponivel
             FROM livros l
             LEFT JOIN categorias c ON c.id = l.id_categoria
             LEFT JOIN (

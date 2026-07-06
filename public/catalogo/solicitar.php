@@ -9,7 +9,7 @@
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/auth_check.php';
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/conexao.php';
 
-$idLivro = intval($_GET['id'] ?? 0);
+$idLivro = intval($_GET['id'] ?? $_POST['id_livro'] ?? 0);
 
 if (!$idLivro) {
     header('Location: catalogo.php');
@@ -20,53 +20,84 @@ $erro = '';
 $sucesso = '';
 $livro = null;
 $prazoDias = 14;
+$csrfToken = libraflowCsrfToken();
 
 try {
-    $conn->beginTransaction();
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (!libraflowValidateCsrfToken($_POST['csrf_token'] ?? null)) {
+            $erro = 'Sessao expirada. Recarregue a pagina e tente novamente.';
+        } else {
+            $conn->beginTransaction();
 
-    $stmt = $conn->prepare("SELECT id, titulo, quantidade FROM livros WHERE id = ? FOR UPDATE");
-    $stmt->execute([$idLivro]);
-    $livro = $stmt->fetch();
+            $stmt = $conn->prepare("SELECT id, titulo, quantidade FROM livros WHERE id = ? FOR UPDATE");
+            $stmt->execute([$idLivro]);
+            $livro = $stmt->fetch();
 
-    if (!$livro) {
-        $erro = 'Livro não encontrado.';
-    } elseif ((int) $livro['quantidade'] <= 0) {
-        $erro = 'Este livro está indisponível no momento.';
+            if (!$livro) {
+                $erro = 'Livro nao encontrado.';
+            } elseif ((int) $livro['quantidade'] <= 0) {
+                $erro = 'Este livro esta indisponivel no momento.';
+            } else {
+                $stmt = $conn->prepare("
+                    SELECT id
+                    FROM emprestimos
+                    WHERE id_usuario = ?
+                      AND id_livro = ?
+                      AND status IN ('A', 'V')
+                    LIMIT 1
+                ");
+                $stmt->execute([$_SESSION['usuario_id'], $idLivro]);
+
+                if ($stmt->fetch()) {
+                    $erro = 'Voce ja possui um emprestimo ativo deste livro.';
+                } else {
+                    $stmt = $conn->prepare("
+                        INSERT INTO emprestimos
+                            (id_usuario, id_livro, data_emprestimo, data_prevista_devolucao, status)
+                        VALUES
+                            (?, ?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL {$prazoDias} DAY), 'A')
+                    ");
+                    $stmt->execute([$_SESSION['usuario_id'], $idLivro]);
+
+                    $stmt = $conn->prepare("UPDATE livros SET quantidade = quantidade - 1 WHERE id = ?");
+                    $stmt->execute([$idLivro]);
+
+                    $sucesso = 'Emprestimo solicitado com sucesso!';
+                }
+            }
+
+            $conn->commit();
+        }
     } else {
-        $stmt = $conn->prepare("
-            SELECT id
-            FROM emprestimos
-            WHERE id_usuario = ?
-              AND id_livro = ?
-              AND status IN ('A', 'V')
-            LIMIT 1
-        ");
-        $stmt->execute([$_SESSION['usuario_id'], $idLivro]);
+        $stmt = $conn->prepare("SELECT id, titulo, quantidade FROM livros WHERE id = ?");
+        $stmt->execute([$idLivro]);
+        $livro = $stmt->fetch();
 
-        if ($stmt->fetch()) {
-            $erro = 'Você já possui um empréstimo ativo deste livro.';
+        if (!$livro) {
+            $erro = 'Livro nao encontrado.';
+        } elseif ((int) $livro['quantidade'] <= 0) {
+            $erro = 'Este livro esta indisponivel no momento.';
         } else {
             $stmt = $conn->prepare("
-                INSERT INTO emprestimos
-                    (id_usuario, id_livro, data_emprestimo, data_prevista_devolucao, status)
-                VALUES
-                    (?, ?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL {$prazoDias} DAY), 'A')
+                SELECT id
+                FROM emprestimos
+                WHERE id_usuario = ?
+                  AND id_livro = ?
+                  AND status IN ('A', 'V')
+                LIMIT 1
             ");
             $stmt->execute([$_SESSION['usuario_id'], $idLivro]);
 
-            $stmt = $conn->prepare("UPDATE livros SET quantidade = quantidade - 1 WHERE id = ?");
-            $stmt->execute([$idLivro]);
-
-            $sucesso = 'Empréstimo solicitado com sucesso!';
+            if ($stmt->fetch()) {
+                $erro = 'Voce ja possui um emprestimo ativo deste livro.';
+            }
         }
     }
-
-    $conn->commit();
 } catch (PDOException $e) {
     if ($conn->inTransaction()) {
         $conn->rollBack();
     }
-    $erro = 'Não foi possível solicitar o empréstimo. Verifique se a tabela de empréstimos foi criada.';
+    $erro = 'Nao foi possivel solicitar o emprestimo. Verifique se a tabela de emprestimos foi criada.';
 }
 ?>
 <!DOCTYPE html>
@@ -303,6 +334,17 @@ try {
                     O livro <strong><?= htmlspecialchars($livro['titulo']) ?></strong> foi reservado para você.
                     A devolução prevista é em <?= $prazoDias ?> dias.
                 </p>
+            <?php elseif (!$erro && $livro): ?>
+                <p>
+                    Confirmar solicitacao de emprestimo para
+                    <strong><?= htmlspecialchars($livro['titulo']) ?></strong>?
+                </p>
+                <p>A devolucao prevista e em <?= $prazoDias ?> dias.</p>
+                <form method="POST" action="solicitar.php?id=<?= (int) $livro['id'] ?>" style="margin:2rem 0;">
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
+                    <input type="hidden" name="id_livro" value="<?= (int) $livro['id'] ?>">
+                    <button type="submit" class="btn-principal">Confirmar solicitacao</button>
+                </form>
             <?php else: ?>
                 <div class="alerta alerta-erro"><?= htmlspecialchars($erro ?: 'Não foi possível concluir a solicitação.') ?></div>
             <?php endif; ?>

@@ -17,6 +17,7 @@ require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/conexao.php';
 
 $erro = '';
 $sucesso = '';
+$csrfToken = libraflowCsrfToken();
 
 try {
     // Buscar livros disponíveis
@@ -43,7 +44,9 @@ try {
         $idUsuario = intval($_POST['id_usuario'] ?? 0);
         $dias = intval($_POST['dias'] ?? 7);
 
-        if ($idLivro <= 0 || $idUsuario <= 0) {
+        if (!libraflowValidateCsrfToken($_POST['csrf_token'] ?? null)) {
+            $erro = 'Sessao expirada. Recarregue a pagina e tente novamente.';
+        } elseif ($idLivro <= 0 || $idUsuario <= 0) {
             $erro = 'Selecione um livro e um aluno.';
         } else {
             $conn->beginTransaction();
@@ -296,6 +299,7 @@ try {
         <?php endif; ?>
 
         <form method="POST" class="form-novo-emprestimo">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
             <div class="form-group">
                 <label for="id_livro">Selecione o Livro *</label>
                 <select id="id_livro" name="id_livro" required onchange="mostrarInfoLivro()">

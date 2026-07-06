@@ -19,12 +19,15 @@ $periodos = ['Manha', 'Tarde', 'Noite'];
 $erro = '';
 $sucesso = '';
 $dataHoje = date('Y-m-d');
+$csrfToken = libraflowCsrfToken();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dataRegistro = $_POST['data_registro'] ?? $dataHoje;
     $visitas = $_POST['visitas'] ?? [];
 
-    if (!$dataRegistro) {
+    if (!libraflowValidateCsrfToken($_POST['csrf_token'] ?? null)) {
+        $erro = 'Sessao expirada. Recarregue a pagina e tente novamente.';
+    } elseif (!$dataRegistro) {
         $erro = 'Informe a data do registro.';
     } else {
         try {
@@ -235,6 +238,7 @@ try {
             <div class="form-card">
                 <h2>Novo registro</h2>
                 <form method="POST">
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
                     <div class="form-grid">
                         <div class="form-group full">
                             <label for="data_registro">Data</label>

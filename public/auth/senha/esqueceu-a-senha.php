@@ -8,15 +8,20 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/vendor/autoload.php';
 require_once __DIR__ . '/../../../app/config/conexao.php';
+require_once __DIR__ . '/../../../app/config/auth.php';
 require_once __DIR__ . '/../../../app/config/email.php';
 
 $mensagem = '';
 $tipo = '';
+$csrfToken = libraflowCsrfToken();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
 
-    if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    if (!libraflowValidateCsrfToken($_POST['csrf_token'] ?? null)) {
+        $mensagem = 'Sessao expirada. Recarregue a pagina e tente novamente.';
+        $tipo = 'erro';
+    } elseif ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $mensagem = 'Digite um e-mail valido.';
         $tipo = 'erro';
     } else {
@@ -177,6 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <?php if ($tipo !== 'sucesso'): ?>
             <form method="POST" action="">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
                 <label for="email">E-mail cadastrado</label>
                 <input
                     type="email"

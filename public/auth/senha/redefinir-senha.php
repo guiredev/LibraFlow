@@ -7,12 +7,14 @@
 // public/auth/senha/redefinir-senha.php
 
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/conexao.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/auth.php';
 
-$token       = trim($_GET['token'] ?? '');
+$token       = trim($_GET['token'] ?? $_POST['token'] ?? '');
 $erro        = '';
 $sucesso     = '';
 $tokenValido = false;
 $registro    = null;
+$csrfToken   = libraflowCsrfToken();
 
 if (empty($token)) {
     $erro = 'Link inválido.';
@@ -39,7 +41,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tokenValido) {
     $senha = $_POST['senha']           ?? '';
     $conf  = $_POST['confirmar_senha'] ?? '';
 
-    if (empty($senha) || empty($conf)) {
+    if (!libraflowValidateCsrfToken($_POST['csrf_token'] ?? null)) {
+        $erro = 'Sessao expirada. Recarregue a pagina e tente novamente.';
+    } elseif (empty($senha) || empty($conf)) {
         $erro = 'Preencha os dois campos.';
     } elseif (strlen($senha) < 8) {
         $erro = 'A senha deve ter no mínimo 8 caracteres.';
@@ -280,6 +284,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tokenValido) {
 
         <?php elseif ($tokenValido): ?>
             <form method="POST" action="">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
                 <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
 
                 <label for="senha">Nova senha</label>

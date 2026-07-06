@@ -15,6 +15,54 @@ if ($_SESSION['usuario_tipo'] !== 'D') {
 
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/conexao.php';
 
+$csrfToken = libraflowCsrfToken();
+$mensagemOperacao = '';
+$erroOperacao = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'devolver_rapido') {
+    if (!libraflowValidateCsrfToken($_POST['csrf_token'] ?? null)) {
+        $erroOperacao = 'Sessao expirada. Recarregue a pagina e tente novamente.';
+    } else {
+        try {
+            $idEmprestimo = intval($_POST['id_emprestimo'] ?? 0);
+            $conn->beginTransaction();
+
+            $stmt = $conn->prepare("
+                SELECT id, id_livro, status
+                FROM emprestimos
+                WHERE id = ?
+                FOR UPDATE
+            ");
+            $stmt->execute([$idEmprestimo]);
+            $emprestimo = $stmt->fetch();
+
+            if (!$emprestimo) {
+                $erroOperacao = 'Emprestimo nao encontrado.';
+            } elseif ($emprestimo['status'] === 'D') {
+                $erroOperacao = 'Este emprestimo ja foi devolvido.';
+            } else {
+                $conn->prepare("
+                    UPDATE emprestimos
+                    SET status = 'D', data_devolucao = CURDATE()
+                    WHERE id = ?
+                ")->execute([$idEmprestimo]);
+
+                $conn->prepare("UPDATE livros SET quantidade = quantidade + 1 WHERE id = ?")
+                     ->execute([$emprestimo['id_livro']]);
+
+                $mensagemOperacao = 'Devolucao registrada com sucesso.';
+            }
+
+            $conn->commit();
+        } catch (PDOException $e) {
+            if ($conn->inTransaction()) {
+                $conn->rollBack();
+            }
+            $erroOperacao = 'Nao foi possivel registrar a devolucao.';
+        }
+    }
+}
+
 $conn->exec("
     UPDATE emprestimos
     SET status = 'V'
@@ -288,6 +336,12 @@ $historico = $conn->query("
     </header>
 
     <main>
+        <?php if ($mensagemOperacao): ?>
+            <div class="alerta alerta-sucesso"><?= htmlspecialchars($mensagemOperacao) ?></div>
+        <?php elseif ($erroOperacao): ?>
+            <div class="alerta alerta-erro"><?= htmlspecialchars($erroOperacao) ?></div>
+        <?php endif; ?>
+
         <section class="busca-rapida-admin" aria-label="Busca rápida">
             <div>
                 <h2>Busca rápida</h2>
@@ -367,6 +421,7 @@ $historico = $conn->query("
                     <div class="lista-operacional">
                         <?php foreach ($emprestimosAtrasados as $item): ?>
                             <form method="POST" class="linha-operacional">
+                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
                                 <input type="hidden" name="acao" value="devolver_rapido">
                                 <input type="hidden" name="id_emprestimo" value="<?= (int) $item['id'] ?>">
                                 <span><strong><?= htmlspecialchars($item['nome']) ?></strong><small><?= htmlspecialchars($item['titulo']) ?></small></span>

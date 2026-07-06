@@ -19,6 +19,7 @@ $acao = $_GET['acao'] ?? '';
 $idUsuario = $_GET['id'] ?? '';
 $erro = '';
 $sucesso = '';
+$csrfToken = libraflowCsrfToken();
 
 // Endpoint AJAX para carregar alunos
 if (isset($_GET['ajax'])) {
@@ -43,7 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $acao === 'editar') {
     $endereco = trim($_POST['endereco'] ?? '');
     $idade = intval($_POST['idade'] ?? 0);
 
-    if ($id <= 0 || empty($nome) || empty($email)) {
+    if (!libraflowValidateCsrfToken($_POST['csrf_token'] ?? null)) {
+        $erro = 'Sessao expirada. Recarregue a pagina e tente novamente.';
+    } elseif ($id <= 0 || empty($nome) || empty($email)) {
         $erro = 'Preencha os campos obrigatórios.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $erro = 'E-mail inválido.';
@@ -68,18 +71,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $acao === 'editar') {
     }
 }
 
-// Excluir usuário
-if ($acao === 'excluir' && $idUsuario) {
-    try {
-        $stmt = $conn->prepare("DELETE FROM usuarios WHERE id = ? AND tipo = 'A'");
-        $stmt->execute([intval($idUsuario)]);
-        $sucesso = 'Usuário excluído com sucesso.';
-    } catch (PDOException $e) {
-        $erro = 'Não foi possível excluir este usuário. Verifique se não há empréstimos ativos.';
+// Excluir usuario
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'excluir') {
+    $idUsuario = intval($_POST['id'] ?? 0);
+
+    if (!libraflowValidateCsrfToken($_POST['csrf_token'] ?? null)) {
+        $erro = 'Sessao expirada. Recarregue a pagina e tente novamente.';
+    } else {
+        try {
+            $historico = $conn->prepare("SELECT COUNT(*) FROM emprestimos WHERE id_usuario = ?");
+            $historico->execute([$idUsuario]);
+
+            if ((int) $historico->fetchColumn() > 0) {
+                throw new RuntimeException('historico');
+            }
+
+            $stmt = $conn->prepare("DELETE FROM usuarios WHERE id = ? AND tipo = 'A'");
+            $stmt->execute([$idUsuario]);
+            $sucesso = 'Usuario excluido com sucesso.';
+        } catch (Throwable $e) {
+            $erro = 'Nao foi possivel excluir este usuario. Verifique se nao ha historico de emprestimos.';
+        }
     }
 }
 
-// Buscar usuário para edição
+// Buscar usuario para edicao
 $usuarioEditar = null;
 if ($acao === 'editar' && $idUsuario) {
     $stmt = $conn->prepare("SELECT * FROM usuarios WHERE id = ? AND tipo = 'A'");
@@ -449,9 +465,12 @@ $totalUsuarios = count($usuarios);
                                         <a href="detalhe_aluno.php?id=<?= $usuario['id'] ?>" class="btn-tabela btn-editar">Detalhes</a>
                                         <a href="usuarios.php?acao=editar&id=<?= $usuario['id'] ?>"
                                            class="btn-tabela btn-editar">Editar</a>
-                                        <a href="usuarios.php?acao=excluir&id=<?= $usuario['id'] ?>"
-                                           class="btn-tabela btn-excluir"
-                                           onclick="return confirm('Tem certeza que deseja excluir este usuário?');">Excluir</a>
+                                        <form method="POST" action="usuarios.php" style="margin:0;">
+                                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
+                                            <input type="hidden" name="acao" value="excluir">
+                                            <input type="hidden" name="id" value="<?= (int) $usuario['id'] ?>">
+                                            <button type="submit" class="btn-tabela btn-excluir" onclick="return confirm('Tem certeza que deseja excluir este usuario?');">Excluir</button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
@@ -468,6 +487,7 @@ $totalUsuarios = count($usuarios);
         <div class="modal">
             <h2>Editar Usuário</h2>
             <form method="POST" action="usuarios.php?acao=editar">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
                 <input type="hidden" name="id" value="<?= $usuarioEditar['id'] ?>">
 
                 <div class="form-group">

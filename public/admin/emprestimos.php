@@ -17,6 +17,7 @@ require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/conexao.php';
 
 $erro = '';
 $sucesso = '';
+$csrfToken = libraflowCsrfToken();
 
 // Processar novo empréstimo via AJAX
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['ajax'])) {
@@ -27,6 +28,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['ajax'])) {
     $dias = intval($_POST['dias'] ?? 7);
 
     try {
+        if (!libraflowValidateCsrfToken($_POST['csrf_token'] ?? null)) {
+            echo json_encode(['sucesso' => false, 'erro' => 'Sessao expirada. Recarregue a pagina e tente novamente.']);
+            exit;
+        }
+
         if ($idLivro <= 0 || $idUsuario <= 0) {
             echo json_encode(['sucesso' => false, 'erro' => 'Selecione um livro e um aluno.']);
             exit;
@@ -98,8 +104,11 @@ try {
           AND data_prevista_devolucao < CURDATE()
     ");
 
-    if (isset($_GET['devolver'])) {
-        $idEmprestimo = intval($_GET['devolver']);
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'devolver') {
+        if (!libraflowValidateCsrfToken($_POST['csrf_token'] ?? null)) {
+            $erro = 'Sessao expirada. Recarregue a pagina e tente novamente.';
+        } else {
+        $idEmprestimo = intval($_POST['id_emprestimo'] ?? 0);
 
         $conn->beginTransaction();
 
@@ -130,6 +139,7 @@ try {
         }
 
         $conn->commit();
+        }
     }
 
     $status = $_GET['status'] ?? '';
@@ -572,11 +582,14 @@ $statusInfo = [
                                 </td>
                                 <td>
                                     <?php if ($podeDevolver): ?>
-                                        <a href="emprestimos.php?devolver=<?= $emprestimo['id'] ?>"
-                                           class="btn-devolver"
-                                           onclick="return confirm('Registrar devolução deste livro?')">
-                                            Registrar devolução
-                                        </a>
+                                        <form method="POST" action="emprestimos.php" style="margin:0;">
+                                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
+                                            <input type="hidden" name="acao" value="devolver">
+                                            <input type="hidden" name="id_emprestimo" value="<?= (int) $emprestimo['id'] ?>">
+                                            <button type="submit" class="btn-devolver" onclick="return confirm('Registrar devolucao deste livro?')">
+                                                Registrar devolucao
+                                            </button>
+                                        </form>
                                     <?php else: ?>
                                         <span class="muted">Finalizado</span>
                                     <?php endif; ?>
@@ -598,6 +611,7 @@ $statusInfo = [
             </div>
             <div class="modal-body">
                 <form id="formEmprestimo" class="form-emprestimo">
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
                     <input type="hidden" id="selectedLivro" name="id_livro" value="">
                     <input type="hidden" id="selectedAluno" name="id_usuario" value="">
 
