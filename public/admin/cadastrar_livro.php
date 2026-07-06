@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /*
  * MAPA RAPIDO DO ARQUIVO
  * Local: public/admin/cadastrar_livro.php
@@ -113,7 +113,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <nav>
         <span style="font-family:'Lora',serif;font-size:2rem;color:#283618;">Cadastrar Livro</span>
         <div class="right">
-            <span style="font-size:1.4rem;color:#606C38;"><i class="fas fa-user" aria-hidden="true"></i> <?= htmlspecialchars($_SESSION['usuario_nome']) ?></span>
+            <div class="admin-user-menu">
+                <button type="button" class="admin-user-button" aria-expanded="false" aria-controls="adminUserMenu">
+                    <span class="admin-user-avatar"><?= htmlspecialchars(substr($_SESSION['usuario_nome'], 0, 1)) ?></span>
+                    <span class="admin-user-name"><?= htmlspecialchars($_SESSION['usuario_nome']) ?></span>
+                    <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                </button>
+                <div class="admin-user-dropdown" id="adminUserMenu">
+                    <a href="/LibraFlow/public/admin/Admin.php"><i class="fas fa-house" aria-hidden="true"></i> Painel</a>
+                    <a href="/LibraFlow/public/admin/perfil.php"><i class="fas fa-user-gear" aria-hidden="true"></i> Perfil</a>
+                    <a href="/LibraFlow/public/admin/usuarios.php"><i class="fas fa-users" aria-hidden="true"></i> Usuarios</a>
+                    <a href="/LibraFlow/public/admin/emprestimos.php"><i class="fas fa-clipboard-list" aria-hidden="true"></i> Emprestimos</a>
+                    <a href="/LibraFlow/public/auth/logout.php" class="sair"><i class="fas fa-right-from-bracket" aria-hidden="true"></i> Sair</a>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -191,11 +204,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div class="form-group full">
                         <label>Capa do livro</label>
-                        <div class="upload-area">
+                        <label class="upload-area" for="inputCapa">
                             <input type="file" name="capa" id="inputCapa" accept=".jpg,.jpeg,.png,.webp">
-                            <p><i class="fas fa-folder-open" aria-hidden="true"></i> Clique para selecionar uma imagem<br><small>JPG, PNG ou WEBP — máx. 2MB</small></p>
+                            <span class="upload-icon"><i class="fas fa-image" aria-hidden="true"></i></span>
+                            <strong><i class="fas fa-upload" aria-hidden="true"></i> Escolher capa</strong>
+                            <p id="nomeCapa">JPG, PNG ou WEBP - max. 2MB. Prefira imagem vertical.</p>
                             <img id="previewCapa" class="preview-capa" src="" alt="Preview da capa">
-                        </div>
+                        </label>
                     </div>
 
                     <div class="form-group full">
@@ -215,12 +230,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         document.getElementById('inputCapa').addEventListener('change', function () {
             const file = this.files[0];
             if (!file) return;
+            document.getElementById('nomeCapa').textContent = file.name;
             const reader = new FileReader();
             reader.onload = e => {
                 const img = document.getElementById('previewCapa');
                 img.src = e.target.result;
                 img.style.display = 'block';
-                document.querySelector('.upload-area p').style.display = 'none';
             };
             reader.readAsDataURL(file);
         });
@@ -233,6 +248,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </button>
 
     <script src="darkmode.js"></script>
+    <script src="/LibraFlow/public/admin/admin-user-menu.js"></script>
 </body>
 </html>
 

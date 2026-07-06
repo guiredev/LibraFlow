@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /*
  * MAPA RAPIDO DO ARQUIVO
  * Local: public/admin/cadastro_rapido_aluno.php
@@ -198,7 +198,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <nav>
         <span style="font-family:'Lora',serif;font-size:2rem;color:#283618;">Cadastro Rápido</span>
         <div class="right">
-            <span style="font-size:1.4rem;color:#606C38;"><?= htmlspecialchars($_SESSION['usuario_nome']) ?></span>
+            <div class="admin-user-menu">
+                <button type="button" class="admin-user-button" aria-expanded="false" aria-controls="adminUserMenu">
+                    <span class="admin-user-avatar"><?= htmlspecialchars(substr($_SESSION['usuario_nome'], 0, 1)) ?></span>
+                    <span class="admin-user-name"><?= htmlspecialchars($_SESSION['usuario_nome']) ?></span>
+                    <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                </button>
+                <div class="admin-user-dropdown" id="adminUserMenu">
+                    <a href="/LibraFlow/public/admin/Admin.php"><i class="fas fa-house" aria-hidden="true"></i> Painel</a>
+                    <a href="/LibraFlow/public/admin/perfil.php"><i class="fas fa-user-gear" aria-hidden="true"></i> Perfil</a>
+                    <a href="/LibraFlow/public/admin/usuarios.php"><i class="fas fa-users" aria-hidden="true"></i> Usuarios</a>
+                    <a href="/LibraFlow/public/admin/emprestimos.php"><i class="fas fa-clipboard-list" aria-hidden="true"></i> Emprestimos</a>
+                    <a href="/LibraFlow/public/auth/logout.php" class="sair"><i class="fas fa-right-from-bracket" aria-hidden="true"></i> Sair</a>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -288,6 +301,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         });
     </script>
     <script src="darkmode.js"></script>
+    <script src="/LibraFlow/public/admin/admin-user-menu.js"></script>
 </body>
 </html>
 

@@ -952,6 +952,18 @@ footer {
     white-space: nowrap;
 }
 
+.foto-upload-label .upload-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 4.4rem;
+    height: 4.4rem;
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--text-link) 12%, var(--bg-card));
+    color: var(--text-link);
+    font-size: 1.8rem;
+}
+
 .foto-upload-label strong {
     display: inline-flex;
     align-items: center;

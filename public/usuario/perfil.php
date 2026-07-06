@@ -198,9 +198,10 @@ $fotoPerfilUrl = !empty($usuario['foto_perfil'])
                             <span><?= htmlspecialchars(substr($usuario['nome'], 0, 1)) ?></span>
                         <?php endif; ?>
                     </div>
-                    <label class="foto-upload-label">
+                    <label class="foto-upload-label upload-area" for="fotoPerfil">
                         <span>Foto de perfil</span>
-                        <input type="file" name="foto_perfil" accept="image/jpeg,image/png,image/webp">
+                        <input type="file" id="fotoPerfil" name="foto_perfil" accept="image/jpeg,image/png,image/webp">
+                        <span class="upload-icon"><i class="fas fa-image" aria-hidden="true"></i></span>
                         <strong><i class="fas fa-camera" aria-hidden="true"></i> Escolher foto</strong>
                         <small id="fotoNome">JPG, PNG ou WEBP ate 1MB. Use uma imagem quadrada para melhor enquadramento.</small>
                     </label>
