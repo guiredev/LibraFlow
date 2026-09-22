@@ -1,318 +1,36 @@
-﻿<?php
-/*
- * MAPA RAPIDO DO ARQUIVO
- * Local: public/admin/visitas.php
- * Funcao: Registro e consulta de visitas da biblioteca por data/periodo.
- */
-// public/admin/visitas.php
-
+<?php
+/* Consulta administrativa das visitas individuais. O histórico agregado permanece em visitas_biblioteca. */
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/auth_check.php';
-
-if ($_SESSION['usuario_tipo'] !== 'D') {
-    header('Location: /LibraFlow/public/usuario/index.php');
-    exit;
-}
-
+if ($_SESSION['usuario_tipo'] !== 'D') { header('Location: /LibraFlow/public/usuario/index.php'); exit; }
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/conexao.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/services/VisitaService.php';
+date_default_timezone_set('America/Sao_Paulo');
 
-$periodos = ['Manha', 'Tarde', 'Noite'];
-$erro = '';
-$sucesso = '';
-$dataHoje = date('Y-m-d');
-$csrfToken = libraflowCsrfToken();
+function visitaDataValida(?string $data): ?string { $d = DateTimeImmutable::createFromFormat('!Y-m-d', (string) $data); return $d && $d->format('Y-m-d') === $data ? $data : null; }
+function labelPeriodo(string $periodo): string { return $periodo === 'Manha' ? 'Manhã' : $periodo; }
+function urlVisitas(array $alteracoes = []): string { $query = array_filter(array_merge($_GET, $alteracoes), fn($v) => $v !== '' && $v !== null); return '?' . http_build_query($query); }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $dataRegistro = $_POST['data_registro'] ?? $dataHoje;
-    $visitas = $_POST['visitas'] ?? [];
-
-    if (!libraflowValidateCsrfToken($_POST['csrf_token'] ?? null)) {
-        $erro = 'Sessao expirada. Recarregue a pagina e tente novamente.';
-    } elseif (!$dataRegistro) {
-        $erro = 'Informe a data do registro.';
-    } else {
-        try {
-            $stmt = $conn->prepare("
-                INSERT INTO visitas_biblioteca (data_registro, periodo, quantidade)
-                VALUES (?, ?, ?)
-                ON DUPLICATE KEY UPDATE quantidade = VALUES(quantidade)
-            ");
-
-            foreach ($periodos as $periodo) {
-                $quantidade = max(0, intval($visitas[$periodo] ?? 0));
-                $stmt->execute([$dataRegistro, $periodo, $quantidade]);
-            }
-
-            $sucesso = 'Visitas registradas com sucesso.';
-        } catch (PDOException $e) {
-            $erro = 'Nao foi possivel salvar as visitas. Verifique se a tabela foi criada.';
-        }
-    }
-}
-
-$inicio = $_GET['inicio'] ?? date('Y-m-01');
-$fim = $_GET['fim'] ?? $dataHoje;
-
+$hoje = date('Y-m-d'); $inicio = visitaDataValida($_GET['inicio'] ?? date('Y-m-01')) ?? date('Y-m-01'); $fim = visitaDataValida($_GET['fim'] ?? $hoje) ?? $hoje;
+if ($inicio > $fim) { [$inicio, $fim] = [$fim, $inicio]; }
+$periodo = $_GET['periodo'] ?? ''; $serie = $_GET['serie'] ?? ''; $motivo = $_GET['motivo'] ?? ''; $ano = filter_var($_GET['ano'] ?? '', FILTER_VALIDATE_INT);
+if ($periodo !== '' && !in_array($periodo, VisitaService::PERIODOS, true)) $periodo = '';
+if ($serie !== '' && !in_array($serie, VisitaService::SERIES, true)) $serie = '';
+if ($motivo !== '' && !in_array($motivo, VisitaService::MOTIVOS, true)) $motivo = '';
+if ($ano === false || $ano === null || $ano < (int)date('Y') - 1 || $ano > (int)date('Y') + 1) $ano = null;
+$pagina = max(1, (int)($_GET['pagina'] ?? 1)); $porPagina = 30; $erro = '';
+$where = ['data_visita BETWEEN :inicio AND :fim']; $params = [':inicio' => $inicio, ':fim' => $fim];
+foreach (['periodo' => $periodo, 'serie' => $serie, 'motivo' => $motivo] as $campo => $valor) if ($valor !== '') { $where[] = "$campo = :$campo"; $params[":$campo"] = $valor; }
+if ($ano !== null) { $where[] = 'ano = :ano'; $params[':ano'] = $ano; }
+$whereSql = implode(' AND ', $where);
 try {
-    $stmt = $conn->prepare("
-        SELECT data_registro, periodo, quantidade
-        FROM visitas_biblioteca
-        WHERE data_registro BETWEEN ? AND ?
-        ORDER BY data_registro DESC,
-            FIELD(periodo, 'Manha', 'Tarde', 'Noite')
-    ");
-    $stmt->execute([$inicio, $fim]);
-    $registros = $stmt->fetchAll();
-
-    $totaisPeriodo = array_fill_keys($periodos, 0);
-    $totalGeral = 0;
-
-    foreach ($registros as $registro) {
-        if (isset($totaisPeriodo[$registro['periodo']])) {
-            $totaisPeriodo[$registro['periodo']] += (int) $registro['quantidade'];
-        }
-        $totalGeral += (int) $registro['quantidade'];
-    }
-} catch (PDOException $e) {
-    $registros = [];
-    $totaisPeriodo = array_fill_keys($periodos, 0);
-    $totalGeral = 0;
-    $erro = $erro ?: 'Nao foi possivel carregar os registros de visitas.';
-}
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM registros_visitas WHERE $whereSql"); $stmt->execute($params); $totalResultados = (int)$stmt->fetchColumn();
+    $stmt = $conn->prepare("SELECT data_visita,hora_visita,nome,rm,serie,ano,periodo,motivo FROM registros_visitas WHERE $whereSql ORDER BY data_visita DESC,hora_visita DESC LIMIT :limite OFFSET :offset"); foreach($params as $k=>$v) $stmt->bindValue($k,$v); $stmt->bindValue(':limite',$porPagina,PDO::PARAM_INT); $stmt->bindValue(':offset',($pagina-1)*$porPagina,PDO::PARAM_INT); $stmt->execute(); $registros=$stmt->fetchAll();
+    $totalHoje=(int)$conn->query("SELECT COUNT(*) FROM registros_visitas WHERE data_visita=CURDATE()")->fetchColumn(); $totalMes=(int)$conn->query("SELECT COUNT(*) FROM registros_visitas WHERE data_visita>=DATE_FORMAT(CURDATE(), '%Y-%m-01')")->fetchColumn(); $totalAno=(int)$conn->query("SELECT COUNT(*) FROM registros_visitas WHERE YEAR(data_visita)=YEAR(CURDATE())")->fetchColumn();
+    $estatistica=$conn->prepare('SELECT periodo,COUNT(*) total FROM registros_visitas WHERE data_visita BETWEEN ? AND ? GROUP BY periodo'); $estatistica->execute([$inicio,$fim]); $porPeriodo=$estatistica->fetchAll();
+    $estatistica=$conn->prepare('SELECT motivo,COUNT(*) total FROM registros_visitas WHERE data_visita BETWEEN ? AND ? GROUP BY motivo ORDER BY total DESC'); $estatistica->execute([$inicio,$fim]); $porMotivo=$estatistica->fetchAll();
+    $estatistica=$conn->prepare('SELECT serie,COUNT(*) total FROM registros_visitas WHERE data_visita BETWEEN ? AND ? GROUP BY serie ORDER BY serie'); $estatistica->execute([$inicio,$fim]); $porSerie=$estatistica->fetchAll();
+} catch(PDOException $e) { error_log('Erro ao consultar visitas: '.$e->getMessage()); $erro='Não foi possível carregar as visitas. Verifique se a atualização do banco foi aplicada.'; $registros=$porPeriodo=$porMotivo=$porSerie=[]; $totalResultados=$totalHoje=$totalMes=$totalAno=0; }
+$paginas=max(1,(int)ceil($totalResultados/$porPagina)); $pagina=min($pagina,$paginas);
 ?>
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visitas | LibraFlow Admin</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="darkmode-btn.css">
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
-    <style>
-        .visitas-layout {
-            display: grid;
-            grid-template-columns: minmax(280px, 420px) 1fr;
-            gap: 2rem;
-            align-items: start;
-        }
-
-        /* Dark Mode Toggle Button */
-        .theme-toggle-wrapper {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            z-index: 1000;
-        }
-
-        .theme-toggle-btn {
-            width: 5.5rem;
-            height: 5.5rem;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: #DDA15E;
-        }
-
-        .theme-toggle-btn:hover {
-            transform: scale(1.1) rotate(20deg);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-        }
-
-        .theme-toggle-btn:active {
-            transform: scale(0.95);
-        }
-
-        .theme-toggle-btn:focus-visible {
-            outline: 3px solid #BC6C25;
-            outline-offset: 3px;
-        }
-
-        body.dark .theme-toggle-btn {
-            background: #4A6020;
-        }
-
-        @media (max-width: 768px) {
-            .theme-toggle-wrapper {
-                bottom: 1.5rem;
-                right: 1.5rem;
-            }
-
-            .theme-toggle-btn {
-                width: 4.5rem;
-                height: 4.5rem;
-                font-size: 1.5rem;
-            }
-        }
-
-        .totais-visitas {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(14rem, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .total-card {
-            background: #fff;
-            border-radius: 1.2rem;
-            padding: 1.8rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
-
-        .total-card h2 {
-            font-size: 1.3rem;
-            color: #4A4A4A;
-            margin-bottom: 0.8rem;
-        }
-
-        .total-card p {
-            font-size: 3rem;
-            font-weight: 800;
-            color: #283618;
-        }
-
-        @media (max-width: 900px) {
-            .visitas-layout { grid-template-columns: 1fr; }
-            .totais-visitas { grid-template-columns: 1fr 1fr; }
-        }
-    </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head>
-<body>
-    <aside>
-        <div class="logo-aside"><span>LibraFlow</span></div>
-        <ul>
-            <li><a href="/LibraFlow/public/admin/Admin.php"><i class="fas fa-house nav-icon" aria-hidden="true"></i> Início</a></li>
-            <li><a href="/LibraFlow/public/admin/listar_livros.php"><i class="fas fa-book-open nav-icon" aria-hidden="true"></i> Livros</a></li>
-            <li><a href="/LibraFlow/public/admin/cadastrar_livro.php"><i class="fas fa-plus nav-icon" aria-hidden="true"></i> Cadastrar Livro</a></li>
-            <li><a href="/LibraFlow/public/admin/usuarios.php"><i class="fas fa-users nav-icon" aria-hidden="true"></i> Usuários</a></li>
-            <li><a href="/LibraFlow/public/admin/emprestimos.php"><i class="fas fa-clipboard-list nav-icon" aria-hidden="true"></i> Empréstimos</a></li>
-            <li><a href="/LibraFlow/public/admin/visitas.php" class="ativo"><i class="fas fa-clock nav-icon" aria-hidden="true"></i> Visitas</a></li>
-            <li><a href="relatorios/index.php"><i class="fas fa-chart-line nav-icon" aria-hidden="true"></i> Relatórios</a></li>
-            <div class="sidebar-down">
-                <li><a href="/LibraFlow/public/auth/logout.php">Sair</a></li>
-            </div>
-        </ul>
-    </aside>
-
-    <nav>
-        <span style="font-family:'Lora',serif;font-size:2rem;color:#283618;">Controle de Visitas</span>
-        <div class="right">
-            <div class="admin-user-menu">
-                <button type="button" class="admin-user-button" aria-expanded="false" aria-controls="adminUserMenu">
-                    <span class="admin-user-avatar"><?= htmlspecialchars(substr($_SESSION['usuario_nome'], 0, 1)) ?></span>
-                    <span class="admin-user-name"><?= htmlspecialchars($_SESSION['usuario_nome']) ?></span>
-                    <i class="fas fa-chevron-down" aria-hidden="true"></i>
-                </button>
-                <div class="admin-user-dropdown" id="adminUserMenu">
-                    <a href="/LibraFlow/public/admin/Admin.php"><i class="fas fa-house" aria-hidden="true"></i> Painel</a>
-                    <a href="/LibraFlow/public/admin/perfil.php"><i class="fas fa-user-gear" aria-hidden="true"></i> Perfil</a>
-                    <a href="/LibraFlow/public/admin/usuarios.php"><i class="fas fa-users" aria-hidden="true"></i> Usuarios</a>
-                    <a href="/LibraFlow/public/admin/emprestimos.php"><i class="fas fa-clipboard-list" aria-hidden="true"></i> Emprestimos</a>
-                    <a href="/LibraFlow/public/auth/logout.php" class="sair"><i class="fas fa-right-from-bracket" aria-hidden="true"></i> Sair</a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <header>
-        <h1>Controle de Visitas</h1>
-        <p>Registre visitas por periodo e acompanhe os totais automaticamente.</p>
-    </header>
-
-    <main>
-        <?php if ($erro): ?>
-            <div class="alerta alerta-erro"><?= htmlspecialchars($erro) ?></div>
-        <?php endif; ?>
-
-        <?php if ($sucesso): ?>
-            <div class="alerta alerta-sucesso"><?= htmlspecialchars($sucesso) ?></div>
-        <?php endif; ?>
-
-        <section class="totais-visitas">
-            <?php foreach ($totaisPeriodo as $periodo => $total): ?>
-                <div class="total-card">
-                    <h2><?= htmlspecialchars($periodo) ?></h2>
-                    <p><?= $total ?></p>
-                </div>
-            <?php endforeach; ?>
-            <div class="total-card">
-                <h2>Total do periodo</h2>
-                <p><?= $totalGeral ?></p>
-            </div>
-        </section>
-
-        <section class="visitas-layout">
-            <div class="form-card">
-                <h2>Novo registro</h2>
-                <form method="POST">
-                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
-                    <div class="form-grid">
-                        <div class="form-group full">
-                            <label for="data_registro">Data</label>
-                            <input type="date" id="data_registro" name="data_registro" value="<?= htmlspecialchars($_POST['data_registro'] ?? $dataHoje) ?>" required>
-                        </div>
-
-                        <?php foreach ($periodos as $periodo): ?>
-                            <div class="form-group">
-                                <label for="periodo_<?= htmlspecialchars($periodo) ?>"><?= htmlspecialchars($periodo) ?></label>
-                                <input type="number" id="periodo_<?= htmlspecialchars($periodo) ?>" name="visitas[<?= htmlspecialchars($periodo) ?>]" min="0" value="<?= htmlspecialchars($_POST['visitas'][$periodo] ?? '0') ?>">
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                    <button type="submit" class="btn-salvar">Salvar visitas</button>
-                </form>
-            </div>
-
-            <div>
-                <form method="GET" class="filtros">
-                    <input type="date" name="inicio" value="<?= htmlspecialchars($inicio) ?>">
-                    <input type="date" name="fim" value="<?= htmlspecialchars($fim) ?>">
-                    <button type="submit" class="btn-filtrar">Filtrar</button>
-                    <a href="visitas.php" style="font-size:1.3rem;color:#BC6C25;font-weight:bold;text-decoration:none;padding:0.8rem;">Mes atual</a>
-                </form>
-
-                <div class="tabela-wrapper">
-                    <?php if (empty($registros)): ?>
-                        <div class="vazio-tabela">Nenhuma visita registrada neste intervalo.</div>
-                    <?php else: ?>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Data</th>
-                                    <th>Periodo</th>
-                                    <th>Quantidade</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($registros as $registro): ?>
-                                    <tr>
-                                        <td><?= date('d/m/Y', strtotime($registro['data_registro'])) ?></td>
-                                        <td><?= htmlspecialchars($registro['periodo']) ?></td>
-                                        <td><?= (int) $registro['quantidade'] ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Botão Dark Mode -->
-    <button id="themeToggle" class="theme-toggle-float" aria-label="Alternar tema claro/escuro">
-        <span id="themeIcon"><i class="fas fa-moon" aria-hidden="true"></i></span>
-        <span id="themeLabel">Escuro</span>
-    </button>
-
-    <script src="darkmode.js"></script>
-    <script src="/LibraFlow/public/admin/admin-user-menu.js"></script>
-</body>
-</html>
-
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Visitas | LibraFlow Admin</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="darkmode-btn.css"><link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"><style>.cards-visitas,.estatisticas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-bottom:1.5rem}.card-visita,.estatistica{background:var(--bg-card);border:1px solid rgba(188,108,37,.12);border-radius:1.2rem;padding:1.5rem;box-shadow:var(--shadow-sm)}.card-visita small{font-weight:700;color:var(--text-body);text-transform:uppercase}.card-visita strong{display:block;color:var(--text-title);font:800 3rem Lora,serif;margin-top:.4rem}.estatistica h2{font:700 1.6rem Lora,serif;color:var(--text-title);margin:0 0 .7rem}.estatistica p{margin:.35rem 0;color:var(--text-body)}.estatistica b{color:var(--text-title)}.acoes-visitas{display:flex;gap:1rem;align-items:center;margin-bottom:1.5rem}.paginacao{display:flex;gap:.8rem;justify-content:flex-end;align-items:center;margin-top:1rem}.paginacao a{color:var(--text-link);font-weight:700;text-decoration:none}@media(max-width:760px){.cards-visitas,.estatisticas{grid-template-columns:1fr}.acoes-visitas{flex-wrap:wrap}}</style></head><body>
+<aside><div class="logo-aside"><span>LibraFlow</span></div><ul><li><a href="/LibraFlow/public/admin/Admin.php">Início</a></li><li><a href="/LibraFlow/public/admin/listar_livros.php">Livros</a></li><li><a href="/LibraFlow/public/admin/usuarios.php">Usuários</a></li><li><a href="/LibraFlow/public/admin/emprestimos.php">Empréstimos</a></li><li><a href="/LibraFlow/public/admin/visitas.php" class="ativo">Visitas</a></li><li><a href="relatorios/index.php">Relatórios</a></li><div class="sidebar-down"><li><a href="/LibraFlow/public/auth/logout.php">Sair</a></li></div></ul></aside><nav><span style="font-family:Lora,serif;font-size:2rem;color:#283618">Visitas</span></nav><header><h1>Controle de visitas</h1><p>Consulte os registros individuais enviados pelo QR Code.</p></header><main><?php if($erro): ?><div class="alerta alerta-erro"><?=htmlspecialchars($erro)?></div><?php endif; ?><div class="acoes-visitas"><a class="btn-novo" href="visitas_qr.php"><i class="fas fa-qrcode"></i> QR Code da visita</a><a class="voltar" href="/LibraFlow/public/admin/relatorios/index.php">Exportar relatório de visitas</a></div><section class="cards-visitas"><div class="card-visita"><small>Visitas hoje</small><strong><?=$totalHoje?></strong></div><div class="card-visita"><small>Este mês</small><strong><?=$totalMes?></strong></div><div class="card-visita"><small>Este ano</small><strong><?=$totalAno?></strong></div></section><form class="filtros" method="get"><input type="date" name="inicio" value="<?=htmlspecialchars($inicio)?>"><input type="date" name="fim" value="<?=htmlspecialchars($fim)?>"><select name="periodo"><option value="">Todos os períodos</option><?php foreach(VisitaService::PERIODOS as $item):?><option value="<?=$item?>" <?=$periodo===$item?'selected':''?>><?=labelPeriodo($item)?></option><?php endforeach;?></select><select name="serie"><option value="">Todas as séries</option><?php foreach(VisitaService::SERIES as $item):?><option value="<?=$item?>" <?=$serie===$item?'selected':''?>><?=$item?></option><?php endforeach;?></select><input type="number" name="ano" value="<?=$ano??''?>" placeholder="Ano letivo" min="<?=date('Y')-1?>" max="<?=date('Y')+1?>"><select name="motivo"><option value="">Todos os motivos</option><?php foreach(VisitaService::MOTIVOS as $item):?><option value="<?=htmlspecialchars($item)?>" <?=$motivo===$item?'selected':''?>><?=htmlspecialchars($item)?></option><?php endforeach;?></select><button class="btn-filtrar">Filtrar</button><a class="voltar" href="visitas.php">Limpar</a></form><section class="estatisticas"><div class="estatistica"><h2>Por período</h2><?php foreach($porPeriodo as $l):?><p><b><?=labelPeriodo($l['periodo'])?></b>: <?=(int)$l['total']?></p><?php endforeach;?></div><div class="estatistica"><h2>Por motivo</h2><?php foreach($porMotivo as $l):?><p><b><?=htmlspecialchars($l['motivo'])?></b>: <?=(int)$l['total']?></p><?php endforeach;?></div><div class="estatistica"><h2>Por série</h2><?php foreach($porSerie as $l):?><p><b><?=htmlspecialchars($l['serie'])?></b>: <?=(int)$l['total']?></p><?php endforeach;?></div></section><div class="tabela-wrapper"><p style="margin-top:0;font-weight:700"><?=$totalResultados?> resultado(s)</p><?php if(!$registros):?><div class="vazio-tabela">Nenhuma visita encontrada para os filtros selecionados.</div><?php else:?><table><thead><tr><th>Data</th><th>Hora</th><th>Nome</th><th>RM</th><th>Série</th><th>Ano</th><th>Período</th><th>Motivo</th></tr></thead><tbody><?php foreach($registros as $r):?><tr><td><?=date('d/m/Y',strtotime($r['data_visita']))?></td><td><?=substr($r['hora_visita'],0,5)?></td><td><?=htmlspecialchars($r['nome'])?></td><td><?=htmlspecialchars($r['rm'])?></td><td><?=htmlspecialchars($r['serie'])?></td><td><?=(int)$r['ano']?></td><td><?=labelPeriodo($r['periodo'])?></td><td><?=htmlspecialchars($r['motivo'])?></td></tr><?php endforeach;?></tbody></table><?php endif;?><div class="paginacao"><?php if($pagina>1):?><a href="<?=htmlspecialchars(urlVisitas(['pagina'=>$pagina-1]))?>">← Anterior</a><?php endif;?><span>Página <?=$pagina?> de <?=$paginas?></span><?php if($pagina<$paginas):?><a href="<?=htmlspecialchars(urlVisitas(['pagina'=>$pagina+1]))?>">Próxima →</a><?php endif;?></div></div></main><button id="themeToggle" class="theme-toggle-float"><span id="themeIcon">☾</span><span id="themeLabel">Escuro</span></button><script src="darkmode.js"></script></body></html>

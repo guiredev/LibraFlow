@@ -49,7 +49,7 @@ $fim     = $_GET['fim']     ?? null;
 $inicio  = $inicio === '' ? null : $inicio;
 $fim     = $fim === '' ? null : $fim;
 
-$tipos_validos    = ['atrasados', 'historico', 'acervo', 'ranking'];
+$tipos_validos    = ['atrasados', 'historico', 'acervo', 'ranking', 'visitas'];
 $formatos_validos = ['pdf', 'xlsx'];
 
 if (!in_array($tipo, $tipos_validos) || !in_array($formato, $formatos_validos)) {
@@ -139,6 +139,18 @@ switch ($tipo) {
                 $r['total_solicitacoes'],
                 $r['total_aprovados'],
                 $r['total_devolvidos'],
+            ];
+        }
+        break;
+
+    case 'visitas':
+        $titulo = 'Visitas Individuais à Biblioteca';
+        $colunas = ['Data', 'Hora', 'Nome', 'RM', 'Série', 'Ano', 'Período', 'Motivo'];
+        foreach ($servico->visitasIndividuais($inicio, $fim) as $r) {
+            $dados[] = [
+                date('d/m/Y', strtotime($r['data_visita'])), substr($r['hora_visita'], 0, 5),
+                $r['nome'], $r['rm'], $r['serie'], $r['ano'],
+                $r['periodo'] === 'Manha' ? 'Manhã' : $r['periodo'], $r['motivo'],
             ];
         }
         break;

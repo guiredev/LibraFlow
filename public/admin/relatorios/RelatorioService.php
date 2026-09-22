@@ -179,4 +179,17 @@ class RelatorioService
             'emprestimos_atrasados' => $totalAtrasados,
         ];
     }
+
+    /** Visitas individuais registradas no formulário público. */
+    public function visitasIndividuais(?string $dataInicio = null, ?string $dataFim = null): array
+    {
+        $sql = "SELECT data_visita, hora_visita, nome, rm, serie, ano, periodo, motivo FROM registros_visitas WHERE 1=1";
+        $params = [];
+        if ($dataInicio) { $sql .= ' AND data_visita >= :inicio'; $params[':inicio'] = $dataInicio; }
+        if ($dataFim) { $sql .= ' AND data_visita <= :fim'; $params[':fim'] = $dataFim; }
+        $sql .= ' ORDER BY data_visita DESC, hora_visita DESC';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

@@ -75,7 +75,7 @@ $totalEmprestimos = $conn->query("SELECT COUNT(*) FROM emprestimos WHERE status 
 $totalAtraso      = $conn->query("SELECT COUNT(*) FROM emprestimos WHERE status = 'V'")->fetchColumn();
 $totalUsuarios    = $conn->query("SELECT COUNT(*) FROM usuarios WHERE tipo = 'A'")->fetchColumn();
 $totalLivros      = $conn->query("SELECT COUNT(*) FROM livros")->fetchColumn();
-$totalVisitasMes  = $conn->query("SELECT COALESCE(SUM(quantidade), 0) FROM visitas_biblioteca WHERE data_registro >= DATE_FORMAT(CURDATE(), '%Y-%m-01')")->fetchColumn();
+$totalVisitasMes  = $conn->query("SELECT (SELECT COALESCE(SUM(quantidade), 0) FROM visitas_biblioteca WHERE data_registro >= DATE_FORMAT(CURDATE(), '%Y-%m-01')) + (SELECT COUNT(*) FROM registros_visitas WHERE data_visita >= DATE_FORMAT(CURDATE(), '%Y-%m-01'))")->fetchColumn();
 
 // Dados dos graficos do painel inicial.
 $emprestimosPorMes = $conn->query("
@@ -119,10 +119,14 @@ $categoriasMaisProcuradas = $conn->query("
     LIMIT 6
 ")->fetchAll();
 
+
 $visitasPorPeriodo = $conn->query("
-    SELECT periodo AS rotulo, COALESCE(SUM(quantidade), 0) AS total
-    FROM visitas_biblioteca
-    WHERE data_registro >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+    SELECT periodo AS rotulo, SUM(total) AS total
+    FROM (
+        SELECT periodo, COALESCE(SUM(quantidade), 0) AS total FROM visitas_biblioteca WHERE data_registro >= DATE_FORMAT(CURDATE(), '%Y-%m-01') GROUP BY periodo
+        UNION ALL
+        SELECT periodo, COUNT(*) AS total FROM registros_visitas WHERE data_visita >= DATE_FORMAT(CURDATE(), '%Y-%m-01') GROUP BY periodo
+    ) visitas
     GROUP BY periodo
     ORDER BY FIELD(periodo, 'Manha', 'Tarde', 'Noite'), periodo
 ")->fetchAll();
@@ -298,12 +302,16 @@ $historico = $conn->query("
             <span>LibraFlow</span>
         </div>
         <ul>
-             <li><a href="/LibraFlow/public/admin/Admin.php" class="ativo"><i class="fas fa-house nav-icon" aria-hidden="true"></i> Início</a></li>
-            <li><a href="/LibraFlow/public/admin/listar_livros.php"><i class="fas fa-book-open nav-icon" aria-hidden="true"></i> Livros</a></li>
-            <li><a href="/LibraFlow/public/admin/cadastrar_livro.php"><i class="fas fa-plus nav-icon" aria-hidden="true"></i> Cadastrar Livro</a></li>
-            <li><a href="/LibraFlow/public/admin/usuarios.php"><i class="fas fa-users nav-icon" aria-hidden="true"></i> Usuários</a></li>
+            <li class="nav-section">Principal</li>
+            <li><a href="/LibraFlow/public/admin/Admin.php" class="ativo"><i class="fas fa-house nav-icon" aria-hidden="true"></i> Visão geral</a></li>
+            <li class="nav-section">Biblioteca</li>
+            <li><a href="/LibraFlow/public/admin/listar_livros.php"><i class="fas fa-book-open nav-icon" aria-hidden="true"></i> Acervo</a></li>
+            <li><a href="/LibraFlow/public/admin/cadastrar_livro.php"><i class="fas fa-plus nav-icon" aria-hidden="true"></i> Adicionar livro</a></li>
+            <li class="nav-section">Operação</li>
             <li><a href="/LibraFlow/public/admin/emprestimos.php"><i class="fas fa-clipboard-list nav-icon" aria-hidden="true"></i> Empréstimos</a></li>
+            <li><a href="/LibraFlow/public/admin/usuarios.php"><i class="fas fa-users nav-icon" aria-hidden="true"></i> Pessoas</a></li>
             <li><a href="/LibraFlow/public/admin/visitas.php"><i class="fas fa-clock nav-icon" aria-hidden="true"></i> Visitas</a></li>
+            <li class="nav-section">Análises</li>
             <li><a href="relatorios/index.php"><i class="fas fa-chart-line nav-icon" aria-hidden="true"></i> Relatórios</a></li>
             <div class="sidebar-down">
                 <li><a href="/LibraFlow/public/auth/logout.php"><i class="fas fa-right-from-bracket nav-icon" aria-hidden="true"></i> Sair</a></li>

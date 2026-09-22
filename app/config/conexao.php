@@ -11,9 +11,13 @@ $banco = getenv('LIBRAFLOW_DB_NAME') ?: 'libraflow';
 $usuario = getenv('LIBRAFLOW_DB_USER') ?: 'root';
 $senha = getenv('LIBRAFLOW_DB_PASS') ?: '';
 
+if (!preg_match('/^[A-Za-z0-9_]+$/', $banco)) {
+    die('Nome de banco de dados inválido.');
+}
+
 try {
     $conn = new PDO(
-        "mysql:host={$host};dbname={$banco};charset=utf8mb4",
+        "mysql:host={$host};charset=utf8mb4",
         $usuario,
         $senha,
         [
@@ -22,6 +26,11 @@ try {
             PDO::ATTR_EMULATE_PREPARES   => false,
         ]
     );
+
+    $conn->exec("CREATE DATABASE IF NOT EXISTS `{$banco}` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci");
+    $conn->exec("USE `{$banco}`");
+    require_once __DIR__ . '/database_setup.php';
+    libraflowEnsureDatabaseTables($conn);
 } catch (PDOException $e) {
     error_log('Erro na conexao com banco LibraFlow: ' . $e->getMessage());
     die('Erro ao conectar ao banco de dados.');

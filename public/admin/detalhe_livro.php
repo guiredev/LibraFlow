@@ -33,13 +33,12 @@ $historico = $stmt->fetchAll();
 </head>
 <body>
     <aside><div class="logo-aside"><span>LibraFlow</span></div><ul>
-        <li><a href="/LibraFlow/public/admin/Admin.php"><i class="fas fa-house nav-icon"></i> Início</a></li>
-        <li><a href="/LibraFlow/public/admin/listar_livros.php" class="ativo"><i class="fas fa-book-open nav-icon"></i> Livros</a></li>
-        <li><a href="/LibraFlow/public/admin/cadastrar_livro.php"><i class="fas fa-plus nav-icon"></i> Cadastrar Livro</a></li>
-        <li><a href="/LibraFlow/public/admin/usuarios.php"><i class="fas fa-users nav-icon"></i> Usuários</a></li>
-        <li><a href="/LibraFlow/public/admin/emprestimos.php"><i class="fas fa-clipboard-list nav-icon"></i> Empréstimos</a></li>
+        <li class="nav-section">Principal</li><li><a href="/LibraFlow/public/admin/Admin.php"><i class="fas fa-house nav-icon" aria-hidden="true"></i> Visão geral</a></li>
+        <li class="nav-section">Biblioteca</li><li><a href="/LibraFlow/public/admin/listar_livros.php" class="ativo"><i class="fas fa-book-open nav-icon" aria-hidden="true"></i> Acervo</a></li><li><a href="/LibraFlow/public/admin/cadastrar_livro.php"><i class="fas fa-plus nav-icon" aria-hidden="true"></i> Adicionar livro</a></li>
+        <li class="nav-section">Operação</li><li><a href="/LibraFlow/public/admin/emprestimos.php"><i class="fas fa-clipboard-list nav-icon" aria-hidden="true"></i> Empréstimos</a></li><li><a href="/LibraFlow/public/admin/usuarios.php"><i class="fas fa-users nav-icon" aria-hidden="true"></i> Pessoas</a></li><li><a href="/LibraFlow/public/admin/visitas.php"><i class="fas fa-clock nav-icon" aria-hidden="true"></i> Visitas</a></li>
+        <li class="nav-section">Análises</li><li><a href="/LibraFlow/public/admin/relatorios/index.php"><i class="fas fa-chart-line nav-icon" aria-hidden="true"></i> Relatórios</a></li><div class="sidebar-down"><li><a href="/LibraFlow/public/auth/logout.php"><i class="fas fa-right-from-bracket nav-icon" aria-hidden="true"></i> Sair</a></li></div>
     </ul></aside>
-    <nav><span style="font-family:'Lora',serif;font-size:2rem;color:var(--text-title);">Detalhe do Livro</span></nav>
+    <nav><div class="logo-nav"><span>Detalhe do Livro</span></div><div class="right"><a class="admin-nav-link" href="/LibraFlow/public/admin/Admin.php"><i class="fas fa-house" aria-hidden="true"></i> Painel</a></div></nav>
     <header><h1><?= htmlspecialchars($livro['titulo']) ?></h1><p><?= htmlspecialchars($livro['autor']) ?></p></header>
     <main>
         <section class="detalhe-grid">

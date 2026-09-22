@@ -114,10 +114,12 @@ $resumo = $servico->resumoGeral();
 
         /* ── Main ── */
         .main {
-            margin-left: var(--sidebar-w);
+            margin-left: 25.6rem;
+            width: calc(100% - 25.6rem);
             flex: 1;
-            padding: 40px 48px;
-            max-width: 1100px;
+            min-width: 0;
+            padding: 10.2rem clamp(2rem, 3vw, 5.2rem) 4rem;
+            max-width: none;
         }
 
         .page-header {
@@ -141,7 +143,7 @@ $resumo = $servico->resumoGeral();
         /* ── Cards de resumo ── */
         .cards-resumo {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
             gap: 18px;
             margin-bottom: 36px;
         }
@@ -179,7 +181,7 @@ $resumo = $servico->resumoGeral();
         }
         .lista-relatorios {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 32rem), 1fr));
             gap: 18px;
         }
         .relatorio-card {
@@ -255,11 +257,17 @@ $resumo = $servico->resumoGeral();
         .btn-pdf i  { color: var(--danger); }
         .btn-xlsx i { color: var(--success); }
 
-        @media (max-width: 900px) {
-            .main { margin-left: 0; padding: 24px 20px; }
-            .sidebar { display: none; }
+        @media (max-width: 960px) {
+            .main { margin-left: 7.2rem; width: calc(100% - 7.2rem); padding: 9.2rem 2rem 3rem; }
             .cards-resumo { grid-template-columns: repeat(2, 1fr); }
             .lista-relatorios { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 640px) {
+            .main { margin-left: 0; width: 100%; padding: 9.2rem 1.4rem 3rem; }
+            .cards-resumo { grid-template-columns: 1fr; }
+            .relatorio-card .acoes { flex-direction: column; }
+            .relatorio-card .filtros { flex-direction: column; }
+            .relatorio-card .filtros input { width: 100%; }
         }
     </style>
 </head>
@@ -270,18 +278,27 @@ $resumo = $servico->resumoGeral();
             <span>LibraFlow</span>
         </div>
         <ul>
-            <li><a href="/LibraFlow/public/admin/Admin.php"><i class="fas fa-house nav-icon" aria-hidden="true"></i> Início</a></li>
-            <li><a href="/LibraFlow/public/admin/listar_livros.php"><i class="fas fa-book-open nav-icon" aria-hidden="true"></i> Livros</a></li>
-            <li><a href="/LibraFlow/public/admin/cadastrar_livro.php"><i class="fas fa-plus nav-icon" aria-hidden="true"></i> Cadastrar Livro</a></li>
-            <li><a href="/LibraFlow/public/admin/usuarios.php"><i class="fas fa-users nav-icon" aria-hidden="true"></i> Usuários</a></li>
-            <li><a href="/LibraFlow/public/admin/emprestimos.php"><i class="fas fa-clipboard-list nav-icon" aria-hidden="true"></i> Empréstimos</a></li>
+            <li class="nav-section">Principal</li><li><a href="/LibraFlow/public/admin/Admin.php"><i class="fas fa-house nav-icon" aria-hidden="true"></i> Visão geral</a></li>
+            <li class="nav-section">Biblioteca</li><li><a href="/LibraFlow/public/admin/listar_livros.php"><i class="fas fa-book-open nav-icon" aria-hidden="true"></i> Acervo</a></li>
+            <li><a href="/LibraFlow/public/admin/cadastrar_livro.php"><i class="fas fa-plus nav-icon" aria-hidden="true"></i> Adicionar livro</a></li>
+            <li class="nav-section">Operação</li><li><a href="/LibraFlow/public/admin/emprestimos.php"><i class="fas fa-clipboard-list nav-icon" aria-hidden="true"></i> Empréstimos</a></li>
+            <li><a href="/LibraFlow/public/admin/usuarios.php"><i class="fas fa-users nav-icon" aria-hidden="true"></i> Pessoas</a></li>
             <li><a href="/LibraFlow/public/admin/visitas.php"><i class="fas fa-clock nav-icon" aria-hidden="true"></i> Visitas</a></li>
-            <li><a href="/LibraFlow/public/admin/relatorios/index.php" class="ativo"><i class="fas fa-chart-line nav-icon" aria-hidden="true"></i> Relatórios</a></li>
+            <li class="nav-section">Análises</li><li><a href="/LibraFlow/public/admin/relatorios/index.php" class="ativo"><i class="fas fa-chart-line nav-icon" aria-hidden="true"></i> Relatórios</a></li>
             <div class="sidebar-down">
                 <li><a href="/LibraFlow/public/auth/logout.php"><i class="fas fa-right-from-bracket nav-icon" aria-hidden="true"></i> Sair</a></li>
             </div>
         </ul>
     </aside>
+
+<nav aria-label="Navegação contextual">
+    <div class="logo-nav"><span>Relatórios</span></div>
+    <div class="right">
+        <a class="admin-nav-link" href="/LibraFlow/public/admin/Admin.php">
+            <i class="fas fa-house" aria-hidden="true"></i> Painel
+        </a>
+    </div>
+</nav>
 
 <main class="main">
     <div class="page-header">
@@ -366,6 +383,22 @@ $resumo = $servico->resumoGeral();
             <div class="acoes">
                 <a class="btn-relatorio btn-pdf"  href="gerar_relatorio.php?tipo=ranking&formato=pdf"><i class="fas fa-file-pdf"></i> PDF</a>
                 <a class="btn-relatorio btn-xlsx" href="gerar_relatorio.php?tipo=ranking&formato=xlsx"><i class="fas fa-file-excel"></i> Excel</a>
+            </div>
+        </div>
+
+        <div class="relatorio-card">
+            <div class="icone"><i class="fas fa-qrcode"></i></div>
+            <h3>Visitas Individuais</h3>
+            <p>Registros de entrada da biblioteca enviados pelo formulário de QR Code.</p>
+            <form class="filtros" method="GET" action="gerar_relatorio.php" target="_blank" id="form-visitas">
+                <input type="hidden" name="tipo" value="visitas">
+                <input type="hidden" name="formato" value="pdf">
+                <input type="date" name="inicio" title="Data inicial">
+                <input type="date" name="fim" title="Data final">
+            </form>
+            <div class="acoes">
+                <a class="btn-relatorio btn-pdf" href="#" onclick="return enviarComFiltro('form-visitas','pdf')"><i class="fas fa-file-pdf"></i> PDF</a>
+                <a class="btn-relatorio btn-xlsx" href="#" onclick="return enviarComFiltro('form-visitas','xlsx')"><i class="fas fa-file-excel"></i> Excel</a>
             </div>
         </div>
 

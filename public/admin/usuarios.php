@@ -393,13 +393,13 @@ $totalUsuarios = count($usuarios);
     <aside>
         <div class="logo-aside"><span>LibraFlow</span></div>
         <ul>
-            <li><a href="/LibraFlow/public/admin/Admin.php"><i class="fas fa-house nav-icon" aria-hidden="true"></i> Início</a></li>
-            <li><a href="/LibraFlow/public/admin/listar_livros.php"><i class="fas fa-book-open nav-icon" aria-hidden="true"></i> Livros</a></li>
-            <li><a href="/LibraFlow/public/admin/cadastrar_livro.php"><i class="fas fa-plus nav-icon" aria-hidden="true"></i> Cadastrar Livro</a></li>
-            <li><a href="/LibraFlow/public/admin/usuarios.php" class="ativo"><i class="fas fa-users nav-icon" aria-hidden="true"></i> Usuários</a></li>
-            <li><a href="/LibraFlow/public/admin/emprestimos.php"><i class="fas fa-clipboard-list nav-icon" aria-hidden="true"></i> Empréstimos</a></li>
+            <li class="nav-section">Principal</li><li><a href="/LibraFlow/public/admin/Admin.php"><i class="fas fa-house nav-icon" aria-hidden="true"></i> Visão geral</a></li>
+            <li class="nav-section">Biblioteca</li><li><a href="/LibraFlow/public/admin/listar_livros.php"><i class="fas fa-book-open nav-icon" aria-hidden="true"></i> Acervo</a></li>
+            <li><a href="/LibraFlow/public/admin/cadastrar_livro.php"><i class="fas fa-plus nav-icon" aria-hidden="true"></i> Adicionar livro</a></li>
+            <li class="nav-section">Operação</li><li><a href="/LibraFlow/public/admin/emprestimos.php"><i class="fas fa-clipboard-list nav-icon" aria-hidden="true"></i> Empréstimos</a></li>
+            <li><a href="/LibraFlow/public/admin/usuarios.php" class="ativo"><i class="fas fa-users nav-icon" aria-hidden="true"></i> Pessoas</a></li>
             <li><a href="/LibraFlow/public/admin/visitas.php"><i class="fas fa-clock nav-icon" aria-hidden="true"></i> Visitas</a></li>
-            <li><a href="relatorios/index.php"><i class="fas fa-chart-line nav-icon" aria-hidden="true"></i> Relatórios</a></li>
+            <li class="nav-section">Análises</li><li><a href="relatorios/index.php"><i class="fas fa-chart-line nav-icon" aria-hidden="true"></i> Relatórios</a></li>
             <div class="sidebar-down">
                 <li><a href="/LibraFlow/public/auth/logout.php">Sair</a></li>
             </div>
@@ -407,7 +407,7 @@ $totalUsuarios = count($usuarios);
     </aside>
 
     <nav>
-        <span style="font-family:'Lora',serif;font-size:2rem;color:var(--text-title);">Gestão de Usuários</span>
+        <div class="logo-nav"><span>Gestão de Usuários</span></div>
         <div class="right">
             <div class="admin-user-menu">
                 <button type="button" class="admin-user-button" aria-expanded="false" aria-controls="adminUserMenu">
@@ -560,4 +560,3 @@ $totalUsuarios = count($usuarios);
     <script src="/LibraFlow/public/admin/admin-user-menu.js"></script>
 </body>
 </html>
-

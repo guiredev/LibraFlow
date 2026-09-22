@@ -864,6 +864,82 @@ tbody tr:last-child td {
     }
 }
 
+/* ========================================================================
+   LibraFlow Design System — camada de produto (2026)
+   Tokens semânticos compartilhados pela área operacional.
+   ======================================================================== */
+:root {
+    --lf-ink: #283618;
+    --lf-muted: #606C38;
+    --lf-canvas: #FFFFFF;
+    --lf-surface: #F5F5F0;
+    --lf-surface-subtle: #FFFFFF;
+    --lf-line: #BC6C25;
+    --lf-primary: #DDA15E;
+    --lf-primary-strong: #BC6C25;
+    --lf-accent: #BC6C25;
+    --lf-success: #167857;
+    --lf-warning: #b6671d;
+    --lf-danger: #c34242;
+    --lf-info: #3670aa;
+    --lf-radius-control: .8rem;
+    --lf-radius-surface: 1.4rem;
+    --lf-shadow: 0 1px 2px rgba(20, 43, 34, .04), 0 10px 30px rgba(20, 43, 34, .06);
+}
+
+body.dark {
+    --lf-ink: #e6efe9;
+    --lf-muted: #a9bbb0;
+    --lf-canvas: #1C2410;
+    --lf-surface: #243015;
+    --lf-surface-subtle: #2A3318;
+    --lf-line: #3A4E1E;
+    --lf-primary: #4A6020;
+    --lf-primary-strong: #3A4E1E;
+    --lf-accent: #A8C97F;
+    --lf-shadow: 0 1px 2px rgba(0, 0, 0, .18), 0 16px 34px rgba(0, 0, 0, .22);
+}
+
+body { background: var(--lf-canvas); color: var(--lf-ink); }
+aside { width: 25.6rem; padding: 1.2rem; background: #283618; border-right: 1px solid rgba(255,255,255,.06); }
+.logo-aside { padding: 1.5rem 1.2rem 2.2rem; border: 0; }
+.logo-aside span { color: #fffaf3; font-size: 2.25rem; letter-spacing: -.045em; }
+.logo-aside::after { content: 'LIBRARY OPERATIONS'; display: block; margin-top: .35rem; color: rgba(232,247,239,.56); font: 800 .9rem 'Source Sans 3', sans-serif; letter-spacing: .13em; }
+aside ul { gap: .25rem; overflow-y: auto; }
+aside a { display: flex; align-items: center; gap: 1rem; min-height: 4.25rem; padding: 0 1.2rem; border: 0; border-radius: .8rem; color: rgba(239,249,243,.76); font-size: 1.35rem; font-weight: 650; }
+aside a .nav-icon { width: 1.6rem; color: rgba(239,249,243,.62); text-align: center; }
+aside a:hover, aside a.ativo { background: rgba(180, 229, 202, .12); border: 0; color: #fff; }
+aside a.ativo { box-shadow: inset 3px 0 0 var(--lf-accent); }
+aside a.ativo .nav-icon, aside a:hover .nav-icon { color: #f4bd80; }
+.nav-section { margin: 1.5rem 1.2rem .45rem; color: rgba(239,249,243,.42); font-size: .92rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.nav-section:first-child { margin-top: .4rem; }
+.sidebar-down { margin-top: auto; padding-top: 1.1rem; border-color: rgba(255,255,255,.09); }
+nav { left: 25.6rem; width: calc(100% - 25.6rem); min-height: 7.2rem; padding: 1.2rem 3.2rem; background: color-mix(in srgb, var(--lf-surface) 92%, transparent); border-bottom: 1px solid var(--lf-line); box-shadow: none; backdrop-filter: blur(16px); }
+nav .logo-nav span { color: var(--lf-ink) !important; font-size: 1.75rem !important; letter-spacing: -.03em; }
+header, main { margin-left: 25.6rem; }
+header { padding-top: 10.6rem; }
+header::after { width: 3.6rem; height: .3rem; background: var(--lf-accent); }
+header h1, .topo-lista h2, .usuarios-header h2, .historico h2 { color: var(--lf-ink); letter-spacing: -.035em; }
+header p { color: var(--lf-muted); }
+
+.card-1, .card-2, .card-3, .card-4, .historico, .form-card, .topo-lista, .usuarios-header, .filtros, .tabela-wrapper, .busca-rapida-admin, .atencao-dia, .operacao-card, .painel-graficos, .grafico-card { background: var(--lf-surface); border-color: var(--lf-line); box-shadow: var(--lf-shadow); border-radius: var(--lf-radius-surface); }
+.card-1, .card-2, .card-3, .card-4 { min-height: 12rem; padding: 1.8rem; border-left-width: .35rem; }
+.card-1 h2, .card-2 h2, .card-3 h2, .card-4 h2, .grafico-card-header span { color: var(--lf-muted); font-size: 1.12rem; font-weight: 750; letter-spacing: .055em; text-transform: uppercase; }
+.card-1 p, .card-2 p, .card-3 p, .card-4 p { color: var(--lf-ink); font-size: 3.4rem; line-height: 1; letter-spacing: -.06em; }
+.resumo .card-1 { border-left-color: var(--lf-success); }.resumo .card-2 { border-left-color: var(--lf-danger); }.resumo .card-3 { border-left-color: var(--lf-accent); }.resumo .card-4 { border-left-color: var(--lf-primary); }
+
+button, .btn-salvar, .btn-filtrar, .btn-novo { min-height: 4rem; border-radius: var(--lf-radius-control); background: var(--lf-primary); color: #fff; font-weight: 750; }
+button:hover, .btn-salvar:hover, .btn-filtrar:hover, .btn-novo:hover { background: var(--lf-primary-strong); box-shadow: 0 6px 16px rgba(20, 92, 74, .18); }
+.btn-editar { background: var(--lf-accent); }.btn-excluir { background: var(--lf-danger); }.voltar { color: var(--lf-primary); }
+.form-group input, .form-group select, .form-group textarea, .filtros input, .filtros select { border-color: var(--lf-line); border-radius: var(--lf-radius-control); background: var(--lf-surface-subtle); color: var(--lf-ink); }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus, .filtros input:focus, .filtros select:focus, input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid color-mix(in srgb, var(--lf-accent) 42%, transparent); outline-offset: 2px; border-color: var(--lf-primary); box-shadow: none; }
+thead tr { border-bottom: 1px solid var(--lf-line); } th { color: var(--lf-muted); font-family: 'Source Sans 3', sans-serif; font-size: 1.05rem; letter-spacing: .075em; } td { color: var(--lf-ink); } th, td { border-bottom-color: var(--lf-line); padding: 1.3rem 1rem; } tbody tr:hover { background: color-mix(in srgb, var(--lf-primary) 4%, transparent); }
+.vazio-tabela { display: grid; place-items: center; min-height: 16rem; color: var(--lf-muted); }.vazio-tabela::before { content: '⌁'; display: block; color: var(--lf-accent); font: 3.6rem/1 Lora, serif; }
+.alerta { border-radius: var(--lf-radius-control); border-left: 4px solid currentColor; }
+
+@media (max-width: 960px) { aside { width: 7.2rem; padding: 1.1rem .9rem; } .logo-aside { padding: 1.1rem .6rem 2rem; text-align: center; } .logo-aside span { font-size: 0; } .logo-aside span::before { content: 'LF'; font-size: 1.85rem; } .logo-aside::after, .nav-section { display: none; } aside a { justify-content: center; padding: 0; font-size: 0; } aside a .nav-icon { font-size: 1.55rem; } nav { left: 7.2rem; width: calc(100% - 7.2rem); } header, main { margin-left: 7.2rem; } }
+@media (max-width: 640px) { aside { display: none; } nav { left: 0; width: 100%; padding: 1.1rem 1.4rem; } header, main { margin-left: 0; } header { padding: 9.2rem 1.4rem 1.8rem; } main { padding: 0 1.4rem 3rem; } .admin-user-name { display: none; } nav .right { gap: .45rem; } .tabela-wrapper { border-radius: 1rem; padding: .8rem; } }
+
 @media (max-width: 768px) {
     .topo-lista,
     .usuarios-header {
@@ -1062,110 +1138,7 @@ body {
     color: var(--text-title);
 }
 
-aside {
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 6.4rem;
-    padding: 0 2.8rem;
-    background: var(--bg-sidebar);
-    border-bottom: 1px solid var(--border-color);
-    box-shadow: none;
-    flex-direction: row;
-    align-items: center;
-}
-
-.logo-aside {
-    padding: 0;
-    border-bottom: 0;
-    margin-right: 3rem;
-}
-
-.logo-aside span {
-    color: var(--text-title);
-    font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
-    font-size: 2rem;
-    letter-spacing: 0;
-}
-
-.logo-aside span::before {
-    content: "L+";
-    display: inline-grid;
-    place-items: center;
-    width: 3.6rem;
-    height: 3.6rem;
-    margin-right: 1rem;
-    border-radius: 1rem;
-    background: var(--btn-primary);
-    color: var(--btn-primary-text);
-    font-weight: 800;
-}
-
-aside ul {
-    flex: 1;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.6rem;
-}
-
-aside li {
-    display: flex;
-}
-
-aside a {
-    border-left: 0;
-    border-radius: var(--radius-sm);
-    color: var(--text-sidebar);
-    font-size: 1.4rem;
-    padding: 0.8rem 1.1rem;
-    white-space: nowrap;
-}
-
-aside a:hover,
-aside a.ativo {
-    background: rgba(188, 108, 37, 0.12);
-    color: var(--btn-primary);
-    border-left-color: transparent;
-}
-
-.sidebar-down {
-    margin-top: 0;
-    margin-left: auto;
-    border-top: 0;
-}
-
-nav {
-    position: static;
-    width: auto;
-    margin: 8.8rem auto 0;
-    padding: 0 3.2rem;
-    max-width: 123.2rem;
-    background: transparent;
-    box-shadow: none;
-}
-
-nav .logo-nav span {
-    color: var(--text-title) !important;
-    font-family: 'Source Sans 3', 'Segoe UI', sans-serif !important;
-    font-size: 2.4rem !important;
-    font-weight: 800;
-}
-
-nav .right .user {
-    color: var(--text-body) !important;
-}
-
-header,
-main {
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 123.2rem;
-    width: 100%;
-}
-
-header {
-    padding: 1.6rem 3.2rem 2.4rem;
-}
+/* Estrutura horizontal antiga removida: a geometria da sidebar fica ao fim do arquivo. */
 
 header h1 {
     font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
@@ -1177,10 +1150,6 @@ header h1 {
 header p {
     max-width: 66rem;
     color: var(--text-body);
-}
-
-main {
-    padding: 0 3.2rem 4rem;
 }
 
 .resumo {
@@ -1326,24 +1295,6 @@ button,
 }
 
 @media (max-width: 1120px) {
-    aside {
-        height: auto;
-        min-height: 6.4rem;
-        flex-wrap: wrap;
-        padding: 1rem 1.6rem;
-    }
-
-    aside ul {
-        order: 2;
-        width: 100%;
-        overflow-x: auto;
-        padding-bottom: 0.4rem;
-    }
-
-    nav {
-        margin-top: 11.8rem;
-    }
-
     .resumo {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -2528,3 +2479,98 @@ body.dark .pesquisa-global-campo button {
         grid-column: span 1;
     }
 }
+
+/* Final design-system precedence: keeps legacy behavior while unifying all screens. */
+/* Paleta oficial: docs/guia-estilizacao/GuiadeCores-LibraFlow.md */
+:root { --lf-ink:#283618; --lf-muted:#606C38; --lf-canvas:#FFFFFF; --lf-surface:#F5F5F0; --lf-surface-subtle:#FFFFFF; --lf-line:#BC6C25; --lf-primary:#DDA15E; --lf-primary-strong:#BC6C25; --lf-accent:#BC6C25; --bg-page:var(--lf-canvas); --bg-card:var(--lf-surface); --bg-header:#FFFFFF; --text-title:var(--lf-ink); --text-body:var(--lf-muted); --text-link:#BC6C25; --border-color:var(--lf-line); --btn-primary:var(--lf-primary); --btn-primary-hover:var(--lf-primary-strong); --btn-primary-text:#FEFAE0; --shadow-sm:var(--lf-shadow); --shadow-md:var(--lf-shadow); }
+body.dark { --lf-ink:#D4E8B0; --lf-muted:#A8C97F; --lf-canvas:#1C2410; --lf-surface:#243015; --lf-surface-subtle:#2A3318; --lf-line:#3A4E1E; --lf-primary:#4A6020; --lf-primary-strong:#3A4E1E; --lf-accent:#A8C97F; --bg-page:#1C2410; --bg-card:#243015; --bg-header:#243015; --text-title:#D4E8B0; --text-body:#A8C97F; --text-link:#A8C97F; --border-color:#3A4E1E; --btn-primary:#4A6020; --btn-primary-hover:#3A4E1E; --btn-primary-text:#D4E8B0; }
+body { background:var(--lf-canvas); overflow-x:hidden; } aside { width:25.6rem; padding:1.2rem; background:#283618; } nav { left:25.6rem; width:calc(100% - 25.6rem); background:var(--bg-header); border-bottom:1px solid var(--lf-line); box-shadow:none; } header,main { margin-left:25.6rem; min-width:0; }
+.logo-aside { padding:1.5rem 1.2rem 2.2rem; border:0; }.logo-aside span { color:#fffaf3; letter-spacing:-.045em; }.logo-aside::after { content:'LIBRARY OPERATIONS'; display:block; margin-top:.35rem; color:rgba(232,247,239,.56); font:800 .9rem 'Source Sans 3',sans-serif; letter-spacing:.13em; } aside ul { gap:.25rem; } aside a { display:flex; align-items:center; gap:1rem; min-height:4.25rem; padding:0 1.2rem; border:0; border-radius:.8rem; color:rgba(239,249,243,.76); } aside a:hover,aside a.ativo { background:rgba(180,229,202,.12); border:0; color:#fff; } aside a.ativo { box-shadow:inset 3px 0 0 var(--lf-accent); }.nav-section { margin:1.5rem 1.2rem .45rem; color:rgba(239,249,243,.42); font-size:.92rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }.nav-section:first-child { margin-top:.4rem; }
+header::after { width:3.6rem; height:.3rem; background:var(--lf-accent); }.card-1,.card-2,.card-3,.card-4,.historico,.form-card,.topo-lista,.usuarios-header,.filtros,.tabela-wrapper,.busca-rapida-admin,.atencao-dia,.operacao-card,.painel-graficos,.grafico-card { background:var(--lf-surface); border-color:var(--lf-line); box-shadow:var(--lf-shadow); border-radius:var(--lf-radius-surface); }.card-1 h2,.card-2 h2,.card-3 h2,.card-4 h2,.grafico-card-header span,th { color:var(--lf-muted); }.card-1 p,.card-2 p,.card-3 p,.card-4 p,td { color:var(--lf-ink); }.resumo .card-1 { border-left-color:var(--lf-success); }.resumo .card-2 { border-left-color:var(--lf-danger); }.resumo .card-3 { border-left-color:var(--lf-accent); }.resumo .card-4 { border-left-color:var(--lf-primary); }
+button,.btn-salvar,.btn-filtrar,.btn-novo { background:var(--lf-primary); border-radius:var(--lf-radius-control); } button:hover,.btn-salvar:hover,.btn-filtrar:hover,.btn-novo:hover { background:var(--lf-primary-strong); }.form-group input,.form-group select,.form-group textarea,.filtros input,.filtros select { border-color:var(--lf-line); background:var(--lf-surface-subtle); color:var(--lf-ink); } th,td { border-bottom-color:var(--lf-line); } tbody tr:hover { background:color-mix(in srgb,var(--lf-primary) 4%,transparent); }
+@media (max-width:960px) { aside { width:7.2rem; padding:1.1rem .9rem; }.logo-aside { text-align:center; }.logo-aside span { font-size:0; }.logo-aside span::before { content:'LF'; font-size:1.85rem; }.logo-aside::after,.nav-section { display:none; } aside a { justify-content:center; padding:0; font-size:0; } aside a .nav-icon { font-size:1.55rem; } nav { left:7.2rem; width:calc(100% - 7.2rem); } header,main { margin-left:7.2rem; } }
+img,svg,canvas { max-width:100%; height:auto; } .tabela-wrapper { max-width:100%; } @media (max-width:640px) { aside { display:none; } nav { position:fixed; left:0; width:100%; padding:1.1rem 1.4rem; } nav .logo-nav { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } header,main { margin-left:0; } header { padding:9.2rem 1.4rem 1.8rem; } main { padding:0 1.4rem 3rem; } .resumo,.atencao-grid,.acoes-operacionais,.graficos-grid { grid-template-columns:1fr!important; } }
+
+/* A antiga barra superior não deve coexistir com a sidebar do admin. */
+body.admin-home { position:static; top:auto; }
+aside {
+    position:fixed;
+    inset:0 auto 0 0;
+    width:25.6rem;
+    height:100vh;
+    min-height:0;
+    padding:1.2rem;
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    background:#283618;
+    border:0;
+    border-right:1px solid rgba(255,255,255,.1);
+}
+aside ul { flex:1 1 auto; min-height:0; display:flex; flex-direction:column; align-items:stretch; gap:.25rem; overflow-y:auto; overflow-x:hidden; }
+aside li { display:block; flex:0 0 auto; }
+.logo-aside { margin:0; padding:1.5rem 1.2rem 2.2rem; }
+.logo-aside span { color:#FEFAE0; font-family:'Lora',serif; font-size:2.25rem; }
+.logo-aside span::before { content:none; }
+aside a { display:flex; justify-content:flex-start; width:100%; white-space:nowrap; font-size:1.35rem; }
+body.admin-home nav, body.admin-home header, body.admin-home main { width:calc(100% - 25.6rem); max-width:none; }
+body.admin-home nav { left:25.6rem; padding-left:clamp(2rem,3vw,5.2rem); padding-right:clamp(2rem,3vw,5.2rem); }
+
+/* Geometria única da área administrativa: sem containers concorrentes. */
+nav,
+body.admin-home nav {
+    position:fixed;
+    top:0;
+    left:25.6rem;
+    z-index:1000;
+    width:calc(100% - 25.6rem);
+    min-height:7.2rem;
+    margin:0;
+    padding:1.2rem clamp(2rem,3vw,5.2rem);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:var(--bg-header);
+}
+header,
+main,
+body.admin-home header,
+body.admin-home main {
+    width:calc(100% - 25.6rem);
+    max-width:none;
+    margin-left:25.6rem;
+    margin-right:0;
+}
+header,
+body.admin-home header { padding:10.2rem clamp(2rem,3vw,5.2rem) 2rem; }
+main,
+body.admin-home main { padding:0 clamp(2rem,3vw,5.2rem) 4rem; }
+body.admin-home header { display:flex; }
+
+@media (max-width:960px) {
+    aside { width:7.2rem; padding:1.1rem .9rem; }
+    .logo-aside { padding:1.1rem .6rem 2rem; text-align:center; }
+    .logo-aside span { font-size:0; }.logo-aside span::before { content:'LF'; font-size:1.85rem; }
+    aside a { justify-content:center; padding:0; font-size:0; }.nav-section,.logo-aside::after { display:none; }
+    nav,body.admin-home nav { left:7.2rem; width:calc(100% - 7.2rem); }
+    header,main,body.admin-home header,body.admin-home main { width:calc(100% - 7.2rem); margin-left:7.2rem; }
+}
+@media (max-width:640px) {
+    aside { display:none; } nav,body.admin-home nav { left:0; width:100%; padding:1.1rem 1.4rem; }
+    header,main,body.admin-home header,body.admin-home main { width:100%; margin-left:0; }
+    header,body.admin-home header { padding:9.2rem 1.4rem 1.8rem; } main,body.admin-home main { padding:0 1.4rem 3rem; }
+}
+
+/* Visitas: mesmos cartões, superfícies e breakpoints do restante do admin. */
+.cards-visitas,
+.estatisticas { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1.4rem; margin-bottom:1.8rem; }
+.card-visita,
+.estatistica { background:var(--lf-surface); border:1px solid var(--lf-line); border-radius:var(--lf-radius-surface); box-shadow:var(--lf-shadow); padding:1.8rem; min-width:0; }
+.card-visita small { color:var(--lf-muted); font-size:1.05rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+.card-visita strong { display:block; margin-top:.55rem; color:var(--lf-ink); font:800 3rem/1 'Lora',serif; }
+.estatistica h2 { margin:0 0 .8rem; color:var(--lf-ink); font:700 1.6rem/1.2 'Lora',serif; }
+.estatistica p { margin:.4rem 0; color:var(--lf-muted); }.estatistica b { color:var(--lf-ink); }
+.acoes-visitas { display:flex; align-items:center; gap:1rem; flex-wrap:wrap; margin-bottom:1.8rem; }
+.admin-nav-link { display:inline-flex; align-items:center; gap:.7rem; min-height:4rem; padding:0 1.1rem; border:1px solid var(--lf-line); border-radius:.8rem; color:var(--lf-ink); font-weight:750; text-decoration:none; }
+.admin-nav-link:hover { background:rgba(188,108,37,.1); color:var(--lf-primary-strong); }
+@media (max-width:760px) { .cards-visitas,.estatisticas { grid-template-columns:1fr; } .acoes-visitas { align-items:stretch; flex-direction:column; } .acoes-visitas > * { width:100%; } }

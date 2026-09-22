@@ -129,6 +129,10 @@ form {
     color: #DDA15E;
 }
 
+/* Paleta e dimensões alinhadas ao guia oficial do LibraFlow. */
+body { min-height:100vh; height:auto; padding:2rem 1.6rem; background:#FFFFFF; color:#283618; }
+nav { width:min(100%,120rem); padding:1.6rem 0 3rem; }.inputs { width:min(100%,45rem); max-width:45rem; padding:clamp(2.4rem,6vw,4rem); background:#F5F5F0; border:1px solid #BC6C25; }.inputs h2 { color:#283618; }.inputs label { color:#606C38; }.inputs input { width:100%; min-height:4.4rem; height:auto; border-radius:.8rem; background:#FFFFFF; color:#283618; }.inputs input:focus { outline:3px solid rgba(188,108,37,.34); outline-offset:2px; }.inputs input[type="submit"],.login.btn button { min-height:4.4rem; background:#DDA15E; color:#FEFAE0; border-radius:.8rem; }.inputs input[type="submit"]:hover,.login.btn button:hover { background:#BC6C25; }.inputs a,.links-nav a { color:#BC6C25; } @media(max-width:480px){ body { justify-content:flex-start; padding:1.2rem; } nav { padding:1rem 0 2rem; } .inputs { width:100%; } }
+
 @media (max-width: 768px) {
     html {
         font-size: 56.25%;

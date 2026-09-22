@@ -5,7 +5,8 @@
  * Funcao: Modelo das credenciais locais de email. Copie para email.local.php no ambiente local.
  */
 return [
-    'LIBRAFLOW_APP_URL' => 'http://localhost/LibraFlow',
+    // Use o domínio publicado ou o IP local do computador (não "localhost") para links e QR Codes.
+    'LIBRAFLOW_APP_URL' => 'http://192.168.1.100/LibraFlow',
     'LIBRAFLOW_SMTP_HOST' => 'smtp.gmail.com',
     'LIBRAFLOW_SMTP_USER' => 'seu-email@gmail.com',
     'LIBRAFLOW_SMTP_PASS' => 'senha-de-app-do-google',

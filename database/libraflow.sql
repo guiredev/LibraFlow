@@ -189,6 +189,26 @@ INSERT INTO `visitas_biblioteca` (`id`, `data_registro`, `periodo`, `quantidade`
 (5, '2026-06-12', 'Tarde', 0, '2026-06-08 20:43:04', '2026-06-08 20:43:39'),
 (6, '2026-06-12', 'Noite', 50, '2026-06-08 20:43:04', '2026-06-08 20:43:39');
 
+-- --------------------------------------------------------
+
+--
+-- Visitas individuais registradas pelo formulário público.
+-- A tabela visitas_biblioteca acima permanece como histórico agregado.
+--
+CREATE TABLE `registros_visitas` (
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) DEFAULT NULL,
+  `nome` varchar(100) NOT NULL,
+  `rm` varchar(30) NOT NULL,
+  `periodo` enum('Manha','Tarde','Noite') NOT NULL,
+  `serie` varchar(20) NOT NULL,
+  `ano` smallint(4) NOT NULL,
+  `motivo` enum('Estudo','Pesquisa','Leitura','Empréstimo','Devolução','Trabalho escolar','Uso do espaço','Outro') NOT NULL,
+  `data_visita` date NOT NULL,
+  `hora_visita` time NOT NULL,
+  `criado_em` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Índices para tabelas despejadas
 --
@@ -250,6 +270,16 @@ ALTER TABLE `visitas_biblioteca`
   ADD KEY `idx_visitas_data` (`data_registro`);
 
 --
+-- Índices de tabela `registros_visitas`
+--
+ALTER TABLE `registros_visitas`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_registros_visitas_data` (`data_visita`),
+  ADD KEY `idx_registros_visitas_rm` (`rm`),
+  ADD KEY `idx_registros_visitas_usuario` (`id_usuario`),
+  ADD KEY `idx_registros_visitas_periodo` (`periodo`);
+
+--
 -- AUTO_INCREMENT para tabelas despejadas
 --
 
@@ -296,6 +326,12 @@ ALTER TABLE `visitas_biblioteca`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
+-- AUTO_INCREMENT de tabela `registros_visitas`
+--
+ALTER TABLE `registros_visitas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- Restrições para tabelas despejadas
 --
 
@@ -323,6 +359,12 @@ ALTER TABLE `recuperacao_senha`
 --
 ALTER TABLE `login_tokens`
   ADD CONSTRAINT `fk_login_tokens_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
+
+--
+-- Restrições para tabela `registros_visitas`
+--
+ALTER TABLE `registros_visitas`
+  ADD CONSTRAINT `fk_registros_visitas_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

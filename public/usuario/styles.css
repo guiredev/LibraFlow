@@ -65,6 +65,11 @@ body.dark {
     --shadow-md: 0 20px 48px rgba(0, 0, 0, 0.30);
 }
 
+/* Área do leitor — mesma identidade operacional, com ênfase em leitura. */
+:root { --bg-page:#FFFFFF; --bg-card:#F5F5F0; --bg-muted:#F5F5F0; --text-title:#283618; --text-body:#606C38; --text-link:#BC6C25; --border-color:#BC6C25; --btn-primary:#DDA15E; --btn-primary-hover:#BC6C25; --radius-sm:.8rem; --radius-md:1.4rem; --radius-lg:1.8rem; --shadow-sm:0 1px 2px rgba(40,54,24,.06),0 10px 28px rgba(40,54,24,.08); }
+body.dark { --bg-page:#1C2410; --bg-card:#243015; --bg-muted:#2A3318; --text-title:#D4E8B0; --text-body:#A8C97F; --text-link:#A8C97F; --border-color:#3A4E1E; --btn-primary:#4A6020; --btn-primary-hover:#3A4E1E; --btn-primary-text:#D4E8B0; }
+nav { min-height:7.6rem; border-bottom-color:var(--border-color); }.logo-nav { letter-spacing:-.035em; }.painel, .perfil-card, .dados-aluno, .emprestimo-card { border-color:var(--border-color)!important; border-radius:var(--radius-md)!important; box-shadow:var(--shadow-sm)!important; } button, .btn { border-radius:var(--radius-sm)!important; }.status, .badge { border-radius:999px!important; font-weight:750; } input:focus, select:focus, button:focus-visible, a:focus-visible { outline:3px solid color-mix(in srgb,var(--btn-primary) 32%,transparent); outline-offset:2px; }
+
 body {
     min-height: 100vh;
     background: var(--bg-page);
@@ -1212,3 +1217,6 @@ button:focus-visible {
     outline: 2px solid var(--text-link);
     outline-offset: 2px;
 }
+
+/* Final product tokens for the reader area. */
+:root { --bg-page:#FFFFFF; --bg-card:#F5F5F0; --bg-header:#FFFFFF; --bg-muted:#F5F5F0; --text-title:#283618; --text-body:#606C38; --text-link:#BC6C25; --border-color:#BC6C25; --btn-primary:#DDA15E; --btn-primary-hover:#BC6C25; --btn-primary-text:#FEFAE0; --radius-sm:.8rem; --radius-md:1.4rem; --radius-lg:1.8rem; } body.dark { --bg-page:#1C2410; --bg-card:#243015; --bg-header:#243015; --bg-muted:#2A3318; --text-title:#D4E8B0; --text-body:#A8C97F; --text-link:#A8C97F; --border-color:#3A4E1E; --btn-primary:#4A6020; --btn-primary-hover:#3A4E1E; --btn-primary-text:#D4E8B0; } body { overflow-x:hidden; } nav { min-height:7.6rem; border-bottom-color:var(--border-color); }.painel,.perfil-card,.dados-aluno,.emprestimo-card { border-color:var(--border-color)!important; border-radius:var(--radius-md)!important; } button,.btn { border-radius:var(--radius-sm)!important; } input:focus,select:focus,button:focus-visible,a:focus-visible { outline:3px solid rgba(188,108,37,.34); outline-offset:2px; } img,svg { max-width:100%; height:auto; }

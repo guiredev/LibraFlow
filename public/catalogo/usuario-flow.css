@@ -53,6 +53,15 @@ body.dark {
     --u-shadow-md: 0 20px 48px rgba(0, 0, 0, 0.30);
 }
 
+/* LibraFlow Design System: catálogo como espaço de descoberta, não listagem genérica. */
+:root { --u-primary: #DDA15E; --u-primary-hover: #BC6C25; --u-text-link: #BC6C25; --u-bg-page: #FFFFFF; --u-bg-muted: #F5F5F0; --u-border: #BC6C25; --u-radius-sm: .8rem; --u-radius-md: 1.4rem; --u-shadow-sm: 0 1px 2px rgba(40,54,24,.06), 0 10px 28px rgba(40,54,24,.08); }
+body.dark { --u-primary: #4A6020; --u-primary-hover: #3A4E1E; --u-text-link: #A8C97F; --u-bg-page: #1C2410; --u-bg-muted: #2A3318; --u-border: #3A4E1E; }
+body > nav { min-height: 7.6rem; border-bottom-color: var(--u-border); }
+.logo-nav span { letter-spacing: -.035em; }.links-nav a, nav a { border-radius: .8rem; }.links-nav a.ativo { background: color-mix(in srgb, var(--u-primary) 12%, transparent); color: var(--u-primary) !important; }
+main, .lista-emprestimos { padding-bottom: 5rem; }.card-livro, .livro-card, .emprestimo-card, .detalhe-livro, .filtros, .painel { border-color: var(--u-border) !important; border-radius: 1.4rem !important; box-shadow: var(--u-shadow-sm) !important; }
+button, .btn, .btn-solicitar, .btn-favorito { border-radius: .8rem !important; background: var(--u-primary) !important; }.book-card:hover, .card-livro:hover, .livro-card:hover { transform: translateY(-.35rem); border-color: color-mix(in srgb, var(--u-primary) 38%, var(--u-border)) !important; }
+input:focus, select:focus, button:focus-visible, a:focus-visible { outline: 3px solid color-mix(in srgb, var(--u-primary) 32%, transparent); outline-offset: 2px; }
+
 html {
     font-size: 62.5%;
 }
@@ -875,3 +884,6 @@ p .fas {
         flex-direction: column;
     }
 }
+
+/* Final product tokens: catalog screens share the LibraFlow visual language. */
+:root { --u-primary:#DDA15E; --u-primary-hover:#BC6C25; --u-primary-text:#FEFAE0; --u-text-title:#283618; --u-text-body:#606C38; --u-text-link:#BC6C25; --u-bg-page:#FFFFFF; --u-bg-card:#F5F5F0; --u-bg-header:#FFFFFF; --u-bg-muted:#F5F5F0; --u-border:#BC6C25; --u-radius-sm:.8rem; --u-radius-md:1.4rem; } body.dark { --u-primary:#4A6020; --u-primary-hover:#3A4E1E; --u-primary-text:#D4E8B0; --u-text-title:#D4E8B0; --u-text-body:#A8C97F; --u-text-link:#A8C97F; --u-bg-page:#1C2410; --u-bg-card:#243015; --u-bg-header:#243015; --u-bg-muted:#2A3318; --u-border:#3A4E1E; } body { background:var(--u-bg-page)!important; overflow-x:hidden; } body > nav { min-height:7.6rem; border-bottom-color:var(--u-border); }.links-nav a.ativo { background:rgba(188,108,37,.12); color:var(--u-text-link)!important; } body.dark .links-nav a.ativo { background:rgba(168,201,127,.13); }.card-livro,.livro-card,.emprestimo-card,.detalhe-livro,.filtros,.painel { border-color:var(--u-border)!important; border-radius:1.4rem!important; } button,.btn,.btn-solicitar,.btn-favorito { border-radius:.8rem!important; background:var(--u-primary)!important; color:var(--u-primary-text)!important; } input:focus,select:focus,button:focus-visible,a:focus-visible { outline:3px solid rgba(188,108,37,.34); outline-offset:2px; } img,svg { max-width:100%; height:auto; } @media(max-width:620px){ body > nav { grid-template-columns:1fr auto!important; padding:0 1.4rem!important; } .links-nav { grid-column:1/-1; width:100%; overflow-x:auto; } .links-nav ul { width:max-content; } }

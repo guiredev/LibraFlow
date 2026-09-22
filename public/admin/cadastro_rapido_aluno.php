@@ -182,13 +182,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <aside>
         <div class="logo-aside"><span>LibraFlow</span></div>
         <ul>
-            <li><a href="/LibraFlow/public/admin/Admin.php">Início</a></li>
-            <li><a href="/LibraFlow/public/admin/listar_livros.php">Livros</a></li>
-            <li><a href="/LibraFlow/public/admin/cadastrar_livro.php">Cadastrar Livro</a></li>
-            <li><a href="/LibraFlow/public/admin/usuarios.php" class="ativo">Usuários</a></li>
-            <li><a href="/LibraFlow/public/admin/emprestimos.php">Empréstimos</a></li>
-            <li><a href="/LibraFlow/public/admin/relatorios/index.php"><i class="fas fa-chart-line nav-icon" aria-hidden="true"></i> Relatórios</a></li>
-            <li><a href="/LibraFlow/public/admin/visitas.php">Visitas</a></li>
+            <li class="nav-section">Principal</li><li><a href="/LibraFlow/public/admin/Admin.php"><i class="fas fa-house nav-icon" aria-hidden="true"></i> Visão geral</a></li>
+            <li class="nav-section">Biblioteca</li><li><a href="/LibraFlow/public/admin/listar_livros.php"><i class="fas fa-book-open nav-icon" aria-hidden="true"></i> Acervo</a></li>
+            <li><a href="/LibraFlow/public/admin/cadastrar_livro.php"><i class="fas fa-plus nav-icon" aria-hidden="true"></i> Adicionar livro</a></li>
+            <li class="nav-section">Operação</li><li><a href="/LibraFlow/public/admin/emprestimos.php"><i class="fas fa-clipboard-list nav-icon" aria-hidden="true"></i> Empréstimos</a></li>
+            <li><a href="/LibraFlow/public/admin/usuarios.php" class="ativo"><i class="fas fa-users nav-icon" aria-hidden="true"></i> Pessoas</a></li>
+            <li><a href="/LibraFlow/public/admin/visitas.php"><i class="fas fa-clock nav-icon" aria-hidden="true"></i> Visitas</a></li>
+            <li class="nav-section">Análises</li><li><a href="/LibraFlow/public/admin/relatorios/index.php"><i class="fas fa-chart-line nav-icon" aria-hidden="true"></i> Relatórios</a></li>
             <div class="sidebar-down">
                 <li><a href="/LibraFlow/public/auth/logout.php">Sair</a></li>
             </div>
@@ -196,7 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </aside>
 
     <nav>
-        <span style="font-family:'Lora',serif;font-size:2rem;color:#283618;">Cadastro Rápido</span>
+        <div class="logo-nav"><span>Cadastro Rápido</span></div>
         <div class="right">
             <div class="admin-user-menu">
                 <button type="button" class="admin-user-button" aria-expanded="false" aria-controls="adminUserMenu">
@@ -304,4 +304,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="/LibraFlow/public/admin/admin-user-menu.js"></script>
 </body>
 </html>
-

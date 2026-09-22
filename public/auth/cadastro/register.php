@@ -9,6 +9,10 @@
 session_start();
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/conexao.php';
 require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/auth.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/LibraFlow/app/config/user_features.php';
+
+// Complementa o schema de uma instalação nova antes do primeiro cadastro.
+libraflowEnsureUserFeatureTables($conn);
 
 if (isset($_SESSION['usuario_id'])) {
     header('Location: /LibraFlow/public/usuario/index.php');

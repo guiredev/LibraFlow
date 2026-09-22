@@ -11,6 +11,7 @@ A estrutura foi reorganizada para separar codigo compartilhado, paginas acessada
 LibraFlow/
 ├── app/                  # codigo interno compartilhado
 │   └── config/           # banco, autenticacao, sessao, email
+│   └── services/         # regras compartilhadas de funcionalidades
 ├── public/               # paginas abertas pelo navegador
 │   ├── auth/             # login, cadastro, recuperacao de senha, logout
 │   ├── admin/            # painel administrativo
@@ -33,6 +34,8 @@ LibraFlow/
 - Catalogo: `http://localhost/LibraFlow/public/catalogo/catalogo.php`
 - Admin: `http://localhost/LibraFlow/public/admin/Admin.php`
 - Relatorios atuais: `http://localhost/LibraFlow/public/admin/relatorios/index.php`
+- Registro público de visita: `http://localhost/LibraFlow/public/visita/`
+- QR Code de visitas (admin): `http://localhost/LibraFlow/public/admin/visitas_qr.php`
 
 ## Banco de dados
 
@@ -45,12 +48,17 @@ LibraFlow/
 
 ### `app/config/`
 
-- `conexao.php`: cria `$conn` como PDO para o banco `libraflow`. Use este arquivo em codigo novo.
+- `conexao.php`: cria `$conn` como PDO, cria o banco `libraflow` e o schema essencial se ainda não existirem. Use este arquivo em codigo novo.
+- `database_setup.php`: criação idempotente das tabelas principais para uma instalação nova.
 - `auth.php`: funcoes de sessao, cookie "lembrar-me", token persistente e redirecionamento por tipo de usuario.
 - `auth_check.php`: protecao de paginas logadas. Redireciona para login quando nao ha sessao valida.
 - `email.php`: configuracao e envio de email com PHPMailer. Monta o link de redefinicao de senha.
 - `email.local.example.php`: modelo de configuracao SMTP local.
 - `email.local.php`: configuracao SMTP local real. Esta no `.gitignore`.
+
+### `app/services/`
+
+- `VisitaService.php`: valida, associa alunos por RM e grava as visitas individuais.
 
 ### `public/auth/login/`
 
@@ -102,7 +110,8 @@ LibraFlow/
 - `novo_emprestimo.php`: cria emprestimo manual.
 - `cadastro_rapido_aluno.php`: cadastra aluno durante o fluxo administrativo.
 - `usuarios.php`: lista, edita e remove usuarios.
-- `visitas.php`: registra visitas da biblioteca.
+- `visitas.php`: consulta e filtra os registros individuais de visitas.
+- `visitas_qr.php`: mostra e imprime o QR Code fixo do formulário público.
 - `relatorios.php`: tela antiga de relatorios.
 - `gerar_relatorio.php`: gerador antigo de PDF/Excel.
 - `conexao.php`: conexao administrativa legada.

@@ -55,6 +55,11 @@ body.dark {
     --shadow-md: 0 20px 48px rgba(0, 0, 0, 0.3);
 }
 
+/* Entrada do produto: superfície editorial e controles consistentes. */
+:root { --bg-page:#FFFFFF; --bg-panel:#F5F5F0; --bg-soft:#FEFAE0; --bg-input:#FFFFFF; --text-title:#283618; --text-body:#606C38; --text-link:#BC6C25; --accent:#DDA15E; --accent-strong:#BC6C25; --btn-primary:#DDA15E; --btn-primary-hover:#BC6C25; --btn-primary-text:#FEFAE0; --border-color:#BC6C25; --radius-sm:.8rem; --radius-md:1.4rem; --shadow-md:0 20px 52px rgba(40,54,24,.12); }
+body.dark { --bg-page:#1C2410; --bg-panel:#243015; --bg-soft:#2A3318; --bg-input:#2A3318; --text-title:#D4E8B0; --text-body:#A8C97F; --text-link:#A8C97F; --accent:#4A6020; --accent-strong:#3A4E1E; --btn-primary:#4A6020; --btn-primary-hover:#3A4E1E; --btn-primary-text:#D4E8B0; --border-color:#3A4E1E; }
+.form-main { border-color:var(--border-color); border-radius:var(--radius-md); }.eyebrow,.form-kicker { border-radius:999px; color:var(--text-link); }.form-main button, .login.btn button { border-radius:var(--radius-sm); background:var(--btn-primary); }.form-main input:focus, .form-main select:focus, button:focus-visible, a:focus-visible { outline:3px solid color-mix(in srgb,var(--btn-primary) 32%,transparent); outline-offset:2px; }
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -608,3 +613,6 @@ p .fas {
         padding: 1.8rem;
     }
 }
+
+/* Final product tokens for authentication screens. */
+:root { --bg-page:#FFFFFF; --bg-panel:#F5F5F0; --bg-soft:#FEFAE0; --bg-input:#FFFFFF; --text-title:#283618; --text-body:#606C38; --text-link:#BC6C25; --accent:#DDA15E; --accent-strong:#BC6C25; --btn-primary:#DDA15E; --btn-primary-hover:#BC6C25; --btn-primary-text:#FEFAE0; --border-color:#BC6C25; --radius-sm:.8rem; --radius-md:1.4rem; } body.dark { --bg-page:#1C2410; --bg-panel:#243015; --bg-soft:#2A3318; --bg-input:#2A3318; --text-title:#D4E8B0; --text-body:#A8C97F; --text-link:#A8C97F; --accent:#4A6020; --accent-strong:#3A4E1E; --btn-primary:#4A6020; --btn-primary-hover:#3A4E1E; --btn-primary-text:#D4E8B0; --border-color:#3A4E1E; }.form-main { border-color:var(--border-color); border-radius:var(--radius-md); }.form-main button,.login.btn button { border-radius:var(--radius-sm); background:var(--btn-primary); }.form-main input:focus,.form-main select:focus,button:focus-visible,a:focus-visible { outline:3px solid rgba(188,108,37,.34); outline-offset:2px; } img,svg { max-width:100%; height:auto; }

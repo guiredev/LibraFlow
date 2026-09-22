@@ -264,11 +264,42 @@
         });
     }
 
+    // Alguns templates antigos (especialmente visitas.php) ainda trazem uma
+    // sidebar minificada. Normalizamos apenas esse caso para o mesmo shell do
+    // Admin, sem alterar os links nem o conteúdo da página.
+    function normalizeAdminShell() {
+        const aside = document.querySelector('body > aside');
+        if (aside && !aside.querySelector('.nav-section')) {
+            aside.innerHTML =
+                '<div class="logo-aside"><span>LibraFlow</span></div>' +
+                '<ul>' +
+                '<li class="nav-section">Principal</li>' +
+                '<li><a href="/LibraFlow/public/admin/Admin.php"><i class="fas fa-house nav-icon" aria-hidden="true"></i> Visão geral</a></li>' +
+                '<li class="nav-section">Biblioteca</li>' +
+                '<li><a href="/LibraFlow/public/admin/listar_livros.php"><i class="fas fa-book-open nav-icon" aria-hidden="true"></i> Acervo</a></li>' +
+                '<li><a href="/LibraFlow/public/admin/cadastrar_livro.php"><i class="fas fa-plus nav-icon" aria-hidden="true"></i> Adicionar livro</a></li>' +
+                '<li class="nav-section">Operação</li>' +
+                '<li><a href="/LibraFlow/public/admin/emprestimos.php"><i class="fas fa-clipboard-list nav-icon" aria-hidden="true"></i> Empréstimos</a></li>' +
+                '<li><a href="/LibraFlow/public/admin/usuarios.php"><i class="fas fa-users nav-icon" aria-hidden="true"></i> Pessoas</a></li>' +
+                '<li><a href="/LibraFlow/public/admin/visitas.php" class="ativo"><i class="fas fa-clock nav-icon" aria-hidden="true"></i> Visitas</a></li>' +
+                '<li class="nav-section">Análises</li>' +
+                '<li><a href="/LibraFlow/public/admin/relatorios/index.php"><i class="fas fa-chart-line nav-icon" aria-hidden="true"></i> Relatórios</a></li>' +
+                '<div class="sidebar-down"><li><a href="/LibraFlow/public/auth/logout.php"><i class="fas fa-right-from-bracket nav-icon" aria-hidden="true"></i> Sair</a></li></div>' +
+                '</ul>';
+        }
+
+        const nav = document.querySelector('body > nav');
+        if (nav && !nav.querySelector('.logo-nav')) {
+            nav.innerHTML = '<div class="logo-nav"><span>Visitas</span></div><div class="right"><a class="admin-nav-link" href="/LibraFlow/public/admin/Admin.php"><i class="fas fa-house" aria-hidden="true"></i> Painel</a></div>';
+        }
+    }
+
     function onReady() {
         const savedTheme = localStorage.getItem(CONFIG.storageKey) || localStorage.getItem('tema') || getSavedTheme();
         applyTheme(savedTheme);
         initToggleButton();
         initSystemThemeListener();
+        normalizeAdminShell();
         initGlobalSearch();
         setTimeout(function () { document.body.classList.add('theme-transition-enabled'); }, 100);
     }

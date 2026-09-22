@@ -61,10 +61,14 @@ $categoriasMaisProcuradas = $conn->query("
     LIMIT 6
 ")->fetchAll();
 
+
 $visitasPorPeriodo = $conn->query("
-    SELECT periodo AS rotulo, COALESCE(SUM(quantidade), 0) AS total
-    FROM visitas_biblioteca
-    WHERE data_registro >= {$dataInicioSql}
+    SELECT periodo AS rotulo, SUM(total) AS total
+    FROM (
+        SELECT periodo, COALESCE(SUM(quantidade), 0) AS total FROM visitas_biblioteca WHERE data_registro >= {$dataInicioSql} GROUP BY periodo
+        UNION ALL
+        SELECT periodo, COUNT(*) AS total FROM registros_visitas WHERE data_visita >= {$dataInicioSql} GROUP BY periodo
+    ) visitas
     GROUP BY periodo
     ORDER BY FIELD(periodo, 'Manha', 'Tarde', 'Noite'), periodo
 ")->fetchAll();
